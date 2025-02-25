@@ -5,7 +5,7 @@ import { signOgImageUrl } from "@/lib/og-image";
 import Markdown from "react-markdown";
 
 const content = `
-### やあ
+### 自己紹介
 
 彩世です
 
