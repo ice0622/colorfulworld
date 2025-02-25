@@ -1,9 +1,13 @@
 "use client";
+import { useState } from 'react';
 import { GetPostResult } from "@/lib/wisp";
 import Link from "next/link";
 import sanitize, { defaults } from "sanitize-html";
+import ImageSlider from "./ImageSlider"; // 追加
 
 export const PostContent = ({ content }: { content: string }) => {
+  const [showSlider, setShowSlider] = useState(false); // 追加
+
   const sanitizedContent = sanitize(content, {
     allowedTags: [
       "b",
@@ -42,11 +46,20 @@ export const PostContent = ({ content }: { content: string }) => {
     },
     allowedIframeHostnames: ["www.youtube.com", "www.youtube-nocookie.com"],
   });
+
   return (
-    <div
-      className="blog-content mx-auto"
-      dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-    ></div>
+    <div className="blog-content mx-auto">
+      <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+      <div className="flex justify-center mt-4"> {/* 変更 */}
+        <button
+          className="p-2 bg-white text-black border border-black rounded hover:bg-black hover:text-white transition-colors duration-300" // 変更
+          onClick={() => setShowSlider(!showSlider)} // 変更
+        >
+          {showSlider ? '閉じる' : 'ハイライト'}
+        </button>
+      </div>
+      {showSlider && <ImageSlider content={sanitizedContent} />} {/* 変更 */}
+    </div>
   );
 };
 
