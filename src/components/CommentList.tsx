@@ -34,13 +34,14 @@ interface CommentListProps {
 
 export function CommentList({ comments, config, isLoading }: CommentListProps) {
   if (isLoading) {
-    return <div className="animate-pulse">Loading comments...</div>;
+    return <div className="animate-pulse">コメントを読み込んでるよ</div>;
   }
 
   if (comments.length === 0) {
     return (
       <div className="text-muted-foreground mt-8 text-center">
-        No comments yet. Be the first to comment!
+        まだコメントがないよ
+        コメントしてくれたらうれしいな
       </div>
     );
   }

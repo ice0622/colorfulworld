@@ -117,9 +117,7 @@ export function CommentForm({ slug, config, onSuccess }: CommentFormProps) {
           <Shield className="text-muted-foreground mx-auto h-10 w-10" />
           <div className="font-medium">Pending email verification</div>
           <div className="text-muted-foreground m-auto max-w-lg text-balance text-sm">
-            Thanks for your comment! Please check your email to verify your
-            email and post your comment. If you don&apos;t see it in your inbox,
-            please check your spam folder.
+            コメントありがとうございます。メールを確認して、メールアドレスの確認を行い、コメントを投稿してください。もし受信トレイに見当たらない場合は、迷惑メールフォルダもご確認ください。
           </div>
         </AlertDescription>
       </Alert>
@@ -135,7 +133,7 @@ export function CommentForm({ slug, config, onSuccess }: CommentFormProps) {
             name="author"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel>お名前</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Your name"
@@ -152,7 +150,7 @@ export function CommentForm({ slug, config, onSuccess }: CommentFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>メール</FormLabel>
                 <FormControl>
                   <Input
                     type="email"
@@ -193,7 +191,7 @@ export function CommentForm({ slug, config, onSuccess }: CommentFormProps) {
           name="content"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Comment</FormLabel>
+              <FormLabel>コメント</FormLabel>
               <FormControl>
                 <Textarea
                   placeholder="Share your thoughts..."
@@ -230,7 +228,7 @@ export function CommentForm({ slug, config, onSuccess }: CommentFormProps) {
 
         <div className="flex items-center justify-between pt-2">
           <Button type="submit" disabled={form.formState.isSubmitting}>
-            Post Comment
+            コメントを送信するよ
           </Button>
         </div>
       </form>
