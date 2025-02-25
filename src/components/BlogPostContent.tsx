@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { GetPostResult } from "@/lib/wisp";
 import Link from "next/link";
 import sanitize, { defaults } from "sanitize-html";
-import ImageSlider from "./ImageSlider"; // 追加
+import ImageHighright from "./ImageHighright"; // 追加
 
 export const PostContent = ({ content }: { content: string }) => {
   const [showSlider, setShowSlider] = useState(false); // 追加
@@ -58,7 +58,7 @@ export const PostContent = ({ content }: { content: string }) => {
           {showSlider ? '閉じる' : 'ハイライト'}
         </button>
       </div>
-      {showSlider && <ImageSlider content={sanitizedContent} />} {/* 変更 */}
+      {showSlider && <ImageHighright content={sanitizedContent} />} {/* 変更 */}
     </div>
   );
 };
