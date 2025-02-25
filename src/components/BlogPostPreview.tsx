@@ -4,15 +4,47 @@ import { GetPostsResult } from "@/lib/wisp";
 import { formatDate } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useRef, useState } from "react";
 
 export const BlogPostPreview: FunctionComponent<{
   post: GetPostsResult["posts"][0];
 }> = ({ post }) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="break-words">
+    <div
+      ref={ref}
+      className={cn("blog-post-preview break-words", {
+        visible: isVisible,
+      })}
+    >
       <Link href={`/blog/${post.slug}`}>
-        <div className="aspect-[16/9] relative">
+        <div className="aspect-[16/9] relative overflow-hidden transition-transform duration-500 ease-in-out hover:scale-105 hover:ovacity-90">
           <Image
             alt={post.title}
             className="object-cover"
