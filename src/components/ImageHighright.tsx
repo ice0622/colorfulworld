@@ -6,7 +6,7 @@ interface Props {
   content: string;
 }
 
-const ImageSlider = ({ content }: Props) => {
+const ImageHighright = ({ content }: Props) => {
   const [images, setImages] = useState<string[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -54,4 +54,4 @@ const ImageSlider = ({ content }: Props) => {
   );
 };
 
-export default ImageSlider;
+export default ImageHighright;
