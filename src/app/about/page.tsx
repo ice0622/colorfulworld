@@ -4,38 +4,64 @@ import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import Markdown from "react-markdown";
 
-const content = `# About Me
+const content = `
+### やあ
 
-![Samantha](https://imagedelivery.net/lLmNeOP7HXG0OqaG97wimw/clvlugru90000o4g8ahxp069s/db7abbe3-aa5c-433e-a16d-cbf137d1c9e5.png/public)
+彩世です
 
-Hey there! I'm Samantha, a 28-year-old former corporate warrior who decided to ditch the 9-to-5 grind and embark on an adventure of a lifetime. After years of hustling in a high-pressure job, I realized that life is too short to be stuck in an office, staring at spreadsheets all day.
+My name is Ayase.
 
-So I took a leap of faith, quit my cushy job in Singapore, and decided to see the world on my own terms. No more stuffy meetings or rigid schedules – just me, my backpack, and an open road ahead.
+23です
 
-![Samantha](https://imagedelivery.net/lLmNeOP7HXG0OqaG97wimw/clvlugru90000o4g8ahxp069s/6b080e65-2329-4a36-ad5c-0a6af8d9aeb1.png/public)
+I am 23 years old.
 
-This blog is where I'll be documenting my travels, sharing my experiences, and hopefully inspiring others to follow their wanderlust. From trekking through remote villages to savoring local cuisines, I'm on a mission to immerse myself in different cultures and create memories that will last a lifetime.
+NikonFE + Ai Nikkor 50mm f/2.0とiPhone 15 Proをよく使っています
 
-But this journey isn't just about checking off destinations from a bucket list. It's about self-discovery, personal growth, and finding the courage to live life on my own terms. I'll be honest and raw, sharing the highs and lows, the moments of pure bliss and the inevitable challenges that come with solo travel.
+The equipment used is Nikon FE + Ai Nikkor 50mm f2.0 and iPhone 15 Pro.
 
-So join me on this adventure, and let's explore the world together! Who knows, maybe my stories will inspire you to take that leap of faith and pursue your own dreams, whatever they may be.
+### なぜ写真を撮るのか
 
-Let's go on an adventure!
+最近見た『チ。 ―地球の運動について―』 で腑に落ちたセリフがあります
 
-Love,
+There’s a line from the movie *Chii. -About the Earth's Movement-* that resonated with me.
 
-Samantha`;
+>*多分感動は寿命の長さより大切なものだと思う。*
+>
+>*I believe that probably, emotion is more important than the length of life.*
+
+人それぞれ感動はあると思います
+
+Everyone has their own way of feeling moved.
+
+素晴らしい景色を見た時、美味しいものを食べた時、愛する家族と過ごしている時
+
+When seeing a wonderful view, eating something delicious, or spending time with loved ones.
+
+胸にいっぱいに広がる感情
+
+The overwhelming feelings that spread in your chest.
+
+その感情を呼び起こすための鍵として大切に保存しておくために写真を撮っています
+
+I take photos as a key to preserving and evoking those emotions.
+
+### おわりに
+
+自分が好きな時に更新していきます
+
+I will update it when I like it.
+`;
 
 export async function generateMetadata() {
   return {
     title: "About Me",
-    description: "Learn more about Samantha and her travel adventures",
+    description: "Learn more about Ayase and her travel adventures",
     openGraph: {
       title: "About Me",
-      description: "Learn more about Samantha and her travel adventures",
+      description: "Learn more about Ayase and her travel adventures",
       images: [
         signOgImageUrl({
-          title: "Samantha",
+          title: "Ayase",
           label: "About Me",
           brand: config.blog.name,
         }),
