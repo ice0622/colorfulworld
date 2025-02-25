@@ -70,11 +70,33 @@
     * {
       @apply border-border;
     }
+
     body {
       @apply bg-background text-foreground;
     }
 
-    .blog-content img {
-      @apply w-full;
-    }
+  .blog-content img {
+    @apply w-full;
   }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.blog-post-preview {
+  opacity: 0;
+  transform: translateY(50%);
+}
+
+.blog-post-preview.visible {
+  animation: slideUp 0.9s ease forwards;
+}
