@@ -13,7 +13,7 @@ const fadeInUp = {
 
 interface Image {
   src: string;
-  alt: string | null;
+  alt?: string;
 }
 
 export const PostContent = ({ content }: { content: string }) => {
@@ -73,7 +73,7 @@ export const PostContent = ({ content }: { content: string }) => {
       if (src) {
         return {
           src,
-          alt: element.getAttribute('alt')
+          alt: element.getAttribute('alt') || undefined
         };
       }
       return null;
