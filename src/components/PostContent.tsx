@@ -62,10 +62,13 @@ export const PostContent = ({ content }: { content: string }) => {
 
   const images = contentBlocks
     .filter(block => block.nodeName === 'IMG')
-    .map(block => ({
-      src: block.getAttribute('src'),
-      alt: block.getAttribute('alt')
-    }));
+    .map(block => {
+      const element = block as Element;
+      return {
+        src: element.getAttribute('src'),
+        alt: element.getAttribute('alt')
+      };
+    });
 
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
@@ -86,15 +89,15 @@ export const PostContent = ({ content }: { content: string }) => {
             className="prose lg:prose-xl dark:prose-invert mx-auto"
           >
             {block.nodeType === Node.ELEMENT_NODE ? (
-              block.nodeName === 'IMG' ? (
+              (block as Element).nodeName === 'IMG' ? (
                 <img
-                  src={block.getAttribute('src')}
-                  alt={block.getAttribute('alt')}
-                  onClick={() => handleImageClick(images.findIndex(img => img.src === block.getAttribute('src')))}
+                  src={(block as Element).getAttribute('src')}
+                  alt={(block as Element).getAttribute('alt')}
+                  onClick={() => handleImageClick(images.findIndex(img => img.src === (block as Element).getAttribute('src')))}
                   className="cursor-pointer"
                 />
               ) : (
-                <div dangerouslySetInnerHTML={{ __html: block.outerHTML }} />
+                <div dangerouslySetInnerHTML={{ __html: (block as Element).outerHTML }} />
               )
             ) : (
               <p>{block.textContent}</p>
