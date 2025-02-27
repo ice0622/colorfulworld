@@ -11,10 +11,15 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
+interface Image {
+  src: string;
+  alt: string | null;
+}
+
 export const PostContent = ({ content }: { content: string }) => {
   const [showSlider, setShowSlider] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const [lightboxImages, setLightboxImages] = useState([]);
+  const [lightboxImages, setLightboxImages] = useState<Image[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const sanitizedContent = sanitize(content, {
@@ -64,11 +69,16 @@ export const PostContent = ({ content }: { content: string }) => {
     .filter(block => block.nodeName === 'IMG')
     .map(block => {
       const element = block as Element;
-      return {
-        src: element.getAttribute('src'),
-        alt: element.getAttribute('alt')
-      };
-    });
+      const src = element.getAttribute('src');
+      if (src) {
+        return {
+          src,
+          alt: element.getAttribute('alt')
+        };
+      }
+      return null;
+    })
+    .filter((img): img is Image => img !== null); // 型ガードを使用して null を除外
 
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
@@ -91,8 +101,8 @@ export const PostContent = ({ content }: { content: string }) => {
             {block.nodeType === Node.ELEMENT_NODE ? (
               (block as Element).nodeName === 'IMG' ? (
                 <img
-                  src={(block as Element).getAttribute('src')}
-                  alt={(block as Element).getAttribute('alt')}
+                  src={(block as Element).getAttribute('src') || undefined}
+                  alt={(block as Element).getAttribute('alt') || undefined}
                   onClick={() => handleImageClick(images.findIndex(img => img.src === (block as Element).getAttribute('src')))}
                   className="cursor-pointer"
                 />
