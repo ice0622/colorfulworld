@@ -66,19 +66,11 @@ export const PostContent = ({ content }: { content: string }) => {
   const contentBlocks = Array.from(doc.body.childNodes);
 
   const images = contentBlocks
-    .filter(block => block.nodeName === 'IMG')
-    .map(block => {
-      const element = block as Element;
-      const src = element.getAttribute('src');
-      if (src) {
-        return {
-          src,
-          alt: element.getAttribute('alt') || undefined
-        };
-      }
-      return null;
-    })
-    .filter((img): img is Image => img !== null); // 型ガードを使用して null を除外
+    .filter((block): block is HTMLImageElement => block.nodeName === 'IMG')
+    .map(block => ({
+      src: block.getAttribute('src') || '', // null を回避
+      alt: block.getAttribute('alt') || undefined // null なら undefined に変換
+    }));
 
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
