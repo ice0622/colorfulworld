@@ -4,6 +4,12 @@ import { GetPostResult } from "@/lib/wisp";
 import Link from "next/link";
 import sanitize, { defaults } from "sanitize-html";
 import ImageHighright from "./ImageHighright"; // 追加
+import { motion } from "framer-motion"; // 追加
+
+const fadeInUp = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
 
 export const PostContent = ({ content }: { content: string }) => {
   const [showSlider, setShowSlider] = useState(false); // 追加
@@ -47,9 +53,31 @@ export const PostContent = ({ content }: { content: string }) => {
     allowedIframeHostnames: ["www.youtube.com", "www.youtube-nocookie.com"],
   });
 
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(sanitizedContent, 'text/html');
+  const contentBlocks = Array.from(doc.body.childNodes);
+
+
   return (
     <div className="blog-content mx-auto">
-      <div dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+      <div className="space-y-6"> {/* 変更 */}
+        {contentBlocks.map((block, index) => (
+          <motion.div
+            key={index}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="prose lg:prose-xl dark:prose-invert mx-auto"
+          >
+            {block.nodeType === Node.ELEMENT_NODE ? (
+              <div dangerouslySetInnerHTML={{ __html: block.outerHTML }} />
+            ) : (
+              <p>{block.textContent}</p>
+            )}
+          </motion.div>
+        ))}
+      </div>
       <div className="flex justify-center mt-4"> {/* 変更 */}
         <button
           className="p-2 bg-white text-black border border-black rounded hover:bg-black hover:text-white transition-colors duration-300" // 変更
