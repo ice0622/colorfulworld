@@ -11,15 +11,15 @@ interface SpotifyPlayerProps {
 const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ 
   playlistId, 
   width = "100%", 
-  height = "352" 
+  height = "400" 
 }) => {
   // プレイリストIDを使用してSpotify埋め込みURLを生成
   const embedUrl = `https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator`;
   
   return (
-    <div className="spotify-player-wrapper my-8">
+    <div className="spotify-player-wrapper my-8" style={{ width: '100%', maxWidth: '800px', margin: '0 auto' }}>
       <iframe
-        style={{ borderRadius: "12px" }}
+        style={{ borderRadius: "12px", width: '100%' }}
         src={embedUrl}
         width={width}
         height={height}
@@ -27,6 +27,7 @@ const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({
         allowFullScreen={true}
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
+        title="Spotify Player"
       />
     </div>
   );

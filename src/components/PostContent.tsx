@@ -91,79 +91,76 @@ export const PostContent = ({ content }: { content: string }) => {
   const hasCustomComponents = content.includes('<div data-wisp-react-component="true"');
 
   return (
-    <div className="blog-content mx-auto">
-      {/* カスタムコンポーネントのみ中央配置 */}
-      {hasCustomComponents && (
-        <div className="flex justify-center items-center">
-          <div className="space-y-6">
-            <ContentWithCustomComponents
-              content={content}
-              customComponents={{
-                SpotifyPlayer: (props: any) => (
-                  <SpotifyPlayer {...props} width="100%" height="400" />
-                ),
-                // 他のカスタムコンポーネントもここに追加できます
-              }}
-            />
-          </div>
-        </div>
-      )}
+  <div className="blog-content mx-auto">
+    {/* カスタムコンポーネントのみ左寄せ */}
+    {hasCustomComponents && (
+      <div className="space-y-6">
+        <ContentWithCustomComponents
+          content={content}
+          customComponents={{
+            SpotifyPlayer: (props: any) => (
+              <SpotifyPlayer {...props} width="100%" height="400" />
+            ),
+            // 他のカスタムコンポーネントもここに追加できます
+          }}
+        />
+      </div>
+    )}
 
-      {/* 他のコンテンツはそのまま表示 */}
-      {!hasCustomComponents && (
-        <div className="space-y-6">
-          {contentBlocks.map((block, index) => (
-            <motion.div
-              key={index}
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              className="prose lg:prose-xl dark:prose-invert mx-auto"
-            >
-              {block.nodeType === Node.ELEMENT_NODE ? (
-                (block as Element).nodeName === "IMG" ? (
-                  <img
-                    src={(block as Element).getAttribute("src") || undefined}
-                    alt={(block as Element).getAttribute("alt") || undefined}
-                    onClick={() =>
-                      handleImageClick(
-                        images.findIndex(
-                          (img) => img.src === (block as Element).getAttribute("src")
-                        )
+    {/* 他のコンテンツはそのまま表示 */}
+    {!hasCustomComponents && (
+      <div className="space-y-6">
+        {contentBlocks.map((block, index) => (
+          <motion.div
+            key={index}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="prose lg:prose-xl dark:prose-invert mx-auto"
+          >
+            {block.nodeType === Node.ELEMENT_NODE ? (
+              (block as Element).nodeName === "IMG" ? (
+                <img
+                  src={(block as Element).getAttribute("src") || undefined}
+                  alt={(block as Element).getAttribute("alt") || undefined}
+                  onClick={() =>
+                    handleImageClick(
+                      images.findIndex(
+                        (img) => img.src === (block as Element).getAttribute("src")
                       )
-                    }
-                    className="cursor-pointer"
-                  />
-                ) : (
-                  <div
-                    dangerouslySetInnerHTML={{ __html: (block as Element).outerHTML }}
-                  />
-                )
+                    )
+                  }
+                  className="cursor-pointer"
+                />
               ) : (
-                <p>{block.textContent}</p>
-              )}
-            </motion.div>
-          ))}
-        </div>
-      )}
+                <div
+                  dangerouslySetInnerHTML={{ __html: (block as Element).outerHTML }}
+                />
+              )
+            ) : (
+              <p>{block.textContent}</p>
+            )}
+          </motion.div>
+        ))}
+      </div>
+    )}
 
-      {/* ボタンと画像スライダー、Lightbox は共通 */}
-      <div className="flex justify-center mt-4">
-        <button
-          className="p-2 bg-white text-black border border-black rounded hover:bg-black hover:text-white transition-colors duration-300"
-          onClick={() => setShowSlider(!showSlider)}
-        >
-          {showSlider ? "閉じる" : "ハイライト"}
-        </button>
-      </div>
-      {showSlider && <ImageHighright content={sanitizedContent} />}
-      <Lightbox
-        open={lightboxOpen}
-        close={() => setLightboxOpen(false)}
-        slides={lightboxImages}
-        index={currentImageIndex}
-      />
-      </div>
-    );
-  };
+    {/* ボタンと画像スライダー、Lightbox は共通 */}
+    <div className="flex justify-center mt-4">
+      <button
+        className="p-2 bg-white text-black border border-black rounded hover:bg-black hover:text-white transition-colors duration-300"
+        onClick={() => setShowSlider(!showSlider)}
+      >
+        {showSlider ? "閉じる" : "ハイライト"}
+      </button>
+    </div>
+    {showSlider && <ImageHighright content={sanitizedContent} />}
+    <Lightbox
+      open={lightboxOpen}
+      close={() => setLightboxOpen(false)}
+      slides={lightboxImages}
+      index={currentImageIndex}
+    />
+  </div>
+);
