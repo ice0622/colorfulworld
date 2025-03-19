@@ -4,8 +4,8 @@ import React from 'react';
 
 interface SpotifyPlayerProps {
   playlistId: string;
-  width?: string | boolean;
-  height?: string | boolean;
+  width?: string | number;
+  height?: string | number;
 }
 
 const SpotifyPlayer: React.FC<SpotifyPlayerProps> = ({ 
