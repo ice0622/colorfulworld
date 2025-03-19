@@ -164,5 +164,6 @@ export const PostContent = ({ content }: { content: string }) => {
         slides={lightboxImages}
         index={currentImageIndex}
       />
-    </div>
-  );
+      </div>
+    );
+  };
