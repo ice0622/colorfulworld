@@ -9,47 +9,14 @@ const content = `
 
 彩世です
 
-My name is Ayase.
+2001年生まれです
 
-23です
+NikonFEとiPhone 15 Proをよく使っています
 
-I am 23 years old.
-
-NikonFE + Ai Nikkor 50mm f/2.0とiPhone 15 Proをよく使っています
-
-The equipment used is Nikon FE + Ai Nikkor 50mm f2.0 and iPhone 15 Pro.
-
-### なぜ写真を撮るのか
-
-最近見た『チ。 ―地球の運動について―』 で腑に落ちたセリフがあります
-
-There’s a line from the movie *Chii. -About the Earth's Movement-* that resonated with me.
-
->*多分感動は寿命の長さより大切なものだと思う。*
->
->*I believe that probably, emotion is more important than the length of life.*
-
-人それぞれ感動はあると思います
-
-Everyone has their own way of feeling moved.
-
-素晴らしい景色を見た時、美味しいものを食べた時、愛する家族と過ごしている時
-
-When seeing a wonderful view, eating something delicious, or spending time with loved ones.
-
-胸にいっぱいに広がる感情
-
-The overwhelming feelings that spread in your chest.
-
-その感情を呼び起こすための鍵として大切に保存しておくために写真を撮っています
-
-I take photos as a key to preserving and evoking those emotions.
-
-### おわりに
+写真と旅行とゲームとバイクに乗るのが好きです
 
 自分が好きな時に更新していきます
 
-I will update it when I like it.
 `;
 
 export async function generateMetadata() {
