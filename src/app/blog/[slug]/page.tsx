@@ -25,10 +25,10 @@ export async function generateMetadata(props: { params: Promise<Params> }) {
   const generatedOgImage = signOgImageUrl({ title, brand: config.blog.name });
 
   return {
-    title,
+    title: `${title} | ${config.blog.name}`,
     description,
     openGraph: {
-      title,
+      title: `${title} | ${config.blog.name}`,
       description,
       images: image ? [generatedOgImage, image] : [generatedOgImage],
     },
