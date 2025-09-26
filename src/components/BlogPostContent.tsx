@@ -24,9 +24,11 @@ export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
           ))}
         </div>
         <div className="text-sm opacity-40 mt-4">
-          {Intl.DateTimeFormat("en-US").format(
-            new Date(publishedAt || createdAt)
-          )}
+          {new Intl.DateTimeFormat("ja-JP", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+          }).format(new Date(publishedAt || createdAt))}
         </div>
       </div>
     </div>
