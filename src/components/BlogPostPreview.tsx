@@ -58,7 +58,7 @@ export const BlogPostPreview: FunctionComponent<{
           <Link href={`/blog/${post.slug}`}>{post.title}</Link>
         </h1>
         <div className="prose lg:prose-lg italic tracking-tighter text-muted-foreground">
-          {formatDate(post.publishedAt || post.updatedAt, "dd MMMM yyyy")}
+          {formatDate(post.publishedAt || post.updatedAt, "yyyy.MM.dd")}
         </div>
         <div className="prose lg:prose-lg leading-relaxed md:text-lg line-clamp-4 text-muted-foreground">
           {post.description}
@@ -66,7 +66,24 @@ export const BlogPostPreview: FunctionComponent<{
         <div className="text-sm text-muted-foreground">
           {post.tags.map((tag) => (
             <div key={tag.id} className="mr-2 inline-block">
-              <Link href={`/tag/${tag.name}`}>#{tag.name}</Link>
+              <Link
+                href={`/tag/${tag.name}`}
+                className="
+                  inline-block
+                  px-3 py-1
+                  rounded-full
+                  bg-muted
+                  text-muted-foreground
+                  hover:bg-accent
+                  hover:text-accent-foreground
+                  transition
+                  transform
+                  hover:-translate-y-0.5
+                  hover:scale-105
+                  hover:shadow
+                "
+              >
+                #{tag.name}</Link>
             </div>
           ))}
         </div>
