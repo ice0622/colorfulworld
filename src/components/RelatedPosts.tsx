@@ -16,7 +16,7 @@ export const RelatedPosts: FunctionComponent<{
   return (
     <div className="my-8">
       <div className="mb-6 text-lg font-semibold tracking-tight">
-        最近の投稿だよ
+        関連記事
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         {posts.slice(0, 3).map((post) => (
