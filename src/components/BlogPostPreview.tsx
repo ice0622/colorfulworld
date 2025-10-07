@@ -70,7 +70,7 @@ export const BlogPostPreview: FunctionComponent<{
         </div>
         <div className="text-sm text-muted-foreground">
           {post.tags.map((tag) => (
-            <div key={tag.id} className="mr-2 inline-block">
+            <div key={tag.id} className="mr-2 mb-2 inline-block">
               <Link
                 href={`/tag/${tag.name}`}
                 className="
