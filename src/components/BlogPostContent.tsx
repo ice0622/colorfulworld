@@ -1,16 +1,35 @@
 "use client";
+
+import { useEffect } from "react";
 import { GetPostResult } from "@/lib/wisp";
 import Link from "next/link";
-import { PostContent } from "./PostContent";
+import hljs from "highlight.js";
+import "highlight.js/styles/github-dark.css";
+
+// 言語登録
+
 
 export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
+  useEffect(() => {
+    if (!post?.content) return; // ← ここで中身を判定する
+    document.querySelectorAll("pre code").forEach((el) => {
+      hljs.highlightElement(el as HTMLElement);
+    });
+  }, [post?.content]);
+
   if (!post) return null;
+
   const { title, publishedAt, createdAt, content, tags } = post;
+
   return (
     <div>
       <div className="prose lg:prose-xl dark:prose-invert mx-auto lg:prose-h1:text-4xl mb-10 lg:mt-20 break-words">
         <h1>{title}</h1>
-        <PostContent content={content} />
+
+        <article
+          className="prose lg:prose-xl dark:prose-invert max-w-none"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
 
         <div className="mt-10 opacity-40 text-sm">
           {tags.map((tag) => (
@@ -23,6 +42,7 @@ export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
             </Link>
           ))}
         </div>
+
         <div className="text-sm opacity-40 mt-4">
           {new Intl.DateTimeFormat("ja-JP", {
             year: "numeric",
