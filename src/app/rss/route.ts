@@ -35,7 +35,7 @@ export async function GET() {
 
   return new NextResponse(xml, {
     headers: {
-      "Content-Type": "application/rss+xml",
+      "Content-Type": "application/rss+xml; charset=utf-8",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "Content-Type",
       "Access-Control-Allow-Methods": "GET",
