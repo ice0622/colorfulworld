@@ -48,7 +48,7 @@ export default function RootLayout({
           <SpeedInsights />
           <Analytics />
           <main>
-            <div className="max-w-3xl mx-auto px-4">
+            <div className="max-w-4xl mx-auto px-4">
               {children}
             </div>
           </main>
