@@ -6,9 +6,6 @@ import Link from "next/link";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
 
-// 言語登録
-
-
 export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
   useEffect(() => {
     if (!post?.content) return; // ← ここで中身を判定する
@@ -23,11 +20,10 @@ export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
 
   return (
     <div>
-      <div className="prose lg:prose-xl dark:prose-invert mx-auto lg:prose-h1:text-4xl mb-10 lg:mt-20 break-words">
+      <div className="prose lg:prose-xl dark:prose-invert mx-auto max-w-4xl mb-10 lg:mt-20 break-words [&_h1]:text-2xl sm:[&_h1]:text-3xl lg:[&_h1]:text-4xl">
         <h1>{title}</h1>
 
         <article
-          className="prose lg:prose-xl dark:prose-invert max-w-none"
           dangerouslySetInnerHTML={{ __html: content }}
         />
 
