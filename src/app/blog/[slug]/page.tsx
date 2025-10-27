@@ -1,5 +1,6 @@
 import { BlogPostContent } from "@/components/BlogPostContent";
 import { CommentSection } from "@/components/CommentSection";
+import { TagList } from "@/components/TagList";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { RelatedPosts } from "@/components/RelatedPosts";
@@ -79,6 +80,7 @@ const Page = async (props: { params: Promise<Params> }) => {
           <RelatedPosts posts={posts} />
           <CommentSection slug={slug} />
         </div>
+        <TagList />
         <Footer />
       </div>
     </>
