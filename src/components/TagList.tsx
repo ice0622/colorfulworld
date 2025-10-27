@@ -17,6 +17,7 @@ interface Post {
 
 export const TagList: FunctionComponent = () => {
   const [tags, setTags] = useState<Tag[]>([]);
+  const [tagCounts, setTagCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const fetchTagsFromPosts = async () => {
@@ -30,15 +31,18 @@ export const TagList: FunctionComponent = () => {
         const res = await fetch(`https://www.wisp.blog/api/v1/${blogId}/posts?limit=all`);
         const data = await res.json();
 
-        // 記事からタグを集めて重複排除
-        const allTags: Tag[] = data.posts
-          .flatMap((post: Post) => post.tags)
-          .reduce((acc: Tag[], tag: Tag) => {
-            if (!acc.find((t) => t.id === tag.id)) acc.push(tag);
-            return acc;
-          }, []);
+        const counts: Record<string, number> = {};
+        const allTags: Tag[] = [];
+
+        data.posts.forEach((post: Post) => {
+          post.tags.forEach((tag) => {
+            if (!allTags.find((t) => t.id === tag.id)) allTags.push(tag);
+            counts[tag.id] = (counts[tag.id] || 0) + 1;
+          });
+        });
 
         setTags(allTags);
+        setTagCounts(counts);
       } catch (err) {
         console.error("タグ取得エラー:", err);
       }
@@ -47,7 +51,7 @@ export const TagList: FunctionComponent = () => {
     fetchTagsFromPosts();
   }, []);
 
-  if (tags.length === 0) return null; // タグが無い場合は非表示
+  if (tags.length === 0) return null;
 
   return (
     <section className="mt-8 md:mt-16 mb-12">
@@ -56,13 +60,17 @@ export const TagList: FunctionComponent = () => {
       </h2>
       <div className="flex flex-col items-start gap-1 mb-4">
         {tags.map((tag) => (
-          <Link
-            key={tag.id}
-            href={`/tag/${tag.name}`}
-            className="text-sm text-primary hover:underline inline-block underline decoration-2 underline-offset-4 decoration-transparent hover:decoration-primary transition"
-          >
-            {tag.name}
-          </Link>
+          <div key={tag.id} className="flex items-center gap-1">
+            <Link
+              href={`/tag/${tag.name}`}
+              className="text-sm text-primary hover:underline inline underline decoration-2 underline-offset-4 decoration-transparent hover:decoration-primary transition"
+            >
+              {tag.name}
+            </Link>
+            <span className="text-xs text-muted-foreground">
+              ({tagCounts[tag.id] || 0})
+            </span>
+          </div>
         ))}
       </div>
     </section>
