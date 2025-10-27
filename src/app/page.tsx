@@ -1,5 +1,6 @@
 import { BlogPostsPreview } from "@/components/BlogPostPreview";
 import { BlogPostsPagination } from "@/components/BlogPostsPagination";
+import { TagList } from "@/components/TagList";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { wisp } from "@/lib/wisp";
@@ -17,6 +18,7 @@ const Page = async (
       <Header />
       <BlogPostsPreview posts={result.posts} />
       <BlogPostsPagination pagination={result.pagination} />
+      <TagList />
       <Footer />
     </div>
   );
