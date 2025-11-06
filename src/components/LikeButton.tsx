@@ -30,11 +30,6 @@ export default function LikeButton({ postId }: { postId: string }) {
       .then((data) => setTotal(Number(data.count ?? 0)))
       .catch(() => setTotal(0));
 
-    // ② 自分の送信済み
-    fetch(`/api/like/my?postId=${postId}&clientId=${clientIdRef.current}`)
-      .then((res) => res.json())
-      .then((data) => setMyCount(Number(data.myCount ?? 0)))
-      .catch(() => setMyCount(0));
   }, [postId]);
 
   const handleClick = () => {
