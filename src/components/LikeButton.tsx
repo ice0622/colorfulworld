@@ -27,7 +27,7 @@ export default function LikeButton({ postId }: { postId: string }) {
     // ① みんなの合計
     fetch(`/api/like?postId=${postId}`)
       .then((res) => res.json())
-      .then((data) => setTotal(Number(data.count ?? 0)))
+      .then((data) => setTotal(Number(data.count ?? "Loading...")))
       .catch(() => setTotal(0));
 
   }, [postId]);
