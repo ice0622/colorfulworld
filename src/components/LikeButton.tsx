@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 const MAX_MY_LIKES = 10;
 
 export default function LikeButton({ postId }: { postId: string }) {
-  const [total, setTotal] = useState(0);
+  const [total, setTotal] = useState<number | string>("Loading...");
   const [myCount, setMyCount] = useState(0);
   const [pulse, setPulse] = useState(false);
 
@@ -25,20 +25,22 @@ export default function LikeButton({ postId }: { postId: string }) {
     if (!postId) return;
 
     // ① みんなの合計
-    fetch(`/api/like?postId=${postId}`)
+    fetch(`/api/like?postId=${encodeURIComponent(postId)}`)
       .then((res) => res.json())
-      .then((data) => setTotal(Number(data.count ?? "Loading...")))
+      .then((data) => {
+        const n = Number(data?.count);
+        setTotal(Number.isFinite(n) ? n : 0);
+      })
       .catch(() => setTotal(0));
-
   }, [postId]);
 
   const handleClick = () => {
     if (!postId) return;
     if (myCount >= MAX_MY_LIKES) return;
 
-    // UI 即時更新
+    // UI 即時更新（total が "Loading..." の場合は 1 にする）
     setMyCount((c) => c + 1);
-    setTotal((t) => t + 1);
+    setTotal((t) => (typeof t === "number" ? t + 1 : 1));
 
     // サーバへ即送信
     fetch("/api/like", {
@@ -50,7 +52,7 @@ export default function LikeButton({ postId }: { postId: string }) {
         add: 1,
       }),
     }).catch(() => {
-      // 通信失敗しても UI は戻さない（もう 1 回押せないから）
+      // 通信失敗しても UI は戻さない
     });
 
     setPulse(true);
@@ -63,8 +65,12 @@ export default function LikeButton({ postId }: { postId: string }) {
   return (
     <div className="w-full max-w-sm mx-auto">
       <div className="text-center mb-3">
-        <span className="text-2xl font-semibold text-black dark:text-white">{total}</span>
-        <div className="text-xs text-black/60 dark:text-white/60">みんなの「🦎」合計</div>
+        <span className="text-2xl font-semibold text-black dark:text-white">
+          {total}
+        </span>
+        <div className="text-xs text-black/60 dark:text-white/60">
+          みんなの「🦎」合計
+        </div>
       </div>
 
       <div className="flex items-center justify-center mb-3">
