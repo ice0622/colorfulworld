@@ -22,9 +22,9 @@ export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
     <div>
       <div className="
   prose lg:prose-xl dark:prose-invert mx-auto max-w-4xl mb-10 lg:mt-20 break-words
-  [&_h1]:text-2xl        /* 24px → h2 とほぼ同等なので少し物足りない */
-  sm:[&_h1]:text-3xl     /* 30px → h2 より確実に大きい */
-  lg:[&_h1]:text-4xl     /* 36px → 元の h1 とほぼ同じ */
+  [&_h1]:text-2xl
+  sm:[&_h1]:text-3xl
+  lg:[&_h1]:text-4xl
 ">
         <h1>{title}</h1>
 

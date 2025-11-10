@@ -12,6 +12,7 @@ import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FunctionComponent } from "react";
+
 interface MenuItem {
   name: string;
   href: string;
@@ -21,9 +22,9 @@ const menuItems: MenuItem[] = [
   { name: "Blog", href: "/" },
   { name: "About", href: "/about" },
 ];
+
 export const Navigation: FunctionComponent = () => {
   const pathname = usePathname();
-
   return (
     <nav>
       <div className="hidden md:flex items-center">
@@ -73,12 +74,23 @@ export const Navigation: FunctionComponent = () => {
 };
 
 export const Header: FunctionComponent = () => {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  // ホームのみ h1、その他はブランド表示を div + aria-label
+  const BrandTag = isHome ? "h1" : "div";
+
   return (
-    <section className="flex items-center justify-between mt-4 md:mt-8 mb-8">
-      <Link href="/">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tighter leading-tight">
+    <section className="flex items-center justify-between mt-4 md:mt-8 mb-8" role="banner">
+      <Link href="/" aria-label={config.blog.name}>
+        <BrandTag
+          className={cn(
+            "text-3xl md:text-4xl font-bold tracking-tighter leading-tight",
+            !isHome && "text-xl md:text-2xl"
+          )}
+        >
           {config.blog.name}
-        </h1>
+        </BrandTag>
       </Link>
       <Navigation />
     </section>
