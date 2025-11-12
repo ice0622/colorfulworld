@@ -1,56 +1,35 @@
 "use client";
 import Link from "next/link";
 import { FunctionComponent, useEffect, useState } from "react";
-
-// タグ型
-interface Tag {
-  id: string;
-  name: string;
-  description?: string | null;
-}
-
-// 記事型（必要な部分だけ）
-interface Post {
-  id: string;
-  tags: Tag[];
-}
+// 共通ファイルから型と関数をインポート
+import { fetchActiveTagsAndCounts, Tag } from "@/lib/tagUtils"; // パスは適宜調整
 
 export const TagList: FunctionComponent = () => {
+  // 共通の Tag[] 型を使用
   const [tags, setTags] = useState<Tag[]>([]);
   const [tagCounts, setTagCounts] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    const fetchTagsFromPosts = async () => {
+    // 共通関数を呼び出す
+    const fetchTags = async () => {
       try {
-        const blogId = process.env.NEXT_PUBLIC_BLOG_ID;
-        if (!blogId) {
-          console.error("NEXT_PUBLIC_BLOG_ID が設定されていません");
-          return;
-        }
+        // ロジック全体がこの1行に置き換わる
+        const { tags, counts } = await fetchActiveTagsAndCounts();
 
-        const res = await fetch(`https://www.wisp.blog/api/v1/${blogId}/posts?limit=all`);
-        const data = await res.json();
-
-        const counts: Record<string, number> = {};
-        const allTags: Tag[] = [];
-
-        data.posts.forEach((post: Post) => {
-          post.tags.forEach((tag) => {
-            if (!allTags.find((t) => t.id === tag.id)) allTags.push(tag);
-            counts[tag.id] = (counts[tag.id] || 0) + 1;
-          });
-        });
-
-        setTags(allTags);
+        // 取得した結果を state にセットする
+        setTags(tags);
         setTagCounts(counts);
+
       } catch (err) {
-        console.error("タグ取得エラー:", err);
+        console.error("TagList でのタグ取得エラー:", err);
+        // エラーハンドリング (必要に応じて)
       }
     };
 
-    fetchTagsFromPosts();
-  }, []);
+    fetchTags();
+  }, []); // 初回マウント時に実行
 
+  // タグが読み込まれるまで何も表示しない (元のコードと同じ)
   if (tags.length === 0) return null;
 
   return (
@@ -68,6 +47,7 @@ export const TagList: FunctionComponent = () => {
               {tag.name}
             </Link>
             <span className="text-xs text-muted-foreground">
+              {/* stateに保存されたカウントを表示 */}
               ({tagCounts[tag.id] || 0})
             </span>
           </div>

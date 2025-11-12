@@ -3,7 +3,9 @@
 import { config } from "@/config";
 import { wisp } from "@/lib/wisp";
 import type { MetadataRoute } from "next";
-import urlJoin from "url-join"; // urlJoinも忘れずにインポート
+import urlJoin from "url-join";
+// TagList.tsx と共通化したロジックをインポート
+import { fetchActiveTagsAndCounts } from "@/lib/tagUtils"; // ※前回作成した共通ファイル
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // --- 1. CMSから動的データを取得 (記事とタグ) ---
@@ -16,11 +18,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  // タグ (Tag) を取得
-  const tagResult = await wisp.getTags();
-  const tags = tagResult.tags.map((tag) => ({
+  // タグ (Tag) を取得 (★ TagList.tsx と同じ共通ロジックを使用)
+  // wisp.getTags() から変更
+  const { tags: activeTags } = await fetchActiveTagsAndCounts();
+
+  const tags = activeTags.map((tag) => ({
     url: urlJoin(config.baseUrl, "tag", tag.name),
-    lastModified: new Date(),
+    lastModified: new Date(), // タグページの最終更新日は（必要ならCMSから取得）
     priority: 0.8,
   }));
 
@@ -31,7 +35,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/", priority: 1.0 },           // トップページ
     { path: "/blog", priority: 0.9 },       // ブログ一覧
     { path: "/tag", priority: 0.8 },        // タグ一覧
-    { path: "/about", priority: 0.9 },      // (app/static/sitemap.ts から持ってきた)
+    { path: "/about", priority: 0.9 },      // aboutページ
   ];
 
   const staticRoutes = staticPaths.map((page) => ({
@@ -44,6 +48,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticRoutes,
     ...posts,
-    ...tags,
+    ...tags, // これで「実際に使われているタグ」だけがサイトマップに含まれます
   ];
 }
