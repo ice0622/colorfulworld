@@ -11,18 +11,16 @@ import { wisp } from "@/lib/wisp";
 import { notFound } from "next/navigation";
 import type { BlogPosting, WithContext } from "schema-dts";
 
-interface Params {
-  slug: string;
-}
-
-// ✅ メタデータ生成（SEO / OGP）
 export async function generateMetadata(props: { params: Promise<Params> }) {
-  const params = await props.params; // ← 必要！
-  const { slug } = params; // ← Promiseではない！
+  const params = await props.params;
+
+  const { slug } = params;
 
   const result = await wisp.getPost(slug);
-  if (!result?.post) {
-    return { title: "記事が見つかりません" };
+  if (!result || !result.post) {
+    return {
+      title: "Blog post not found",
+    };
   }
 
   const { title, description, image } = result.post;
@@ -38,30 +36,35 @@ export async function generateMetadata(props: { params: Promise<Params> }) {
     },
   };
 }
+interface Params {
+  slug: string;
+}
 
-// ✅ メインページ
-export default async function Page(props: { params: Promise<Params> }) {
+const Page = async (props: { params: Promise<Params> }) => {
   const params = await props.params;
+
   const { slug } = params;
 
   const result = await wisp.getPost(slug);
-  if (!result?.post) return notFound();
-
   const { posts } = await wisp.getRelatedPosts({ slug, limit: 3 });
+
+  if (!result || !result.post) {
+    return notFound();
+  }
+
   const { title, publishedAt, updatedAt, image, author } = result.post;
 
-  // JSON-LD構造化データ
   const jsonLd: WithContext<BlogPosting> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: title,
-    image: image || undefined,
-    datePublished: publishedAt ? new Date(publishedAt).toISOString() : undefined,
-    dateModified: new Date(updatedAt).toISOString(),
+    image: image ? image : undefined,
+    datePublished: publishedAt ? publishedAt.toString() : undefined,
+    dateModified: updatedAt.toString(),
     author: {
       "@type": "Person",
-      name: author?.name || undefined,
-      image: author?.image || undefined,
+      name: author.name ?? undefined,
+      image: author.image ?? undefined,
     },
   };
 
@@ -84,4 +87,6 @@ export default async function Page(props: { params: Promise<Params> }) {
       </div>
     </>
   );
-}
+};
+
+export default Page;
