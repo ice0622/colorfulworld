@@ -16,7 +16,7 @@ const buildConfig = () => {
         title: {
           absolute: defaultTitle,
           default: defaultTitle,
-          template: `%s - ${defaultTitle}`,
+          template: `%s`,
         },
         description: defaultDescription,
       },
