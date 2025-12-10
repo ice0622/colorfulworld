@@ -32,12 +32,10 @@ export async function generateMetadata(
     description,
     openGraph: {
       title,
-      description,
       images: image ? [generatedOgImage, image] : [generatedOgImage],
     },
     twitter: {
       title,
-      description,
       images: image ? [generatedOgImage, image] : [generatedOgImage],
     },
     alternates: {
@@ -64,11 +62,6 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
     image: image || undefined,
     datePublished: publishedAt?.toString(),
     dateModified: updatedAt?.toString(),
-    author: {
-      "@type": "Person",
-      name: author.name,
-      image: author.image,
-    },
   };
 
   return (
