@@ -9,27 +9,28 @@ import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import { wisp } from "@/lib/wisp";
 import { notFound } from "next/navigation";
+import type { Metadata, ResolvingMetadata } from "next";
 import type { BlogPosting, WithContext } from "schema-dts";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata(
+  { params }: { params: { slug: string } },
+  _parent: ResolvingMetadata
+): Promise<Metadata> {
   const { slug } = params;
   const result = await wisp.getPost(slug);
 
-  if (!result || !result.post) {
-    return {
-      title: "Not Found", // 👈 template と結合され "Not Found - Travel with Samantha"
-    };
+  if (!result?.post) {
+    return { title: "Not Found" };
   }
 
   const { title, description, image } = result.post;
   const generatedOgImage = signOgImageUrl({ title, brand: config.blog.name });
 
   return {
-    // 👇絶対に結合しない！記事タイトルそのままだけ！
     title,
     description,
     openGraph: {
-      title, // 👉 OGPも統一
+      title,
       description,
       images: image ? [generatedOgImage, image] : [generatedOgImage],
     },
@@ -44,12 +45,18 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-const Page = async ({ params }: { params: { slug: string } }) => {
+type PageProps = {
+  params: {
+    slug: string;
+  };
+};
+
+const Page = async ({ params }: PageProps) => {
   const { slug } = params;
   const result = await wisp.getPost(slug);
   const { posts } = await wisp.getRelatedPosts({ slug, limit: 3 });
 
-  if (!result || !result.post) return notFound();
+  if (!result?.post) return notFound();
 
   const { title, publishedAt, updatedAt, image, author } = result.post;
 
