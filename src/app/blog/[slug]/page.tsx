@@ -12,7 +12,7 @@ import { notFound } from "next/navigation";
 import type { BlogPosting, WithContext } from "schema-dts";
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const { slug } = await params;
+  const { slug } = params;
   const result = await wisp.getPost(slug);
 
   if (!result || !result.post) {
@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 const Page = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = await params;
+  const { slug } = params;
   const result = await wisp.getPost(slug);
   const { posts } = await wisp.getRelatedPosts({ slug, limit: 3 });
 
