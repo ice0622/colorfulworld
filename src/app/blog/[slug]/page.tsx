@@ -13,9 +13,10 @@ import type { Metadata, ResolvingMetadata } from "next";
 import type { BlogPosting, WithContext } from "schema-dts";
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } },
+  props: { params: Promise<{ slug: string }> },
   _parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const params = await props.params;
   const { slug } = params;
   const result = await wisp.getPost(slug);
 
@@ -45,13 +46,8 @@ export async function generateMetadata(
   };
 }
 
-type PageProps = {
-  params: {
-    slug: string;
-  };
-};
-
-const Page = async ({ params }: PageProps) => {
+const Page = async (props: { params: Promise<{ slug: string }> }) => {
+  const params = await props.params;
   const { slug } = params;
   const result = await wisp.getPost(slug);
   const { posts } = await wisp.getRelatedPosts({ slug, limit: 3 });
