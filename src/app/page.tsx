@@ -4,6 +4,8 @@ import { TagList } from "@/components/TagList";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { wisp } from "@/lib/wisp";
+import GlobeWrapper from "@/components/GlobeWrapper";
+
 
 const Page = async (
   props: {
@@ -16,6 +18,9 @@ const Page = async (
   return (
     <div className="container mx-auto px-5 mb-10">
       <Header />
+      <div className="flex justify-center my-10">
+        <GlobeWrapper />
+      </div>
       <BlogPostsPreview posts={result.posts} />
       <BlogPostsPagination pagination={result.pagination} />
       <TagList />
