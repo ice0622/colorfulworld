@@ -16,11 +16,7 @@ const Page = () => {
           <h1 className="text-3xl font-bold tracking-tight">
             旅の記録
           </h1>
-          <p className="text-muted-foreground text-sm">
-            地球儀のピンをクリックして記事を読む
-          </p>
         </div>
-
         <GlobeWrapper />
 
         <Link
