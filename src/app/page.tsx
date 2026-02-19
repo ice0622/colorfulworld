@@ -1,30 +1,39 @@
-import { BlogPostsPreview } from "@/components/BlogPostPreview";
-import { BlogPostsPagination } from "@/components/BlogPostsPagination";
-import { TagList } from "@/components/TagList";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { wisp } from "@/lib/wisp";
 import GlobeWrapper from "@/components/GlobeWrapper";
+import Link from "next/link";
 
-
-const Page = async (
-  props: {
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-  }
-) => {
-  const searchParams = await props.searchParams;
-  const page = searchParams.page ? parseInt(searchParams.page as string) : 1;
-  const result = await wisp.getPosts({ limit: 6, page });
+const Page = () => {
   return (
-    <div className="container mx-auto px-5 mb-10">
-      <Header />
-      <div className="flex justify-center my-10">
-        <GlobeWrapper />
+    <div className="flex flex-col min-h-screen">
+      <div className="container mx-auto px-5">
+        <Header />
       </div>
-      <BlogPostsPreview posts={result.posts} />
-      <BlogPostsPagination pagination={result.pagination} />
-      <TagList />
-      <Footer />
+
+      {/* メインコンテンツ：地球儀ヒーロー */}
+      <main className="flex-1 flex flex-col items-center justify-center gap-6 py-10">
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold tracking-tight">
+            旅の記録
+          </h1>
+          <p className="text-muted-foreground text-sm">
+            地球儀のピンをクリックして記事を読む
+          </p>
+        </div>
+
+        <GlobeWrapper />
+
+        <Link
+          href="/blog"
+          className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
+        >
+          すべての記事を見る →
+        </Link>
+      </main>
+
+      <div className="container mx-auto px-5">
+        <Footer />
+      </div>
     </div>
   );
 };

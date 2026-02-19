@@ -19,7 +19,7 @@ interface MenuItem {
   openInNewTab?: boolean;
 }
 const menuItems: MenuItem[] = [
-  { name: "Blog", href: "/" },
+  { name: "Blog", href: "/blog" },
   { name: "About", href: "/about" },
 ];
 
@@ -84,10 +84,7 @@ export const Header: FunctionComponent = () => {
     <section className="flex items-center justify-between mt-4 md:mt-8 mb-8" role="banner">
       <Link href="/" aria-label={config.blog.name}>
         <BrandTag
-          className={cn(
-            "text-3xl md:text-4xl font-bold tracking-tighter leading-tight",
-            !isHome && "text-xl md:text-2xl"
-          )}
+          className="text-xl md:text-2xl font-bold tracking-tighter leading-tight"
         >
           {config.blog.name}
         </BrandTag>
