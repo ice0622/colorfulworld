@@ -1,8 +1,9 @@
 "use client";
 
 import createGlobe from "cobe";
-import { useEffect, useRef } from "react";
-import { POST_LOCATIONS } from "@/lib/locations";
+import { useEffect, useRef, useState } from "react";
+import { POST_LOCATIONS, PostLocation } from "@/lib/locations";
+import LocationCardOverlay from "@/components/LocationCardOverlay";
 
 const locationToAngles = (lat: number, lng: number): [number, number] => {
   return [
@@ -16,6 +17,14 @@ export default function Globe() {
   const focusRef = useRef<[number, number]>(
     locationToAngles(POST_LOCATIONS[0].lat, POST_LOCATIONS[0].lng)
   );
+  const [selectedLocation, setSelectedLocation] = useState<PostLocation | null>(null);
+  // ボタンを押した時の「予約地点」。到着したらカードを開く
+  const pendingLocationRef = useRef<PostLocation | null>(null);
+  // 到着時に呼ぶコールバック。useEffect外に置くことで常に最新のstateを参照できる
+  const onArriveRef = useRef<((loc: PostLocation) => void) | null>(null);
+  onArriveRef.current = (loc) => {
+    setSelectedLocation(loc); // カードを表示
+  };
 
   useEffect(() => {
     let width = 0;
@@ -47,6 +56,9 @@ export default function Globe() {
         size: loc.size,
       })),
       onRender: (state) => {
+        // 常にサイズだけはセット（画面リサイズ対応）
+        state.width = width * 2;
+        state.height = width * 2;
         state.phi = currentPhi;
         state.theta = currentTheta;
         const [focusPhi, focusTheta] = focusRef.current;
@@ -58,8 +70,16 @@ export default function Globe() {
           currentPhi -= distNegative * 0.08;
         }
         currentTheta = currentTheta * 0.92 + focusTheta * 0.08;
-        state.width = width * 2;
-        state.height = width * 2;
+        // 目標地点に十分近づいたら到着とみなしてカードを表示
+        const dist = Math.min(distPositive, distNegative);
+        if (
+          pendingLocationRef.current &&
+          dist < 0.01 &&
+          Math.abs(currentTheta - focusTheta) < 0.01
+        ) {
+          onArriveRef.current?.(pendingLocationRef.current);
+          pendingLocationRef.current = null;
+        }
       },
     });
 
@@ -85,12 +105,13 @@ export default function Globe() {
     >
       <canvas
         ref={canvasRef}
+        className={[
+          "transition-all duration-1000 ease-in-out",
+          selectedLocation ? "blur-sm opacity-50 scale-95" : "",
+        ].join(" ")}
         style={{
-          width: "100%",
-          height: "100%",
-          contain: "layout paint size",
-          opacity: 0,
-          transition: "opacity 1s ease",
+          width: "100%", height: "100%", contain: "layout paint size",
+          opacity: 0, transition: "opacity 1s ease"
         }}
       />
       <div className="flex flex-wrap justify-center items-center gap-2 mt-3">
@@ -100,6 +121,8 @@ export default function Globe() {
             key={loc.slug}
             onClick={() => {
               focusRef.current = locationToAngles(loc.lat, loc.lng);
+              pendingLocationRef.current = loc;  // 到着したらカードを開く予約
+              setSelectedLocation(null);         // 前のカードを即閉じる
             }}
             className="bg-white/10 hover:bg-white/20 transition-colors rounded-lg px-3 py-1 text-sm cursor-pointer"
           >
@@ -107,6 +130,14 @@ export default function Globe() {
           </button>
         ))}
       </div>
+
+      <LocationCardOverlay
+        location={selectedLocation}
+        onClose={() => {
+          setSelectedLocation(null); // カードを閉じる
+        }}
+      />
+
     </div>
   );
 }
