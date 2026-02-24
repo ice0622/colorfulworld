@@ -29,12 +29,12 @@ export async function GET(req: NextRequest) {
   }
 
   const key = `likes:${postId}`;
-  const count = await redis.get<number>(key);
+  const count = await redis.hget<number>(key, "count");
   return Response.json({ count: count ?? 0 });
 }
 
 export async function POST(req: NextRequest) {
-  const { postId } = await req.json();
+  const { postId, title, slug } = await req.json();
   const ip = req.headers.get("x-forwarded-for") ?? "unknown";
 
   if (!postId) return Response.json({ error: "postId is required" }, { status: 400 });
@@ -44,6 +44,15 @@ export async function POST(req: NextRequest) {
   }
 
   const key = `likes:${postId}`;
-  const count = await redis.incr(key);
+
+  // count をアトミックにインクリメント、メタデータを同一 Hash に保存
+  const [count] = await Promise.all([
+    redis.hincrby(key, "count", 1),
+    redis.hset(key, {
+      title: title ?? "",
+      slug: slug ?? "",
+    }),
+  ]);
+
   return Response.json({ count });
 }
