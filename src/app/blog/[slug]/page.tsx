@@ -74,7 +74,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
         <Header />
         <div className="max-w-prose mx-auto text-xl">
           <BlogPostContent post={result.post} />
-          <LikeButton postId={result.post.id} />
+          <LikeButton postId={result.post.id} title={title} slug={slug} />
           <RelatedPosts posts={posts} />
           <CommentSection slug={slug} />
         </div>

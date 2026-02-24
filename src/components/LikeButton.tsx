@@ -3,7 +3,15 @@ import { useEffect, useRef, useState } from "react";
 
 const MAX_MY_LIKES = 10;
 
-export default function LikeButton({ postId }: { postId: string }) {
+export default function LikeButton({
+  postId,
+  title,
+  slug,
+}: {
+  postId: string;
+  title?: string;
+  slug?: string;
+}) {
   const [total, setTotal] = useState<number | string>("Loading...");
   const [myCount, setMyCount] = useState(0);
   const [pulse, setPulse] = useState(false);
@@ -48,6 +56,8 @@ export default function LikeButton({ postId }: { postId: string }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         postId,
+        title,
+        slug,
         clientId: clientIdRef.current,
         add: 1,
       }),
