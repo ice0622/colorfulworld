@@ -34,8 +34,12 @@ export const Navigation: FunctionComponent = () => {
               href={item.href}
               target={item.openInNewTab ? "_blank" : "_self"}
               className={cn(
-                "hover:text-gray-900",
-                pathname === item.href && "font-semibold"
+                "relative transition-colors duration-200",
+                "hover:text-gray-900 dark:hover:text-white",
+                "after:absolute after:bottom-[-2px] after:left-0 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full",
+                pathname === item.href
+                  ? "font-semibold after:!w-full"
+                  : ""
               )}
             >
               {item.name}
