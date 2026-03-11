@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="google-site-verification" content="5SJR2In0L-HqUbE-dpclhx3CD8bVYyu-Pr28BZbCHAY" />
+        <meta name="google-site-verification" content="9W9hOu8rbEwlK1r5X4PLavU9wMqaSPMo50l5pvFi-dI" />
       </head>
       <body
         className={cn(
