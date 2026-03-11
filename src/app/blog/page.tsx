@@ -4,6 +4,15 @@ import { TagList } from "@/components/TagList";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { wisp } from "@/lib/wisp";
+import { config } from "@/config";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Blog",
+  alternates: {
+    canonical: `${config.baseUrl}/blog`,
+  },
+};
 
 const Page = async (
   props: {

@@ -11,6 +11,9 @@ import { signOgImageUrl } from "@/lib/og-image";
 export const metadata: Metadata = {
   title: "About Me",
   description: "Learn more about Ayase and her travel adventures",
+  alternates: {
+    canonical: `${config.baseUrl}/about`,
+  },
   openGraph: {
     title: "About Me",
     description: "Learn more about Ayase and her travel adventures",

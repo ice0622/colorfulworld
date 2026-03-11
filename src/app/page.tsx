@@ -2,6 +2,14 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import GlobeWrapper from "@/components/GlobeWrapper";
 import Link from "next/link";
+import { config } from "@/config";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: config.baseUrl,
+  },
+};
 
 const Page = () => {
   return (
