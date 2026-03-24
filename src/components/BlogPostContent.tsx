@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { GetPostResult } from "@/lib/wisp";
+import type { GetPostResult } from "@/types/content";
 import Link from "next/link";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";

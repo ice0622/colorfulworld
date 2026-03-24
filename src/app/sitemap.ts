@@ -1,7 +1,7 @@
 // app/sitemap.ts (これ1つだけを app/ 直下に置く)
 
 import { config } from "@/config";
-import { wisp } from "@/lib/wisp";
+import { getPosts } from "@/lib/content";
 import type { MetadataRoute } from "next";
 import urlJoin from "url-join";
 // TagList.tsx と共通化したロジックをインポート
@@ -11,10 +11,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // --- 1. CMSから動的データを取得 (記事とタグ) ---
 
   // 記事 (Post) を取得
-  const postResult = await wisp.getPosts({ limit: 1000 }); // 念のため件数を多く
+  const postResult = await getPosts({ limit: 1000 }); // 全件取得
   const posts = postResult.posts.map((post) => ({
     url: urlJoin(config.baseUrl, "blog", post.slug),
-    lastModified: new Date(post.updatedAt),
+    lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(),
     priority: 0.8,
   }));
 

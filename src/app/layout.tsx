@@ -11,6 +11,7 @@ import { Analytics } from "@vercel/analytics/next"
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://colorfulworld.jp"),
   title: {
     absolute: config.blog.metadata.title.absolute,
     default: config.blog.metadata.title.default,
@@ -20,6 +21,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: config.blog.metadata.title.default,
     description: config.blog.metadata.description,
+    url: "https://colorfulworld.jp",
+    siteName: config.blog.name,
     images: [
       signOgImageUrl({
         title: config.blog.name,

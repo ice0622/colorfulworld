@@ -3,7 +3,7 @@ import { BlogPostsPagination } from "@/components/BlogPostsPagination";
 import { TagList } from "@/components/TagList";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { wisp } from "@/lib/wisp";
+import { getPosts } from "@/lib/content";
 import { config } from "@/config";
 import type { Metadata } from "next";
 
@@ -21,7 +21,7 @@ const Page = async (
 ) => {
   const searchParams = await props.searchParams;
   const page = searchParams.page ? parseInt(searchParams.page as string) : 1;
-  const result = await wisp.getPosts({ limit: 6, page });
+  const result = await getPosts({ limit: 6, page });
   return (
     <div className="container mx-auto px-5 mb-10">
       <Header />
