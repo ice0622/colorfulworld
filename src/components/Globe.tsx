@@ -58,11 +58,11 @@ export default function Globe() {
       mapSamples: 16000,
       mapBrightness: 1.2,
       baseColor: [1, 1, 1],
-      markerColor: [0.35, 0.85, 1.0],
+      markerColor: [1.0, 1.0, 1.0],   // 白く輝く（白黒地球でも目立つ）
       glowColor: [1.2, 1.2, 1.2],
       markers: POST_LOCATIONS.map((loc) => ({
         location: [loc.lat, loc.lng] as [number, number],
-        size: loc.size,
+        size: loc.size * 1.5,             // マーカーを大きく・目立たせる
         id: loc.slug,
       })),
     });
