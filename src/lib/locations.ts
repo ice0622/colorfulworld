@@ -19,7 +19,7 @@ export const POST_LOCATIONS: PostLocation[] = [
     name: "東京",
     lat: 35.6895,
     lng: 139.6917,
-    size: 0.07,
+    size: 0.02,
     wispTags: ["TOKYO"],
   },
   {
@@ -27,7 +27,7 @@ export const POST_LOCATIONS: PostLocation[] = [
     name: "フランス",
     lat: 48.8566,
     lng: 2.3522,
-    size: 0.07,
+    size: 0.02,
     wispTags: ["FRANCE"],
   },
   {
@@ -35,7 +35,7 @@ export const POST_LOCATIONS: PostLocation[] = [
     name: "マンチェスター",
     lat: 53.4808,
     lng: -2.2426,
-    size: 0.07,
+    size: 0.02,
     wispTags: ["MANCHESTER"],
   },
   {
@@ -43,7 +43,7 @@ export const POST_LOCATIONS: PostLocation[] = [
     name: "リバプール",
     lat: 53.4084,
     lng: -2.9916,
-    size: 0.07,
+    size: 0.02,
     wispTags: ["LIVERPOOL"],
   },
   {
@@ -51,7 +51,7 @@ export const POST_LOCATIONS: PostLocation[] = [
     name: "上海",
     lat: 31.2304,
     lng: 121.4737,
-    size: 0.07,
+    size: 0.02,
     wispTags: ["CHINA"],
   },
 ];
