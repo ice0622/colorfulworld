@@ -4,11 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { PostLocation } from "@/lib/locations";
-import { wisp } from "@/lib/wisp";
-import { GetPostsResult } from "@wisp-cms/client";
-
-// Wisp の posts 配列の要素型をエイリアスしておく
-type Post = GetPostsResult["posts"][0];
+import type { Post } from "@/types/content";
 
 type Props = {
   location: PostLocation | null;
@@ -35,16 +31,27 @@ export default function LocationCardOverlay({ location, onClose }: Props) {
     setLoading(true);
     setPost(null);
 
-    wisp
-      .getPosts({ tags: location.wispTags, limit: "all" })
-      .then(({ posts }) => {
+    // locationSlug で検索（優先）。ヒットが0件のときは tags にフォールバック
+    const locationQuery = `/api/posts?locationSlug=${encodeURIComponent(location.slug)}&limit=all`;
+    const tagsQuery = location.tags.join(",");
+    const tagsFallbackQuery = `/api/posts?tags=${encodeURIComponent(tagsQuery)}&limit=all`;
+
+    fetch(locationQuery)
+      .then((res) => res.json())
+      .then(async ({ posts: locPosts }: { posts: Post[] }) => {
+        if (locPosts.length > 0) return locPosts;
+        // フォールバック: tags で再検索
+        const res = await fetch(tagsFallbackQuery);
+        const { posts: tagPosts } = await res.json() as { posts: Post[] };
+        return tagPosts;
+      })
+      .then((posts: Post[]) => {
         // ② image がある記事だけ絞り込む
         const withImage = posts.filter((p) => p.image);
         if (withImage.length === 0) {
           // 画像なし記事しかない場合はそのまま全件からランダム
-          const all = posts;
-          if (all.length > 0) {
-            setPost(all[Math.floor(Math.random() * all.length)]);
+          if (posts.length > 0) {
+            setPost(posts[Math.floor(Math.random() * posts.length)]);
           }
         } else {
           // ③ ランダムに1件選ぶ

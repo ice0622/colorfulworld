@@ -14,11 +14,7 @@ export const Footer: FunctionComponent = () => {
           © {config.blog.copyright} {new Date().getFullYear()}
         </div>
         <div className="text-xs text-muted-foreground hidden lg:block">
-          <Link
-            href={`https://wisp.blog/?utm_source=next-js-template&utm_medium=web&utm_campaign=${config.baseUrl}`}
-          >
-            Blog powered by wisp
-          </Link>
+          {config.blog.copyright}
         </div>
         <div className="flex items-center gap-2">
           <Link href="/rss" className="w-auto inline-flex">
@@ -31,11 +27,7 @@ export const Footer: FunctionComponent = () => {
       </div>
       {/* 小画面用コピーライト */}
       <div className="text-xs text-muted-foreground lg:hidden">
-        <Link
-          href={`https://wisp.blog/?utm_source=next-js-template&utm_medium=web&utm_campaign=${config.baseUrl}`}
-        >
-          Blog powered by wisp
-        </Link>
+        © {config.blog.copyright} {new Date().getFullYear()}
       </div>
     </footer>
   );

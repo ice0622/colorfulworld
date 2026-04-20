@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { GetPostsResult } from "@/lib/wisp";
+import type { GetPostsResult } from "@/types/content";
 import { formatDate } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
@@ -63,7 +63,7 @@ export const BlogPostPreview: FunctionComponent<{
           </Link>
         </h1>
         <div className="prose lg:prose-lg italic tracking-tighter text-muted-foreground">
-          {formatDate(post.publishedAt || post.updatedAt, "yyyy.MM.dd")}
+          {formatDate(post.publishedAt || post.updatedAt || post.createdAt, "yyyy.MM.dd")}
         </div>
         <div className="prose lg:prose-lg leading-relaxed md:text-lg line-clamp-4 text-muted-foreground">
           {post.description}

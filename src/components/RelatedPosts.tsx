@@ -1,7 +1,7 @@
 "use client";
 
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
-import type { GetRelatedPostsResult } from "@wisp-cms/client";
+import type { GetRelatedPostsResult } from "@/types/content";
 import Image from "next/image";
 import Link from "next/link";
 import type { FunctionComponent } from "react";
