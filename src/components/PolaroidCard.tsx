@@ -30,16 +30,24 @@ export default function PolaroidCard({ location, isActive }: Props) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
+
     wisp
       .getPosts({ tags: location.wispTags, limit: 1 })
       .then(({ posts }) => {
-        if (posts.length > 0) setPost(posts[0]);
+        if (!cancelled && posts.length > 0) {
+          setPost(posts[0]);
+        }
       })
-      .finally(() => setLoading(false));
-  }, [location]);
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
 
-  if (loading || !post) return null;
+    return () => {
+      cancelled = true;
+    };
+  }, [location]);
 
   const label =
     location.slug.charAt(0).toUpperCase() + location.slug.slice(1);
@@ -50,48 +58,59 @@ export default function PolaroidCard({ location, isActive }: Props) {
         position: "absolute",
         ...({
           positionAnchor: `--cobe-${location.slug}`,
-          opacity: isActive
-            ? `var(--cobe-visible-${location.slug}, 0)`
-            : "0",
+          opacity: isActive ? `var(--cobe-visible-${location.slug}, 0)` : "0",
           left: "anchor(center)",
           bottom: "anchor(top)",
         } as React.CSSProperties),
-        transform: "translate(-50%, -10px)",
-        pointerEvents: "auto",
+        transform:
+          `translate(-50%, calc(-10px + (1 - var(--cobe-visible-${location.slug}, 0)) * 12px)) ` +
+          `scale(calc(0.92 + var(--cobe-visible-${location.slug}, 0) * 0.08))`,
+        pointerEvents: isActive && post ? "auto" : "none",
         zIndex: 10,
-        transition: "opacity 0.3s ease",
+        filter: `blur(calc((1 - var(--cobe-visible-${location.slug}, 0)) * 6px))`,
+        transition: "opacity 0.3s ease, transform 0.3s ease, filter 0.3s ease",
       }}
     >
-      <Link href={`/blog/${post.slug}`} className="block">
-        {/* ポラロイド本体 */}
-        <div
-          className={`bg-white shadow-xl border border-gray-200 ${CARD_WIDTH} ${PADDING_TOP} ${PADDING_BTM}`}
-        >
-          {/* 写真 */}
-          <div className="relative aspect-square overflow-hidden bg-gray-100">
-            {post.image ? (
-              <Image
-                src={post.image}
-                alt={post.title}
-                fill
-                className="object-cover"
-                sizes={PHOTO_SIZES}
-              />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center text-gray-400 text-[10px] p-1 text-center leading-tight">
-                {post.title}
-              </div>
-            )}
-          </div>
-
-          {/* ラベル（Geist Pixel） */}
+      {post ? (
+        <Link href={`/blog/${post.slug}`} className="block">
           <div
-            className={`mt-1 text-center text-gray-800 tracking-[0.08em] ${LABEL_SIZE} ${geistPixel.className}`}
+            className={`bg-white shadow-xl border border-gray-200 ${CARD_WIDTH} ${PADDING_TOP} ${PADDING_BTM}`}
+          >
+            <div className="relative aspect-square overflow-hidden bg-gray-100">
+              {post.image ? (
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  sizes={PHOTO_SIZES}
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-400 text-[10px] p-1 text-center leading-tight">
+                  {post.title}
+                </div>
+              )}
+            </div>
+
+            <div
+              className={`mt-1 text-center text-gray-800 tracking-[0.08em] ${LABEL_SIZE} ${geistPixel.className}`}
+            >
+              {label}
+            </div>
+          </div>
+        </Link>
+      ) : loading ? (
+        <div
+          className={`bg-white/90 shadow-xl border border-gray-200 ${CARD_WIDTH} ${PADDING_TOP} ${PADDING_BTM}`}
+        >
+          <div className="aspect-square bg-gray-100 animate-pulse" />
+          <div
+            className={`mt-1 text-center text-gray-500 tracking-[0.08em] ${LABEL_SIZE} ${geistPixel.className}`}
           >
             {label}
           </div>
         </div>
-      </Link>
+      ) : null}
     </div>
   );
 }

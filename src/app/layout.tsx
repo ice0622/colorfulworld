@@ -37,6 +37,9 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="google-site-verification" content="Zz6bJhYQXG5-XM8xBRrvrtx1DcqdS8FzXOzolhqq_xg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Hannari&display=swap" rel="stylesheet" />
       </head>
       <body
         className={cn(
