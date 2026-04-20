@@ -1,5 +1,4 @@
 import { BlogPostContent } from "@/components/BlogPostContent";
-import { CommentSection } from "@/components/CommentSection";
 import LikeButton from "@/components/LikeButton";
 import { TagList } from "@/components/TagList";
 import { Footer } from "@/components/Footer";
@@ -76,7 +75,6 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
           <BlogPostContent post={result.post} />
           <LikeButton postId={result.post.id} title={title} slug={slug} />
           <RelatedPosts posts={posts} />
-          <CommentSection slug={slug} />
         </div>
         <TagList />
         <Footer />

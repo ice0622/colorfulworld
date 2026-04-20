@@ -5,12 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { GeistPixelSquare } from "geist/font/pixel";
 import { PostLocation } from "@/lib/locations";
-import { wisp } from "@/lib/wisp";
-import { GetPostsResult } from "@wisp-cms/client";
+import type { Post } from "@/types/content";
 
 const geistPixel = GeistPixelSquare;
-
-type Post = GetPostsResult["posts"][0];
 
 type Props = {
   location: PostLocation;
@@ -33,9 +30,10 @@ export default function PolaroidCard({ location, isActive }: Props) {
     let cancelled = false;
     setLoading(true);
 
-    wisp
-      .getPosts({ tags: location.wispTags, limit: 1 })
-      .then(({ posts }) => {
+    const tagsQuery = location.tags.join(",");
+    fetch(`/api/posts?tags=${encodeURIComponent(tagsQuery)}&limit=1`)
+      .then((res) => res.json())
+      .then(({ posts }: { posts: Post[] }) => {
         if (!cancelled && posts.length > 0) {
           setPost(posts[0]);
         }

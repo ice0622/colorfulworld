@@ -1,6 +1,6 @@
 # 脱WispCMS 移行計画
 
-最終更新: 2026-03-19
+最終更新: 2026-04-20
 
 ---
 
@@ -8,28 +8,16 @@
 
 ### 執筆・編集環境
 - **PC**: Obsidian（メイン執筆）
-- **スマホ**: Obsidian Mobile（執筆補助） + 管理画面（画像アップロードメイン）
+- **スマホ**: Obsidian Mobile（執筆補助）
 
 ### 画像要件
-- 対応形式: JPEG / JPG / PNG / HEIC / HEIF / RAW（ARW・CR2・NEF等）
-- 圧縮なしで原本保持。配信時のみ最適化（WebP/AVIF）
-- スマホからは管理画面で直接アップロード → URLコピー → Obsidianに貼る
-- PCからはObsidian経由でGit pushし、Actions自動処理
-
-### ストレージ・配信
-- **Cloudflare R2**: 原本保存（高画質アーカイブ・公開用WebP・サムネイル）
-- **Cloudflare CDN**: Image Resizingで用途別配信
-- 独自CDNドメイン: `https://cdn.colorfulworld.jp/`
+- 短期: `public/images/posts/{year}/{month}/` で静的運用
+- URL は `/images/...` のルート相対パスに統一（Markdown・frontmatter ともに外部URLを書かない）
+- 将来: 同じパス体系を CDN にミラーして配信先だけ差し替え（コンテンツ書き換え不要）
 
 ### コンテンツ管理
-- Gitリポジトリ（content-repo）でMarkdown管理
+- Gitリポジトリ内 `content/posts/` でMarkdown管理（当面継続）
 - frontmatterで記事メタを完全管理
-
-### 管理画面
-- 画像ギャラリー（サムネイル一覧）
-- ワンクリックURLコピー
-- 直接アップロード機能（スマホ対応）
-- 認証付き（`/admin/*`）
 
 ---
 
@@ -37,20 +25,20 @@
 
 ```yaml
 ---
-number: 1                          # 記事連番（一意）
-slug: "article-slug"               # URL識別子
-tags:                              # タグ（複数可）
+number: 1
+slug: "article-slug"
+tags:
   - travel
   - photography
-date: "2026-03-19T12:00:00.000Z"   # 公開日時
+date: "2026-03-19T12:00:00.000Z"
 updated: "2026-03-19T12:00:00.000Z"
-location: "Tokyo, Japan"           # 撮影・執筆場所
+location: "Tokyo, Japan"
 title: "記事タイトル"
 description: "記事の概要（OG/meta用）"
-metaTags:                          # 追加メタタグ（SEO拡張用）
+metaTags:
   - "photography"
   - "japan"
-coverImage: "https://cdn.colorfulworld.jp/web/2026/03/cover.webp"
+coverImage: "/images/posts/2026/03/cover.webp"
 featured: false
 draft: false
 ---
@@ -58,111 +46,76 @@ draft: false
 
 ---
 
-## R2バケット構成
+## 画像ディレクトリ構成
 
 ```
-colorfulworld-images/
-  ├── originals/          # 原本（RAW/HEIC含む）- 非公開
-  │   └── 2026/03/photo.arw
-  ├── web/                # 公開用WebP（配信メイン）
-  │   └── 2026/03/photo.webp
-  └── thumbnails/         # 管理画面用サムネイル（400px）
-      └── 2026/03/photo_thumb.webp
+public/images/
+  ├── posts/              # 記事画像（coverImage + 本文内画像）
+  │   └── 2026/03/
+  │       └── photo.webp
+  ├── ui/                 # サイト装飾・共通画像
+  │   └── placeholder.webp
+  └── (将来) originals/  # 原本は別ストレージを検討
 ```
 
 ---
 
 ## 移行フェーズ
 
-### Phase 0：基盤設計（今ここ）
-- [ ] frontmatterスキーマ確定 ✅
-- [ ] content-repo構成決定
-- [ ] R2バケット構成確定
-- [ ] ドメイン型（Post/Tag）設計
+### ✅ 完了済み
 
-### Phase 1：コンテンツ層の自前化
-- [ ] `src/lib/content.ts` 作成（getPosts/getPost/getTags/getRelatedPosts）
-- [ ] ドメイン型定義（Wisp型を排除）
-- [ ] content-repo作成 + Obsidian vault設定
-- [ ] 既存記事をmd+frontmatterで移行（WispからMarkdownエクスポート）
-- [ ] `_template.md` をスキーマに合わせて更新 ✅
+- [x] frontmatterスキーマ確定
+- [x] `src/lib/content.ts` 作成（getPosts/getPost/getTags/getRelatedPosts）
+- [x] ドメイン型定義（Wisp型を排除 → `src/types/content.ts`）
+- [x] `blog/page.tsx` → content.ts経由
+- [x] `blog/[slug]/page.tsx` → content.ts経由
+- [x] `tag/page.tsx` / `tag/[slug]/page.tsx` → content.ts経由
+- [x] `RelatedPosts.tsx` → ローカル関連記事ロジック
+- [x] `sitemap.ts` → content.ts経由
+- [x] `rss/route.ts` → content.ts経由
+- [x] `LocationCardOverlay.tsx` → /api/posts 経由
+- [x] `PolaroidCard.tsx` → /api/posts 経由（Wisp依存除去）
+- [x] `CommentForm.tsx` / `CommentSection.tsx` 削除（コメント機能廃止）
+- [x] `wisp.ts` スタブ削除
+- [x] `@wisp-cms/client` / `@wisp-cms/react-custom-component` パッケージ削除
+- [x] `next.config.mjs` imagedelivery.net 前提を除去
+- [x] `_template.md` をスキーマに合わせて更新
 
-### Phase 2：サイト表示の移行（P0）
-- [ ] `blog/page.tsx` → content.ts経由に差し替え
-- [ ] `blog/[slug]/page.tsx` → content.ts経由に差し替え
-- [ ] `tag/page.tsx` → content.ts経由に差し替え
-- [ ] `tag/[slug]/page.tsx` → content.ts経由に差し替え
-- [ ] `RelatedPosts.tsx` → ローカル関連記事ロジックに差し替え
-- [ ] `LocationCardOverlay.tsx` → content.ts経由に差し替え
+### Phase A: 画像運用の整備（次のステップ）
+- [ ] `public/images/posts/` ディレクトリ構造を作成
+- [ ] 既存記事の `coverImage` を `/images/...` 形式に統一
+- [ ] Markdown 本文内の外部画像URLを `/images/...` に移行（あれば）
+- [ ] `public/images/ui/placeholder.webp` を適切な場所に移動
 
-### Phase 3：画像インフラ
-- [ ] Cloudflare R2バケット作成・設定
-- [ ] CDNドメイン（cdn.colorfulworld.jp）設定
-- [ ] GitHub Actions: 画像検出 → 変換 → R2アップロードワークフロー
-- [ ] 画像処理スクリプト（sharp + S3互換SDK）
-- [ ] Markdownパス自動書き換えスクリプト
-- [ ] RAW対応（darktable-cli or dcraw）原本保存のみで可
+### Phase B: コンテンツの充実
+- [ ] 既存Wisp記事をMarkdownとしてエクスポート・移行
+- [ ] 各記事に `location` フィールドを補完
+- [ ] 地球儀ピン（`src/lib/locations.ts`）と記事 `location` を紐づけ確認
 
-### Phase 4：管理画面
-- [ ] 認証設計（ADMIN_PASSWORD環境変数 or Next-Auth）
-- [ ] `/admin/images` - 画像ギャラリー（R2 list objects）
-- [ ] アップロード機能（署名付きURL経由でR2へ直接PUT）
-- [ ] URLワンクリックコピー（Clipboard API）
-- [ ] スマホ対応レイアウト
-
-### Phase 5：SEO/配信（P1）
-- [ ] `sitemap.ts` → content.ts経由に差し替え
-- [ ] `rss/route.ts` → content.ts経由に差し替え
-- [ ] OGイメージ生成の確認
-
-### Phase 6：コメント機能（P2）
-- [ ] 方針決定: 継続 / 停止 / 自前化（Valtown or Supabaseなど）
+### Phase C: コメント機能（将来対応）
+- [ ] 方針決定: Valtown / Supabase / GitHub Issues連携 / 廃止継続
 - [ ] 決定に従い実装
 
-### Phase 7：クリーンアップ（P3）
-- [ ] `@wisp-cms/client` パッケージ削除
-- [ ] `@wisp-cms/react-custom-component` パッケージ削除
-- [ ] `NEXT_PUBLIC_BLOG_ID` 環境変数削除
-- [ ] `src/lib/wisp.ts` 削除
-- [ ] Footer「powered by wisp」除去
-- [ ] README更新
-
----
-
-## 既存Wisp記事の移行手順
-
-1. WispのAPIで全記事をJSONエクスポート（`wisp.getPosts` で全件取得スクリプト）
-2. JSONからfrontmatter付きMarkdownに変換スクリプトを実行
-3. numberフィールドを連番で付与
-4. locationフィールドを手動または半自動で補完
-5. 画像URLを棚卸しし、R2への移行スクリプトで一括コピー
-6. Markdown本文内のWisp画像URLをCDN URLに置換
-7. 404チェックと動作確認
+### Phase D: 画像の高速配信（将来対応）
+- [ ] CDNドメイン（cdn.colorfulworld.jp 等）の検討
+- [ ] 同一パス体系で public/images をオブジェクトストレージへ同期
+- [ ] next.config.mjs に CDN の remotePatterns を追加
 
 ---
 
 ## 判断が必要な残件
 
-- [ ] content-repoはsite-repoと**同じ**か**別リポジトリ**か
-  - 同じ: シンプル、Actions連携が楽
-  - 別: Obsidian用途に特化しやすい、siteとコンテンツを疎結合にできる
-  - **推奨**: 別リポジトリ（Obsidian vault = content-repo、siteはsubmodule or API取得）
 - [ ] コメント機能の方針
-- [ ] RAW変換: 原本保存のみ か 変換も行うか
-- [ ] 管理画面認証方式
+- [ ] CDN導入のタイミング（記事数・画像数が増えてきたら）
+- [ ] content/posts を将来 Obsidian vault（別リポジトリ）へ分離するか
 
 ---
 
-## 実装工数目安
+## 検証チェックリスト
 
-| フェーズ | 内容 | 目安 |
-|---------|------|------|
-| Phase 0 | 設計確定 | 完了 |
-| Phase 1 | コンテンツ層 | 2〜3日 |
-| Phase 2 | サイト表示移行 | 3〜4日 |
-| Phase 3 | 画像インフラ | 2〜3日 |
-| Phase 4 | 管理画面 | 2〜3日 |
-| Phase 5 | SEO/配信 | 1日 |
-| Phase 6 | コメント | 1〜2日 |
-| Phase 7 | クリーンアップ | 0.5日 |
-| **合計** | | **約2〜3週間** |
+- [ ] Wisp文字列検索で `@wisp-cms`, `wisp.` の残存がないことを確認
+- [ ] 地球儀UIでピン・PolaroidCard・LocationCardOverlay が正常動作
+- [ ] 記事一覧・詳細・タグ・RSS・サイトマップで content.ts 由来データのみで表示
+- [ ] coverImage あり / なし / 本文内画像あり の3パターンで崩れ・404なし
+- [ ] `npm run build` が通ること
+
