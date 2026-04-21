@@ -123,16 +123,15 @@ export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
 
   return (
     <div>
+      {/* タイトルエリア：本文proseの外に出して大きく表示 */}
+      <div className="mx-auto max-w-4xl mb-8 mt-4">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight break-words">
+          {title}
+        </h1>
+      </div>
       <div
-        className="
-  prose lg:prose-xl dark:prose-invert mx-auto max-w-4xl mb-10 lg:mt-20 break-words
-  [&_h1]:text-2xl
-  sm:[&_h1]:text-3xl
-  lg:[&_h1]:text-4xl
-"
+        className="prose lg:prose-lg dark:prose-invert mx-auto max-w-4xl mb-10 break-words"
       >
-        <h1>{title}</h1>
-
         {/* ふわっと要素単位で表示 */}
         <PostContent content={content} />
 
