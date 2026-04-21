@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 import remarkHtml from "remark-html";
 import type {
   Post,
@@ -53,6 +54,7 @@ async function parsePostFile(
   if (includeContent) {
     const processed = await remark()
       .use(remarkGfm)
+      .use(remarkBreaks)
       .use(remarkHtml, { sanitize: false })
       .process(content);
     htmlContent = processed.toString();
