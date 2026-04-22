@@ -10,14 +10,14 @@ title: "お花のお都 おフランス"
 description: "意識はしてなかったのですが思い返せば、結果として初めてのルーブルとシン・エヴァンゲリオンの聖地巡りをしてきました"
 metaTags:
   - ""
-coverImage: "/images/posts/フランス/1.JPG"
+coverImage: "/images/posts/フランス/1.jpg"
 featured: false
 draft: false
 ---
 
 ### 一生忘れない光景
 
-![雲海と朝日](/images/posts/フランス/1.JPG)
+![雲海と朝日](/images/posts/フランス/1.jpg)
 
 朝3時出発という朝なのか夜なのか分からない時間に出発
 Departing at 3 AM, not quite knowing whether it's morning or night.
@@ -25,17 +25,17 @@ Departing at 3 AM, not quite knowing whether it's morning or night.
 飛行機の中で眠れるからいいかと思ってたけど、こんな景色見たら寝れないよね
 I thought I'd be able to sleep on the plane, but once I saw this view, there was no way I could sleep.
 
-![海峡上の雲海](/images/posts/フランス/2.JPG)
+![海峡上の雲海](/images/posts/フランス/2.jpg)
 
 もこもこで美味しそう
 MocoMoco is delicious-looking.
 
-![](/images/posts/フランス/3.JPG)
+![](/images/posts/フランス/3.jpg)
 
 めっちゃまぶしかったけど白飛びなかったのは飛行機の窓のおかげかな
 It was really bright, but there was no overexposure—maybe it was thanks to the airplane window.
 
-![](/images/posts/フランス/4.JPG)
+![](/images/posts/フランス/4.jpg)
 
 どこまでも広がる雲海、朝日が作り出すグラデーションを一生忘れない
 Endless sea of clouds, and the gradient created by the sunrise. I'll never forget it.
@@ -56,7 +56,7 @@ I felt it deep in my soul—that this single moment of awe is worth more than al
 
 ### 花の都
 
-![](/images/posts/フランス/6.JPG)
+![](/images/posts/フランス/6.jpg)
 
 凱旋門をこの目で見ることができるなんて...
 Seeing the Arc de Triomphe with my own eyes...
@@ -64,7 +64,7 @@ Seeing the Arc de Triomphe with my own eyes...
 フランス旅行はずっとそんな感じ
 It felt like this trip was full of such moments.
 
-![](/images/posts/フランス/7.JPG)
+![](/images/posts/フランス/7.jpg)
 
 町探索するだけで楽しくて人生で一番歩いた
 Just exploring the town was so much fun, I walked more than I ever have in my life.
@@ -72,7 +72,7 @@ Just exploring the town was so much fun, I walked more than I ever have in my li
 後クロワッサンのために
 And also, for the croissant.
 
-![](/images/posts/フランス/8.JPG)
+![](/images/posts/フランス/8.jpg)
 
 凱旋門の前の広場で踊る民族衣装の人たち
 People dancing in traditional custumes in front of the Arc de Triomphe.
@@ -80,7 +80,7 @@ People dancing in traditional custumes in front of the Arc de Triomphe.
 優雅な音楽が流れていたような
 There was elegant music playing, I think
 
-![](/images/posts/フランス/9.JPG)
+![](/images/posts/フランス/9.jpg)
 
 凱旋門通りの建物
 Buildings on the street leading to the Arc de Triomphe.
@@ -88,7 +88,7 @@ Buildings on the street leading to the Arc de Triomphe.
 手前の古びたパラソルがいいアクセント
 The old parasol in the foreground is a great touck.
 
-![](/images/posts/フランス/10.JPG)
+![](/images/posts/フランス/10.jpg)
 
 全然意識してなかったけど、運河を流れるクルーズ船とエッフェル塔ってセットなことが多いのね
 I didn't notice it at the time, but it seems that cruise boats on the canals and the Eiffel Tower often go together.
@@ -96,30 +96,30 @@ I didn't notice it at the time, but it seems that cruise boats on the canals and
 雲を突き抜けるエッフェル塔かっこいい
 The Eiffel Tower piercing through the clouds looks amazing.
 
-![](/images/posts/フランス/19.JPG)
+![](/images/posts/フランス/19.jpg)
 
-![](/images/posts/フランス/20.JPG)
+![](/images/posts/フランス/20.jpg)
 
-![](/images/posts/フランス/21.JPG)
+![](/images/posts/フランス/21.jpg)
 
 エッフェル塔ってなんのために建てたんだろうね～
 I wonder why the Eiffel Tower was built in the first place.
 
-![](/images/posts/フランス/11.JPG)
+![](/images/posts/フランス/11.jpg)
 
-![](/images/posts/フランス/12.JPG)
+![](/images/posts/フランス/12.jpg)
 
-![](/images/posts/フランス/13.JPG)
+![](/images/posts/フランス/13.jpg)
 
 街路樹も建物も綺麗に整列されてる町でした
 It was a town where the street trees and buildings were neatly aligned.
 
-![](/images/posts/フランス/14.JPG)
+![](/images/posts/フランス/14.jpg)
 
 海外で日本にまつわる何かを見つけると安心する
 Seeing something related to Japan while abroad gives me a sense of comfort.
 
-![](/images/posts/フランス/15.JPG)
+![](/images/posts/フランス/15.jpg)
 
 宇宙と植物
 Space and plants
@@ -127,24 +127,24 @@ Space and plants
 植物と室外機
 Plants and the outdoor unit.
 
-![](/images/posts/フランス/16.JPG)
+![](/images/posts/フランス/16.jpg)
 
 住んでみたいと憧れるのも納得
 I can understand why you'd dream of living there.
 
-![](/images/posts/フランス/17.JPG)
+![](/images/posts/フランス/17.jpg)
 
 露店もおしゃれ
 The stalls ares so stylish.
 
-![](/images/posts/フランス/18.JPG)
+![](/images/posts/フランス/18.jpg)
 
 ちょっと時期が違っていたら行けたのに
 If the timing had been different, I could have gone.
 
 ### Musée de l'Orangerie
 
-![](/images/posts/フランス/23.JPG)
+![](/images/posts/フランス/23.jpg)
 
 こんなデカいモネの作品を間近で見れる幸せ
 Such a joy to see such a huge Monet piece up close.
@@ -155,18 +155,18 @@ His use of color is incredibly skillful.
 遠くから見ると睡蓮が分かる色してるけど、近くで構成されている色を見ると全く違う色してる
 From afar, you can tell it's water lilies by the colors, but when you look closely at tye colors that make up the composition, they seem completely different.
 
-![](/images/posts/フランス/24.JPG)
+![](/images/posts/フランス/24.jpg)
 
-![](/images/posts/フランス/25.JPG)
+![](/images/posts/フランス/25.jpg)
 
-![](/images/posts/フランス/26.JPG)
+![](/images/posts/フランス/26.jpg)
 
-![](/images/posts/フランス/27.JPG)
+![](/images/posts/フランス/27.jpg)
 
 豪華な額縁とふんだんに使われた余白
 Seeing the luxurious frames and the generous use of empty space
 
-![](/images/posts/フランス/28.JPG)
+![](/images/posts/フランス/28.jpg)
 
 オランジュリー美術館の中にあった蓮の絵
 A painting of lotus flowers from inside the Orangerie Museum.
@@ -179,7 +179,7 @@ The display here was set up with a chair in the middle surrouded by four walls, 
 
 ### Hôtel des Invalides
 
-![](/images/posts/フランス/29.JPG)
+![](/images/posts/フランス/29.jpg)
 
 アンヴァリッド廃兵院やった気がする
 I think this was at the Hôtel des Invalides...
@@ -187,7 +187,7 @@ I think this was at the Hôtel des Invalides...
 トイレに行きたすぎてあまり覚えてないですがとりあえず凄い建物
 I had to go to the bathroom so badly that I don't remember much, but it was an amazing building.
 
-![](/images/posts/フランス/30.JPG)
+![](/images/posts/フランス/30.jpg)
 
 ナポレオンの遺体が安置されている場所、アンヴァリッド廃兵院
 The place where Napoleon's remains are enshrined, the Hôtel des Invalides.
@@ -195,7 +195,7 @@ The place where Napoleon's remains are enshrined, the Hôtel des Invalides.
 やっぱり戦争関連の展示品が多かった
 As expected, there were many exhibits related to war.
 
-![](/images/posts/フランス/31.JPG)
+![](/images/posts/フランス/31.jpg)
 
 これは銃剣
 This is a bayonet.
@@ -205,7 +205,7 @@ It looks cool.
 
 ### Musée d'Orsay
 
-![](/images/posts/フランス/32.JPG)
+![](/images/posts/フランス/32.jpg)
 
 ゴッホの自画像
 Van Gogh’s Self-Portrait
@@ -219,7 +219,7 @@ A sinister aura that made it impossible to look directly at the self-portrait, y
 ゴッホの生涯をやんわりと知っているからそんな風に思ったのかも
 Maybe I felt that way because I had a vague understanding of Van Goph's liife.
 
-![](/images/posts/フランス/39.JPG)
+![](/images/posts/フランス/39.jpg)
 
 ドローイングしてる子供たち
 Children were drawing in the museum.
@@ -230,12 +230,12 @@ Everywhere, children were seriously drawing or appreciating artworks in the muse
 めちゃくちゃセンスが養われそう
 It seems like a great way to develop a strong sense of aesthetics.
 
-![](/images/posts/フランス/33.JPG)
+![](/images/posts/フランス/33.jpg)
 
 オルセー美術館の屋上にあるレストラン
 The restaurant on the rooftop of the Orsay museum.
 
-![](/images/posts/フランス/34.JPG)
+![](/images/posts/フランス/34.jpg)
 
 暗いほうがかっこいい
 It's cooler when it's darker.
@@ -246,7 +246,7 @@ In sitiuations like this, f/2.0 would work just fine.
 時計台の中にあるレストランっておしゃれすぎん？
 Isn't the restaurant inside the clock tower super stylish?
 
-![](/images/posts/フランス/35.JPG)
+![](/images/posts/フランス/35.jpg)
 
 ギャラティック・ノヴァみたい
 It feels like a Galactic Nova.
@@ -259,7 +259,7 @@ Anyway, European clocks are big, and you can really feel the craftsmanship and d
 
 ### Musée du Louvre
 
-![](/images/posts/フランス/36.JPG)
+![](/images/posts/フランス/36.jpg)
 
 この旅行で一番好きな写真
 My favorite photo from this trip.
@@ -279,7 +279,7 @@ And all kinds of people crossing through it.
 こんな奇跡みたいな写真が自分の手で撮れたことに何度見ても感動することができる
 I still can’t believe I was able to capture something this magical myself—it amazes me every time I look at it.
 
-![](/images/posts/フランス/37.JPG)
+![](/images/posts/フランス/37.jpg)
 
 かなりでかくてびっくり
 Victoire de Samothrace is surprsingly big, and I was amazed.
@@ -287,7 +287,7 @@ Victoire de Samothrace is surprsingly big, and I was amazed.
 顔と手がなくて完璧じゃないところに魅力を感じる、人間みたいで
 I find the missing face and the imperfection, captivating—it's very human like.
 
-![](/images/posts/フランス/38.JPG)
+![](/images/posts/フランス/38.jpg)
 
 ルーブルデカすぎ、半日で１割も見れてない気がする
 The Louvre is huge, I feel like I haven't even seen of it in half a day.
@@ -314,7 +314,7 @@ I probably went through the X-ray scanner several times, but it seems like it wa
 
 ### おまけ写真
 
-![](/images/posts/フランス/40.JPG)
-![](/images/posts/フランス/41.JPG)
-![](/images/posts/フランス/42.JPG)
-![](/images/posts/フランス/43.JPG)
+![](/images/posts/フランス/40.jpg)
+![](/images/posts/フランス/41.jpg)
+![](/images/posts/フランス/42.jpg)
+![](/images/posts/フランス/43.jpg)
