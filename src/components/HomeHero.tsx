@@ -37,10 +37,10 @@ export default function HomeHero() {
   );
 
   return (
-    <section className="relative flex min-h-[84vh] flex-col items-center justify-center overflow-hidden py-12 sm:py-16">
-      <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top,_rgba(24,24,27,0.2),_transparent_46%),linear-gradient(180deg,_rgba(9,9,11,0.94)_0%,_rgba(9,9,11,0.7)_34%,_rgba(255,255,255,0)_78%)] dark:bg-[radial-gradient(circle_at_top,_rgba(250,250,250,0.12),_transparent_46%),linear-gradient(180deg,_rgba(9,9,11,0.96)_0%,_rgba(9,9,11,0.78)_34%,_rgba(9,9,11,0.18)_78%,_rgba(9,9,11,0)_100%)]" />
-      <div className="absolute inset-x-0 top-0 -z-10 h-56 bg-gradient-to-b from-black/50 via-black/16 to-transparent dark:from-white/5 dark:via-white/0" />
-
+    <section className="relative flex flex-col items-center justify-center">
+      <div className="absolute inset-0 -z-20 
+  bg-[linear-gradient(180deg,_rgba(9,9,11,0.95)_0%,_rgba(9,9,11,0.7)_40%,_rgba(9,9,11,0)_100%)]"
+      />
       <motion.div
         initial={{ opacity: 1 }}
         animate={isIntroFadingOut ? { opacity: 0 } : { opacity: 1 }}
