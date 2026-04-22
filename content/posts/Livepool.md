@@ -16,7 +16,7 @@ featured: false
 draft: false
 ---
 
-### 音楽の街
+## 音楽の街
 
 ![alt text](/images/posts/リヴァプール/1.jpg)
 
@@ -41,7 +41,7 @@ Every region has its own stretch of empty countryside.
 光の具合がいいですな
 The way the light falls is amazing.
 
-### 港湾都市
+## 港湾都市
 
 ![alt text](/images/posts/リヴァプール/5.jpg)
 
@@ -53,7 +53,7 @@ There were so many seagulls.
 日本の鳩みたいな感じかな
 Kind of like pigeons in Japan, I guess.
 
-### 世界的アーティスト
+## 世界的アーティスト
 
 ![alt text](/images/posts/リヴァプール/7.jpg)
 
@@ -76,7 +76,7 @@ There was even someone busking right next to The Beatles statue—bold move!
 ピアヘッドかっこよかった
 Pier Head looked awesome.
 
-### イギリス旅行の醍醐味 Part 2
+## イギリス旅行の醍醐味 Part 2
 
 ![alt text](/images/posts/リヴァプール/10.jpg)
 
@@ -86,7 +86,7 @@ The fish and chips were just okay.
 普通サイズ頼んだけど量多すぎてお腹ぱんぱんになった
 I ordered the regular size, but it was so much food that I ended up stuffed!
 
-### 散歩
+## 散歩
 
 ![alt text](/images/posts/リヴァプール/11.jpg)
 
@@ -145,7 +145,7 @@ Reon is abrsorbed in the conversation with J-chan.
 分厚い雲に覆われてたんだよね
 It was covered by thick clouds.
 
-### おわりに
+## おわりに
 
 UKロックに関する知識を深めてから行くべきでした...
 I should have deepened my knowledge of UK rock before going...
@@ -163,7 +163,7 @@ Thanks for reading until the end.
 じゃあね
 Cheers
 
-### おまけ
+## おまけ
 
 ![alt text](/images/posts/リヴァプール/21.jpg)
 

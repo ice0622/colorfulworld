@@ -15,7 +15,7 @@ featured: false
 draft: false
 ---
 
-### 一生忘れない光景
+## 一生忘れない光景
 
 ![雲海と朝日](/images/posts/フランス/1.jpg)
 
@@ -54,7 +54,7 @@ I felt it deep in my soul—that this single moment of awe is worth more than al
 
 ![](/images/posts/フランス/5.jpg)
 
-### 花の都
+## 花の都
 
 ![](/images/posts/フランス/6.jpg)
 
@@ -142,7 +142,7 @@ The stalls ares so stylish.
 ちょっと時期が違っていたら行けたのに
 If the timing had been different, I could have gone.
 
-### Musée de l'Orangerie
+## Musée de l'Orangerie
 
 ![](/images/posts/フランス/23.jpg)
 
@@ -177,7 +177,7 @@ I love the gradient.
 ここの展示は四方が囲まれて真ん中に椅子がある形式だったから、落ち着いて鑑賞できた
 The display here was set up with a chair in the middle surrouded by four walls, so it was a calm place to view the art.
 
-### Hôtel des Invalides
+## Hôtel des Invalides
 
 ![](/images/posts/フランス/29.jpg)
 
@@ -203,7 +203,7 @@ This is a bayonet.
 かっこいいね
 It looks cool.
 
-### Musée d'Orsay
+## Musée d'Orsay
 
 ![](/images/posts/フランス/32.jpg)
 
@@ -257,7 +257,7 @@ with precision and intricate attention to detail.
 とりあえずヨーロッパの時計はデカくて職人のこだわりを感じてかっこよかった
 Anyway, European clocks are big, and you can really feel the craftsmanship and dedication of the artisans. They look so cool.
 
-### Musée du Louvre
+## Musée du Louvre
 
 ![](/images/posts/フランス/36.jpg)
 
@@ -298,7 +298,7 @@ That kind of ‘my first time at the Louvre? yeah, it was nothing special’ vib
 それを言える宇多田ヒカルの余裕に改めて敬服
 I’ve got a whole new level of respect for Utada Hikaru and that effortless confidence
 
-### おわりに
+## おわりに
 
 フランス旅行で撮ったフィルム写真たち
 Film photos taken during my trip to France
@@ -312,7 +312,7 @@ Since my ISO sensitivity was low, I didn't take any special precautions.
 何回もX線浴びてたと思うんだけど案外行けました
 I probably went through the X-ray scanner several times, but it seems like it wasn't that bad.
 
-### おまけ写真
+## おまけ写真
 
 ![](/images/posts/フランス/40.jpg)
 ![](/images/posts/フランス/41.jpg)

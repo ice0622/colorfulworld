@@ -16,7 +16,7 @@ featured: false
 draft: false
 ---
 
-### マンチェスター大学
+## マンチェスター大学
 
 ![](/images/posts/マンチェスター/1.jpg)
 
@@ -28,7 +28,7 @@ It feels majestic.
 映画のワンシーンだね
 It feels like a scene from a movie.
 
-### サッカーっていいよね
+## サッカーっていいよね
 
 ![](/images/posts/マンチェスター/3.jpg)
 
@@ -54,7 +54,7 @@ Colin Bell, Francis Lee, and Mike Summerbee are legendary players from Mancheste
 チームカラーいいよね
 The team colors are great, aren't they?
 
-### 世界一うまいケバブ
+## 世界一うまいケバブ
 
 ![](/images/posts/マンチェスター/6.jpg)
 
@@ -81,7 +81,7 @@ I really like the cityspace here too!
 この赤レンガの建物好きすぎて同じ構図の写真を何枚も撮ってる
 I love this red brick building so much that I've taken several photos with the same composition.
 
-### マンチェスター美術館
+## マンチェスター美術館
 
 ![](/images/posts/マンチェスター/11.jpg)
 
@@ -99,7 +99,7 @@ A boy buried in a rainbow-colored branch.
 無造作に書かれているようで計算されつくされた遠近感
 It looks like it's drawn carelessly, but the perspective is meticulously calculated.
 
-### マンチェスター博物館
+## マンチェスター博物館
 
 ![](/images/posts/マンチェスター/13.jpg)
 
@@ -131,7 +131,7 @@ Apparently, its motto is Ars Gratia Artis (Art for Art's Sake).
 かっこいいね
 So cool
 
-### マンチェスター図書館
+## マンチェスター図書館
 
 ![](/images/posts/マンチェスター/16.jpg)
 
@@ -154,7 +154,7 @@ To have Fullmetal Alchemist here...
 ここの図書館にはわかっている人がいる
 This library has someone who knows their stuff.
 
-### 散歩
+## 散歩
 
 ![](/images/posts/マンチェスター/19.jpg)
 
@@ -185,14 +185,14 @@ Such a cool clock tower.
 ヨーロッパの人たち時計に対する異常なこだわりを感じる
 You can really feel the Europeans' intense obsession with clocks.
 
-### マンチェスター大聖堂
+## マンチェスター大聖堂
 
 ![](/images/posts/マンチェスター/23.jpg)
 
 建物の構造が素晴らしいのかシャッターの乾いた金属音まで響いて聞こえた
 The structure of the building was so amazing that I could even hear the dry metallic sound of the shutter echoing.
 
-### ヴィーガン料理
+## ヴィーガン料理
 
 ![](/images/posts/マンチェスター/24.jpg)
 
@@ -212,7 +212,7 @@ It was homemade bread, crispy on the outside and soft on the inside, with a butt
 もっとうまく英語喋れてたらもっと仲良くなれただろうな～
 If I could speak English better, I think I could have gotten closer to them.
 
-### ショッピングセンターにあるもの
+## ショッピングセンターにあるもの
 
 ![](/images/posts/マンチェスター/27.jpg)
 
@@ -239,7 +239,7 @@ That huge hanging one too.
 デカいメリーゴーランドもあるよね
 There's also a big carousel, right?
 
-### イギリス旅行の醍醐味
+## イギリス旅行の醍醐味
 
 ![](/images/posts/マンチェスター/32.jpg)
 
@@ -251,7 +251,7 @@ I think it’s called a Sunday roast, but yeah, that’s what it is.
 何食べてたか忘れてたけど楽しそうなのは覚えてる
 I forgot what I was eating, but I remember having a great time.
 
-### おわりに
+## おわりに
 
 いい都市でした
 It was a great city.
