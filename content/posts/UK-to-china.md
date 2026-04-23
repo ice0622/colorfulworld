@@ -2,21 +2,22 @@
 number: 5
 slug: "uk-china1"
 tags:
-  - ""
+  - "TRIP"
 date: "2025-03-13"
 updated: "2026-04-22"
 location: "UK"
-title: "満喫したところに襲い掛かる悲劇 イギリス 中国編"
+title: "帰るまでが遠足 イギリス 中国編 上"
 description: "エヴァンゲリオンって面白いですよね。。。"
 metaTags:
   - ""
-coverImage: ""
+coverImage: "/images/posts/UK-China/4.jpg"
 featured: false
-draft: true
+draft: false
 ---
 
 ## ロンドンから中国、中国から福岡までの帰路にて
 
+![](/images/posts/UK-China/5.jpg)
 
 
 中国での思い出をお話ししましょう
@@ -30,9 +31,7 @@ I would like to share that story with you.
 
 ## ロンドン
 
-
-
-
+![](/images/posts/China/6.jpg)
 
 ヨーロッパ旅行を終え、クタクタな体と冷めない興奮を一緒に引き摺りながらマンチェスターからロンドンへと向かいました
 After finishing my Europe trip, with my exhausted body and the excitement still lingering, I headed from Manchester to London.
@@ -40,13 +39,25 @@ After finishing my Europe trip, with my exhausted body and the excitement still 
 着いたロンドンの駅ではパレートがたまたま開催されていて、僕の旅行を祝福しているようでした
 When I arrived at the station in London, a parade was unexpectedly taking place, as if celebrating my trip.
 
+![](/images/posts/UK-China/1.jpg)
+
 見れると思ってなかった
 I didn't think I would get to see it.
 
-
+![](/images/posts/UK-China/2.jpg)
 
 ロンドンのビックベンとロンドンアイをチラッとみて駅に乗り込んでヒースロー空港へと向かうのでした
 I briefly saw Big Ben and the London Eye, then boarded the train to Heathrow Airport.
+
+## ロンドンらしさを満喫
+
+![](/images/posts/UK-China/3.jpg)
+とにかくでかかった
+
+![](/images/posts/UK-China/4.jpg)
+ロンドンらしい写真なのでは
+
+## 帰路
 
 ヒースローから上海行きの飛行機は何も問題なく進み、精神と時の部屋と言っても過言はないであろう何も景色が変わらない場所で10時間のフライトをするのでした
 The flight from Heathrow to Shanghai went smoothly, and for about 10 hours, it felt like I was in the "Room of Spirit and Time"—a place where the scenery never changed.
@@ -89,9 +100,7 @@ I never imagined it would turn out like that...
 
 ## 上海浦東空港
 
-
-
-
+![](/images/posts/UK-China/)
 
 無事上海へと上陸して手続きを済ませた後、次の飛行機まで3時間もある状況でした
 After landing safely in Shanghai and finishing the necessary procedures, I had three hours until my next flight.
@@ -109,10 +118,6 @@ However, as a smartphone addict, I had already planned for this and had download
 I got so absorbed in watching Evangelion that before I knew it, it was just 20 minutes before boarding.
 
 まさか...
-
-（これは帰りの時の写真）
-
-
 
 夢中になりすぎて搭乗口に列になっているのに気づかなくて慌てて並びました
 I was so focused that I didn't even notice the line at the gate, so I hurriedly got in line.
@@ -184,9 +189,6 @@ I was being stared at a lot, but I didn't care (at least it's better than in Jap
 I finally arrived at the subway.
 
 ## シンジ君
-
-
-
 
 地下鉄では係のおばちゃんが1人ポツンと
 There was one staff member, an older woman, all alone at the subway station.
