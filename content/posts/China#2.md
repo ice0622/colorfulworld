@@ -5,7 +5,7 @@ tags:
   - "TRIP"
 date: "2025-03-13"
 updated: "2026-04-22"
-location: "CHINA"
+location: "china"
 title: "帰るまでが遠足 中国編 下"
 description: "大国の器の広さを知れたり知れなかったり。行く前になんかのブログでこの流れを見てこうなったら絶対自分だったら帰れなくなるなーと思ってたら。。"
 metaTags:

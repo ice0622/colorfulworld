@@ -2,7 +2,7 @@
 number: 2
 slug: "france"
 tags:
-  - "FRANCE"
+  - "TRIP"
 date: "2025-02-18"
 updated: "2026-04-21"
 location: "france"

@@ -3,10 +3,9 @@ number: 3
 slug: "liverpool"
 tags:
   - "TRIP"
-  - "LIVERPOOL"
 date: "2025-02-21"
 updated: "2026-01-01"
-location: "LIVERPOOL"
+location: "liverpool"
 title: "音の流れに川の流れに リヴァプール"
 description: "カモメだらけでした"
 metaTags:
