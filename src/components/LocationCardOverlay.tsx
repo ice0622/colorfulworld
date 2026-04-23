@@ -12,59 +12,30 @@ type Props = {
 };
 
 export default function LocationCardOverlay({ location, onClose }: Props) {
-  // カード自体のフワっとアニメーション用
   const [visible, setVisible] = useState(false);
-  // ランダムに選ばれた1件の記事
-  const [post, setPost] = useState<Post | null>(null);
-  // ローディング中かどうか
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // location が null になったらカードを閉じてデータもリセット
     if (!location) {
       setVisible(false);
-      setPost(null);
+      setPosts([]);
       return;
     }
 
-    // ① APIを叩く
     setLoading(true);
-    setPost(null);
+    setPosts([]);
 
-    // locationSlug で検索（優先）。ヒットが0件のときは tags にフォールバック
-    const locationQuery = `/api/posts?locationSlug=${encodeURIComponent(location.slug)}&limit=all`;
-    const tagsQuery = location.tags.join(",");
-    const tagsFallbackQuery = `/api/posts?tags=${encodeURIComponent(tagsQuery)}&limit=all`;
-
-    fetch(locationQuery)
+    fetch(`/api/posts?locationSlug=${encodeURIComponent(location.slug)}&limit=all`)
       .then((res) => res.json())
-      .then(async ({ posts: locPosts }: { posts: Post[] }) => {
-        if (locPosts.length > 0) return locPosts;
-        // フォールバック: tags で再検索
-        const res = await fetch(tagsFallbackQuery);
-        const { posts: tagPosts } = await res.json() as { posts: Post[] };
-        return tagPosts;
-      })
-      .then((posts: Post[]) => {
-        // ② image がある記事だけ絞り込む
-        const withImage = posts.filter((p) => p.image);
-        if (withImage.length === 0) {
-          // 画像なし記事しかない場合はそのまま全件からランダム
-          if (posts.length > 0) {
-            setPost(posts[Math.floor(Math.random() * posts.length)]);
-          }
-        } else {
-          // ③ ランダムに1件選ぶ
-          setPost(withImage[Math.floor(Math.random() * withImage.length)]);
-        }
+      .then(({ posts: fetched }: { posts: Post[] }) => {
+        setPosts(fetched);
       })
       .finally(() => setLoading(false));
   }, [location]);
 
-  // API が終わった後にフワっとアニメーションを開始する
   useEffect(() => {
     if (!loading && location) {
-      // マウント直後は opacity-0 → 次フレームで opacity-100
       const id = requestAnimationFrame(() => setVisible(true));
       return () => cancelAnimationFrame(id);
     } else {
@@ -75,12 +46,10 @@ export default function LocationCardOverlay({ location, onClose }: Props) {
   if (!location) return null;
 
   return (
-    // 背景の半透明レイヤー。クリックで閉じる
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
       onClick={onClose}
     >
-      {/* カード本体。クリックが背景に伝わらないよう stopPropagation */}
       <div
         onClick={(e) => e.stopPropagation()}
         className={[
@@ -98,53 +67,74 @@ export default function LocationCardOverlay({ location, onClose }: Props) {
           ✕
         </button>
 
-        {/* ローディング中 */}
+        {/* ヘッダー */}
+        <div className="px-4 pt-4 pb-2">
+          <p className="text-xs text-muted-foreground">{location.name}</p>
+        </div>
+
+        {/* ローディング */}
         {loading && (
-          <div className="h-48 flex items-center justify-center text-muted-foreground text-sm">
+          <div className="h-32 flex items-center justify-center text-muted-foreground text-sm">
             読み込み中…
           </div>
         )}
 
-        {/* 記事が取得できた場合 */}
-        {!loading && post && (
-          <>
-            {/* サムネイル画像 */}
-            <div className="relative aspect-[16/9] w-full bg-muted">
-              <Image
-                src={post.image ?? "/images/placeholder.webp"}
-                alt={post.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            {/* テキストエリア */}
-            <div className="p-4">
-              <p className="text-xs text-muted-foreground mb-1">{location.name}</p>
-              <h2 className="font-semibold text-base leading-snug line-clamp-2 mb-3">
-                {post.title}
-              </h2>
-              {post.description && (
-                <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                  {post.description}
-                </p>
-              )}
-
-              {/* 記事を読むボタン */}
-              <Link
-                href={`/blog/${post.slug}`}
-                className="block w-full text-center rounded-xl bg-primary text-primary-foreground py-2 text-sm font-medium hover:opacity-90 transition-opacity"
-              >
-                記事を読む →
-              </Link>
-            </div>
-          </>
+        {/* 記事一覧 */}
+        {!loading && posts.length > 0 && (
+          <ul className="overflow-y-auto max-h-[70vh] divide-y divide-white/10 pb-4">
+            {posts.map((post) => (
+              <li key={post.slug}>
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="flex gap-3 px-4 py-3 hover:bg-white/5 transition-colors"
+                  onClick={onClose}
+                >
+                  {/* サムネイル */}
+                  <div className="relative w-16 h-16 shrink-0 rounded-lg overflow-hidden bg-muted">
+                    {post.image ? (
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        fill
+                        className="object-cover"
+                        sizes="64px"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground text-[10px] text-center px-1">
+                        No image
+                      </div>
+                    )}
+                  </div>
+                  {/* テキスト */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-muted-foreground mb-0.5">
+                      {post.publishedAt
+                        ? new Date(post.publishedAt).toLocaleDateString("ja-JP", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })
+                        : ""}
+                    </p>
+                    <h3 className="text-sm font-medium leading-snug line-clamp-2">
+                      {post.title}
+                    </h3>
+                    {post.description && (
+                      <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                        {post.description}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
         )}
 
-        {/* 記事が見つからなかった場合 */}
-        {!loading && !post && (
+        {/* 記事なし */}
+        {!loading && posts.length === 0 && (
           <div className="p-6 text-center text-sm text-muted-foreground">
-            <p className="mb-1"> {location.name}</p>
+            <p className="mb-1">{location.name}</p>
             <p>この地点の記事はまだありません</p>
           </div>
         )}

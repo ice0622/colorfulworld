@@ -77,7 +77,11 @@ async function parsePostFile(
     updatedAt: data.updated || null,
     featured: data.featured ?? false,
     draft: data.draft ?? false,
-    location: data.location || "",
+    location: Array.isArray(data.location)
+      ? data.location.map((l: string) => l.trim().toLowerCase()).filter(Boolean)
+      : typeof data.location === "string" && data.location.trim()
+        ? [data.location.trim().toLowerCase()]
+        : [],
     metaTags,
     author: null,
   };
@@ -103,9 +107,9 @@ export async function getPosts(options?: {
   // 下書き除外（本番では draft: true を非表示）
   const filtered = allPosts.filter((p) => {
     if (!includeDrafts && p.draft) return false;
-    // locationSlug による絞り込み（post.location に slug が含まれるかチェック）
+    // locationSlug による絞り込み（配列対応）
     if (locationSlug) {
-      return p.location?.toLowerCase().includes(locationSlug.toLowerCase()) ?? false;
+      return p.location.includes(locationSlug.toLowerCase());
     }
     if (tags && tags.length > 0) {
       return tags.some((t) => p.tags.some((pt) => pt.name === t));

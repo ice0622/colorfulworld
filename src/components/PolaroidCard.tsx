@@ -24,14 +24,18 @@ const LABEL_SIZE = "text-[8px]";
 
 export default function PolaroidCard({ location, isActive }: Props) {
   const [post, setPost] = useState<Post | null>(null);
-  const [loading, setLoading] = useState(true);
+  // false で初期化することで、useEffect が動く前の最初の1フレームに
+  // スケルトンが先走って表示される事象（FOUC）を防ぐ。
+  // useEffect はマウント後に初めて実行されるため、
+  // useState(true) にしてしまうと「fetchが始まっていないのに loading: true」
+  // という矛盾状態が1フレームだけ生じ、スケルトンが一瞬ちらつく。
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
 
-    const tagsQuery = location.tags.join(",");
-    fetch(`/api/posts?tags=${encodeURIComponent(tagsQuery)}&limit=1`)
+    fetch(`/api/posts?locationSlug=${encodeURIComponent(location.slug)}&limit=1`)
       .then((res) => res.json())
       .then(({ posts }: { posts: Post[] }) => {
         if (!cancelled && posts.length > 0) {

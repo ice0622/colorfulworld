@@ -20,7 +20,7 @@ export interface Post {
   updatedAt: string | null;
   featured: boolean;
   draft: boolean;
-  location: string;
+  location: string[];  // 複数ロケーション対応（例: ["uk", "china"]）
   metaTags: string[];
   author: null;        // Wisp互換フィールド（将来拡張用）
 }
