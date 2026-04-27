@@ -6,14 +6,9 @@ import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 
-interface MenuItem {
-  name: string;
-  href: string;
-}
-
-const menuItems: MenuItem[] = [
+const menuItems = [
   { name: "Home", href: "/" },
   { name: "Blog", href: "/blog" },
   { name: "About", href: "/about" },
@@ -22,87 +17,108 @@ const menuItems: MenuItem[] = [
 export const Header: FunctionComponent = () => {
   const pathname = usePathname();
   const scrollDirection = useScrollDirection();
-  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const isVisible = scrollDirection === "up";
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [pathname]);
+
   return (
     <motion.header
-      role="banner"
-      // スクロール下 → 上へ飛んで消える / スクロール上 → びよーんと降りてくる
       animate={{ y: isVisible ? 0 : "-150%" }}
-      transition={{
-        type: "spring",
-        stiffness: 260,
-        damping: 28,
-        mass: 0.8,
-      }}
-      className="fixed top-4 left-1/2 -translate-x-1/2 z-50"
-      style={{ willChange: "transform" }}
+      transition={{ type: "spring", stiffness: 260, damping: 28 }}
+      className="fixed top-4 left-0 right-0 mx-auto z-50 w-[calc(100%-1rem)] max-w-lg"
     >
-      <nav
+      <motion.nav
+        layout
         className={cn(
-          "relative flex items-center gap-1 px-3 py-2 rounded-2xl",
-          // Glass effect
+          "flex flex-col rounded-2xl",
           "backdrop-blur-md",
           "bg-white/60 dark:bg-black/40",
           "border border-white/40 dark:border-white/10",
           "shadow-[0_4px_24px_rgba(0,0,0,0.08)]",
-          // GPU layer
-          "translate-z-0 isolate"
+          "overflow-hidden" // ← ここ重要（蛇腹用）
         )}
-        onMouseLeave={() => setHoveredItem(null)}
       >
-        {/* ロゴ */}
-        <Link
-          href="/"
-          aria-label={config.blog.name}
-          className="px-3 py-1 text-sm font-bold tracking-tight mr-1 text-gray-800 dark:text-gray-100"
-        >
-          {config.blog.name}
-        </Link>
-
-        {/* 区切り線 */}
-        <div className="w-px h-4 bg-gray-300/60 dark:bg-white/20 mx-1" />
-
-        {/* ナビアイテム */}
-        {menuItems.map((item) => (
+        {/* 上段：タイトル + ボタン（常に固定） */}
+        <div className="flex items-center justify-between px-3 py-2">
           <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "relative px-3 py-1 text-sm rounded-xl transition-colors duration-150",
-              "text-gray-600 dark:text-gray-300",
-              "hover:text-gray-900 dark:hover:text-white",
-              pathname === item.href && "font-semibold text-gray-900 dark:text-white"
-            )}
-            onMouseEnter={() => setHoveredItem(item.href)}
+            href="/"
+            className="px-3 py-1 text-sm font-bold tracking-tight text-gray-800 dark:text-gray-100 truncate max-w-[140px]"
           >
-            {/* Spring ハイライト */}
-            <AnimatePresence>
-              {hoveredItem === item.href && (
-                <motion.span
-                  layoutId="dock-highlight"
-                  className="absolute inset-0 rounded-xl bg-gray-900/8 dark:bg-white/10"
-                  transition={{
-                    type: "spring",
-                    stiffness: 250,
-                    damping: 27,
-                    mass: 1,
-                  }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                />
-              )}
-            </AnimatePresence>
-            <span className="relative z-10">{item.name}</span>
+            {config.blog.name}
           </Link>
-        ))}
-      </nav>
+
+          <button
+            onClick={() => setIsOpen((prev) => !prev)}
+            className="sm:hidden p-2 rounded-lg active:scale-95 transition"
+          >
+            <div className="relative w-5 h-5">
+              <motion.span
+                className="absolute left-0 top-1/2 w-full h-[2px] bg-gray-800 dark:bg-white origin-center"
+                animate={isOpen ? { rotate: 45 } : { y: -6 }}
+              />
+              <motion.span
+                className="absolute left-0 top-1/2 w-full h-[2px] bg-gray-800 dark:bg-white"
+                animate={{ opacity: isOpen ? 0 : 1 }}
+              />
+              <motion.span
+                className="absolute left-0 top-1/2 w-full h-[2px] bg-gray-800 dark:bg-white origin-center"
+                animate={isOpen ? { rotate: -45 } : { y: 6 }}
+              />
+            </div>
+          </button>
+
+          {/* PCナビ */}
+          <div className="hidden sm:flex items-center gap-1">
+            {menuItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "px-3 py-1 text-sm rounded-xl",
+                  pathname === item.href && "font-semibold"
+                )}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* モバイルメニュー（蛇腹） */}
+        <AnimatePresence initial={false}>
+          {isOpen && (
+            <motion.div
+              key="menu"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              className="sm:hidden"
+            >
+              <div className="flex flex-col gap-1 px-2 pb-2">
+                {menuItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      "px-3 py-2 rounded-xl text-sm",
+                      "hover:bg-gray-900/10 dark:hover:bg-white/10",
+                      pathname === item.href && "font-semibold"
+                    )}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.nav>
     </motion.header>
   );
 };
-
-// 後方互換: Navigation を単体で使っているページがある場合のエイリアス
-export const Navigation = Header;
