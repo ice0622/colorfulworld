@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { GeistPixelSquare } from "geist/font/pixel";
@@ -12,6 +12,7 @@ const geistPixel = GeistPixelSquare;
 type Props = {
   location: PostLocation;
   isActive: boolean;
+  post: Post | null;
 };
 
 // ---- サイズ定数 ----
@@ -22,35 +23,7 @@ const PADDING_BTM = "pb-2";
 const LABEL_SIZE = "text-[8px]";
 // -------------------
 
-export default function PolaroidCard({ location, isActive }: Props) {
-  const [post, setPost] = useState<Post | null>(null);
-  // false で初期化することで、useEffect が動く前の最初の1フレームに
-  // スケルトンが先走って表示される事象（FOUC）を防ぐ。
-  // useEffect はマウント後に初めて実行されるため、
-  // useState(true) にしてしまうと「fetchが始まっていないのに loading: true」
-  // という矛盾状態が1フレームだけ生じ、スケルトンが一瞬ちらつく。
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-
-    fetch(`/api/posts?locationSlug=${encodeURIComponent(location.slug)}&limit=1`)
-      .then((res) => res.json())
-      .then(({ posts }: { posts: Post[] }) => {
-        if (!cancelled && posts.length > 0) {
-          setPost(posts[0]);
-        }
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [location]);
-
+export default function PolaroidCard({ location, isActive, post }: Props) {
   const label =
     location.slug.charAt(0).toUpperCase() + location.slug.slice(1);
 
@@ -101,17 +74,6 @@ export default function PolaroidCard({ location, isActive }: Props) {
             </div>
           </div>
         </Link>
-      ) : loading ? (
-        <div
-          className={`bg-white/90 shadow-xl border border-gray-200 ${CARD_WIDTH} ${PADDING_TOP} ${PADDING_BTM}`}
-        >
-          <div className="aspect-square bg-gray-100 animate-pulse" />
-          <div
-            className={`mt-1 text-center text-gray-500 tracking-[0.08em] ${LABEL_SIZE} ${geistPixel.className}`}
-          >
-            {label}
-          </div>
-        </div>
       ) : null}
     </div>
   );
