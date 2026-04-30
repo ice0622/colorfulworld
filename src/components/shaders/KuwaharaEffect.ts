@@ -18,7 +18,7 @@ const fragmentShader = /* glsl */ `
   uniform float uStrength;
 
   // 1 Sector あたりのサンプル辺長 (変更する場合は定数を修正)
-  #define KERNEL_SIZE 3
+  #define KERNEL_SIZE 5
 
   // postprocessing が inputBuffer と resolution を自動的に提供する。
   // resolution.xy = レンダーターゲットの幅・高さ (px)

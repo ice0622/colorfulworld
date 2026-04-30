@@ -23,8 +23,6 @@ const SCROLL_HEIGHT_VH = 350;
 
 export default function PainterlyShaderPage() {
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-
   const containerRef = useRef<HTMLDivElement>(null);
 
   const progress = useScrollProgress(containerRef);
@@ -111,13 +109,7 @@ export default function PainterlyShaderPage() {
             src={DEMO_IMAGES}
             strength={strength}
             isLocked={isLocked}
-            currentIndex={currentIndex}
-            onChangeIndex={setCurrentIndex}
           />
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 z-10">
-            <button onClick={() => setCurrentIndex(i => Math.max(0, i - 1))} disabled={currentIndex === 0}>← 前</button>
-            <button onClick={() => setCurrentIndex(i => Math.min(DEMO_IMAGES.length - 1, i + 1))} disabled={currentIndex === DEMO_IMAGES.length - 1}>次 →</button>
-          </div>
           {/* オーバーレイ: ミニマルなピントインジケーター */}
           <div
             className="pointer-events-none absolute inset-0 flex flex-col justify-end p-4"
