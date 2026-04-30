@@ -2,15 +2,17 @@
 
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
+import type { Post } from "@/types/content";
 
 const Globe = dynamic(() => import("@/components/Globe"), { ssr: false });
 
 type GlobeWrapperProps = {
   isVisible?: boolean;
   onReady?: () => void;
+  locationPosts: Record<string, Post | null>;
 };
 
-export default function GlobeWrapper({ isVisible = true, onReady }: GlobeWrapperProps) {
+export default function GlobeWrapper({ isVisible = true, onReady, locationPosts }: GlobeWrapperProps) {
   return (
     <div className="relative my-10 flex min-h-[26rem] w-full justify-center">
       <div
@@ -27,7 +29,7 @@ export default function GlobeWrapper({ isVisible = true, onReady }: GlobeWrapper
             : "translate-y-10 scale-[0.97] opacity-0"
         )}
       >
-        <Globe onReady={onReady} />
+        <Globe onReady={onReady} locationPosts={locationPosts} />
       </div>
     </div>
   );

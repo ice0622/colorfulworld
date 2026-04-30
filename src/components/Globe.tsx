@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { POST_LOCATIONS, PostLocation } from "@/lib/locations";
 import LocationCardOverlay from "@/components/LocationCardOverlay";
 import PolaroidCard from "@/components/PolaroidCard";
+import type { Post } from "@/types/content";
 
 const DRAG_SENSITIVITY = 0.005;
 const AUTO_ROTATION_STEP = 0.003;
@@ -40,9 +41,10 @@ const LOCATION_ANGLES = POST_LOCATIONS.map((location) => ({
 
 type GlobeProps = {
   onReady?: () => void;
+  locationPosts: Record<string, Post | null>;
 };
 
-export default function Globe({ onReady }: GlobeProps) {
+export default function Globe({ onReady, locationPosts }: GlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const onReadyRef = useRef(onReady);
   const focusRef = useRef<[number, number]>(
@@ -313,6 +315,7 @@ export default function Globe({ onReady }: GlobeProps) {
           key={loc.slug}
           location={loc}
           isActive={frontmostSlug === loc.slug}
+          post={locationPosts[loc.slug] ?? null}
         />
       ))}
 
