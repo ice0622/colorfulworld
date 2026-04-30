@@ -45,12 +45,16 @@ function PhotoQuad({ src }: { src: string }) {
 // -------------------------------------------------------------------
 // strength を受け取って Kuwahara ポストプロセスを適用するシーン
 // -------------------------------------------------------------------
-function Scene({ src, strength }: { src: string; strength: number }) {
+function Scene({ src, strength, isLocked }: { src: string; strength: number; isLocked: boolean }) {
   return (
     <>
       <PhotoQuad src={src} />
-      <EffectComposer>
-        <Kuwahara strength={strength} />
+      <EffectComposer multisampling={0}>
+        {!isLocked ? (
+          <Kuwahara strength={strength} />
+        ) : (
+          <></>
+        )}
       </EffectComposer>
     </>
   );
@@ -63,9 +67,11 @@ function Scene({ src, strength }: { src: string; strength: number }) {
 export default function PainterlyCanvas({
   src,
   strength,
+  isLocked,
 }: {
   src: string;
   strength: number;
+  isLocked: boolean;
 }) {
   return (
     <Canvas
@@ -73,9 +79,11 @@ export default function PainterlyCanvas({
       camera={{ position: [0, 0, 10] }}
       gl={{ antialias: false }}
       style={{ width: "100%", height: "100%" }}
+      // dpr={[1, 1.5]}
+      frameloop={isLocked ? "never" : "always"}
     >
       <Suspense fallback={null}>
-        <Scene src={src} strength={strength} />
+        <Scene src={src} strength={strength} isLocked={isLocked} />
       </Suspense>
     </Canvas>
   );
