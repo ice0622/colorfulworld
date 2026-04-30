@@ -133,8 +133,6 @@ The hotel was in a place that was either deserted or still under development.
 村上春樹の「羊をめぐる冒険」で出てくるようないるかホテルを彷彿させる場所でした。
 It reminded me of the Dolphin Hotel from Haruki Murakami’s A Wild Sheep Chase.
 
-![](/images/posts/China/6.jpg)
-
 そのホテルは生まれて初めて泊まった高級ホテルかもしれないぐらい豪華で綺麗な場所でした。
 It was so luxurious and beautiful that it might have been the fanciest hotel I had ever stayed in.
 
