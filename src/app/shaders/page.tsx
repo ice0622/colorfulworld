@@ -79,9 +79,8 @@ export default function PainterlyShaderPage() {
           Painterly Shader
         </h1>
         <p className="max-w-md text-white/60 text-base leading-relaxed">
-          桑原フィルター（Kuwahara filter）を用いて、
-          写真を油絵のような表現に変換するリアルタイムシェーダー。
-          スクロールすることで絵画から写真へとピントが合っていきます。
+          Scroll to focus the image.<br />
+          The photo becomes sharper as you move.
         </p>
         <span className="mt-4 text-white/30 text-sm animate-bounce">
           ↓ スクロールしてください
@@ -119,29 +118,29 @@ export default function PainterlyShaderPage() {
             <button onClick={() => setCurrentIndex(i => Math.max(0, i - 1))} disabled={currentIndex === 0}>← 前</button>
             <button onClick={() => setCurrentIndex(i => Math.min(DEMO_IMAGES.length - 1, i + 1))} disabled={currentIndex === DEMO_IMAGES.length - 1}>次 →</button>
           </div>
-          {/* オーバーレイ: ラベルとスクロール進捗 */}
+          {/* オーバーレイ: ミニマルなピントインジケーター */}
           <div
-            className="pointer-events-none absolute inset-0 flex flex-col justify-end p-8"
+            className="pointer-events-none absolute inset-0 flex flex-col justify-end p-4"
             style={{ transition: "opacity 0.4s ease" }}
           >
-            {/* フィルター強度インジケーター */}
-            <div className="flex flex-col gap-2 max-w-xs">
-              <div className="flex justify-between text-xs text-white/40 tracking-widest uppercase">
-                <span>Painterly</span>
-                <span>Original</span>
+            <div className="flex flex-col gap-1 max-w-[180px]">
+              <div className="flex justify-between text-[10px] text-white/50 tracking-widest uppercase font-semibold" style={{
+                fontFamily: "'EB Garamond', 'Libre Baskerville', serif"
+              }}>
+                <span>Blur</span>
+                <span>Focus</span>
               </div>
-              <div className="h-px bg-white/10 relative">
+              <div className="h-0.5 bg-white/15 rounded-full relative mt-0.5 mb-0.5">
                 <div
-                  className="absolute top-0 left-0 h-px bg-white/60 transition-all duration-100"
+                  className="absolute top-0 left-0 h-0.5 bg-white/70 rounded-full transition-all duration-150"
                   style={{ width: `${(1 - strength) * 100}%` }}
                 />
               </div>
-              <p className="text-xs text-white/30">
-                Kuwahara filter · strength{" "}
-                <span className="text-white/60">
-                  {(strength * 100).toFixed(0)}%
+              <div className="flex justify-end mt-0.5">
+                <span className="text-[10px] text-white/60 font-mono" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {`${Math.round((1 - strength) * 100)}%`}
                 </span>
-              </p>
+              </div>
             </div>
           </div>
         </div>
@@ -149,36 +148,7 @@ export default function PainterlyShaderPage() {
 
       {/* ========== スクロール後の解説 ========== */}
       <section className="max-w-2xl mx-auto px-6 py-24 space-y-8 text-white/70">
-        <h2 className="text-2xl font-semibold text-white">
-          どのように動いているのか
-        </h2>
-        <p className="leading-relaxed">
-          このシェーダーは{" "}
-          <strong className="text-white">桑原フィルター（Kuwahara filter）</strong>
-          を WebGL のポストプロセスとして実装しています。
-          各ピクセルの周囲を 4 つの矩形領域（Sector）に分割し、
-          最も分散が小さい Sector の平均色を採用することで、
-          エッジを保持しながらテクスチャ細部を平滑化します。
-        </p>
-        <p className="leading-relaxed">
-          スクロールで変化する <code className="text-white/80">uStrength</code>{" "}
-          という uniform 値が 1.0→0.0 に変わるにつれ、
-          GLSL 内の <code className="text-white/80">mix(original, painted, strength)</code>{" "}
-          によって元の写真と絵画表現が連続的にブレンドされます。
-        </p>
-        <div className="border-l-2 border-white/10 pl-4 text-sm text-white/50">
-          <p>
-            参考:{" "}
-            <a
-              href="https://blog.maximeheckel.com/posts/on-crafting-painterly-shaders/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline hover:text-white/80"
-            >
-              On Crafting Painterly Shaders — Maxime Heckel
-            </a>
-          </p>
-        </div>
+        {/* 技術的な説明は省略し、シンプルなUIに */}
 
         <h2 className="text-2xl font-semibold text-white pt-4">次のステップ</h2>
         <ul className="list-disc list-inside space-y-2 text-sm leading-relaxed">
