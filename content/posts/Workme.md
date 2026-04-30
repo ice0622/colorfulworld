@@ -10,10 +10,12 @@ title: "一緒に働くあなたへ"
 description: ""
 metaTags:
   - ""
-coverImage: "/images/posts/workme/Image_20260430_154120.jpeg"
+coverImage: "/images/posts/workme/Image_20260430_160240.jpeg"
 featured: false
 draft: false
 ---
+
+![](/images/posts/workme/Image_20260430_160240.jpeg)
 
 ## なぜこれ書いた？
 
