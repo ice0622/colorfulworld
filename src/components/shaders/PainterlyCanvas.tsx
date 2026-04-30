@@ -69,10 +69,11 @@ export default function PainterlyCanvas({
   strength,
   isLocked,
 }: {
-  src: string;
+  src: string | string[];
   strength: number;
   isLocked: boolean;
 }) {
+
   return (
     <Canvas
       orthographic
@@ -83,7 +84,7 @@ export default function PainterlyCanvas({
       frameloop={isLocked ? "never" : "always"}
     >
       <Suspense fallback={null}>
-        <Scene src={src} strength={strength} isLocked={isLocked} />
+        <Scene src={Array.isArray(src) ? src[0] : src} strength={strength} isLocked={isLocked} />
       </Suspense>
     </Canvas>
   );

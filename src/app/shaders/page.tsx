@@ -11,13 +11,20 @@ const PainterlyCanvas = dynamic(
 );
 
 // デモに使用する写真。public/ 以下のパスを指定。
-const DEMO_IMAGE = "/images/posts/フランス/1.jpg";
-
+const DEMO_IMAGES = [
+  "/images/posts/フランス/1.jpg",
+  "/images/posts/フランス/2.jpg",
+  "/images/posts/フランス/3.jpg",
+  "/images/posts/フランス/4.jpg",
+];
 // スティッキースクロールの高さ (vh)。
 // 100vh がキャンバス表示領域、残りがスクロール量になる。
 const SCROLL_HEIGHT_VH = 350;
 
 export default function PainterlyShaderPage() {
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   const progress = useScrollProgress(containerRef);
@@ -32,10 +39,29 @@ export default function PainterlyShaderPage() {
   // ロック時はstrength=0で固定
   const strength = isLocked ? 0 : Math.max(0, 1 - progress);
 
-  // ロック時にスクロール領域を縮めて画像の先頭にジャンプ
+  // ロック時にスクロール領域を縮めても「止まっているように見せる」
+  const prevScrollInfo = useRef<{ scrollY: number, offsetTop: number } | null>(null);
+
+  // isLockedになる直前のscrollYとcontainer.offsetTopを記録
   useEffect(() => {
-    if (isLocked && containerRef.current) {
-      window.scrollTo({ top: containerRef.current.offsetTop, behavior: "auto" });
+    if (!isLocked && progress > 0.98 && containerRef.current) {
+      prevScrollInfo.current = {
+        scrollY: window.scrollY,
+        offsetTop: containerRef.current.offsetTop,
+      };
+    }
+  }, [progress, isLocked]);
+
+  // isLockedになった直後に差分だけscrollTo
+  useEffect(() => {
+    if (isLocked && containerRef.current && prevScrollInfo.current) {
+      // レイアウト反映後に実行（1フレーム遅延）
+      requestAnimationFrame(() => {
+        const newOffsetTop = containerRef.current!.offsetTop;
+        const { scrollY, offsetTop } = prevScrollInfo.current!;
+        const diff = newOffsetTop - offsetTop;
+        window.scrollTo({ top: scrollY + diff, behavior: "auto" });
+      });
     }
   }, [isLocked]);
 
@@ -81,8 +107,18 @@ export default function PainterlyShaderPage() {
             width: "100%",
           }}
         >
-          <PainterlyCanvas src={DEMO_IMAGE} strength={strength} isLocked={isLocked} />
 
+          <PainterlyCanvas
+            src={DEMO_IMAGES}
+            strength={strength}
+            isLocked={isLocked}
+            currentIndex={currentIndex}
+            onChangeIndex={setCurrentIndex}
+          />
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 z-10">
+            <button onClick={() => setCurrentIndex(i => Math.max(0, i - 1))} disabled={currentIndex === 0}>← 前</button>
+            <button onClick={() => setCurrentIndex(i => Math.min(DEMO_IMAGES.length - 1, i + 1))} disabled={currentIndex === DEMO_IMAGES.length - 1}>次 →</button>
+          </div>
           {/* オーバーレイ: ラベルとスクロール進捗 */}
           <div
             className="pointer-events-none absolute inset-0 flex flex-col justify-end p-8"
