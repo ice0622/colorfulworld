@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 const PainterlyCanvas = dynamic(
@@ -8,86 +8,65 @@ const PainterlyCanvas = dynamic(
   { ssr: false }
 );
 
-// ホバーを一定時間継続すると isLocked=true になり元画像にロックインされる
-// ロックイン後はホバー解除してもフィルタが戻らない
+const HOVER_IN_DURATION = 800;   // 絵画 → 写真（速め）
+const HOVER_OUT_DURATION = 2400; // 写真 → 絵画（余韻あり）
 
-const LOCK_DELAY_MS = 1000; // ロックインまでのホバー時間（ms）
+function easeOutCubic(t: number) {
+  return 1 - Math.pow(1 - t, 3);
+}
+
+function animateStrength(
+  from: number,
+  to: number,
+  durationMs: number,
+  onChange: (v: number) => void,
+): () => void {
+  const start = performance.now();
+  let rafId: number;
+  const tick = (now: number) => {
+    const t = Math.min(1, (now - start) / durationMs);
+    onChange(from + (to - from) * easeOutCubic(t));
+    if (t < 1) rafId = requestAnimationFrame(tick);
+  };
+  rafId = requestAnimationFrame(tick);
+  return () => cancelAnimationFrame(rafId);
+}
 
 type Props = {
   src: string;
-  strength?: number;
+  strength?: number; // アイドル時の絵画強度 (0.0〜1.0)
   className?: string;
 };
 
-export default function HoverShaderImage({ src, strength = 0.7, className }: Props) {
-  const [isLocked, setIsLocked] = useState(false);
-  const [progress, setProgress] = useState(0); // 0〜1: ホバー中の進行度
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number | null>(null);
+export default function HoverShaderImage({ src, strength: idleStrength = 0.85, className }: Props) {
+  const strengthRef = useRef(idleStrength);
+  const [strength, setStrength] = useState(idleStrength);
+  const cancelAnim = useRef<(() => void) | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const startTimer = useCallback(() => {
-    if (isLocked) return;
-    startTimeRef.current = performance.now();
+  useEffect(() => {
+    cancelAnim.current?.();
+    const from = strengthRef.current;
+    const to = isHovered ? 0.0 : idleStrength;
+    const duration = isHovered ? HOVER_IN_DURATION : HOVER_OUT_DURATION;
 
-    // プログレスバーのアニメーション
-    const updateProgress = () => {
-      if (!startTimeRef.current) return;
-      const elapsed = performance.now() - startTimeRef.current;
-      const p = Math.min(elapsed / LOCK_DELAY_MS, 1);
-      setProgress(p);
-      if (p < 1) {
-        rafRef.current = requestAnimationFrame(updateProgress);
-      }
-    };
-    rafRef.current = requestAnimationFrame(updateProgress);
+    cancelAnim.current = animateStrength(from, to, duration, (v) => {
+      strengthRef.current = v;
+      setStrength(v);
+    });
 
-    timerRef.current = setTimeout(() => {
-      setIsLocked(true);
-      setProgress(1);
-    }, LOCK_DELAY_MS);
-  }, [isLocked]);
-
-  const cancelTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
-    }
-    startTimeRef.current = null;
-    if (!isLocked) setProgress(0);
-  }, [isLocked]);
+    return () => cancelAnim.current?.();
+  }, [isHovered, idleStrength]);
 
   return (
     <div
-      className={`relative cursor-pointer select-none ${className ?? ""}`}
-      onMouseEnter={startTimer}
-      onMouseLeave={cancelTimer}
-      // タッチデバイス: タップ押下でタイマー開始、離したらキャンセル
-      onTouchStart={startTimer}
-      onTouchEnd={cancelTimer}
+      className={`relative select-none ${className ?? ""}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => setIsHovered(false)}
     >
-      <PainterlyCanvas src={src} strength={strength} isLocked={isLocked} />
-
-      {/* ロックイン前のみプログレスバーを表示 */}
-      {!isLocked && progress > 0 && (
-        <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20">
-          <div
-            className="h-full bg-white/80 transition-none"
-            style={{ width: `${progress * 100}%` }}
-          />
-        </div>
-      )}
-
-      {/* ロックイン完了インジケーター */}
-      {isLocked && (
-        <div className="absolute bottom-2 right-2 text-white/70 text-xs bg-black/40 px-2 py-0.5 rounded-full pointer-events-none">
-          ✓
-        </div>
-      )}
+      <PainterlyCanvas src={src} strength={strength} isLocked={false} />
     </div>
   );
 }

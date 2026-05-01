@@ -37,14 +37,14 @@ export default function Page() {
   return (
     <div className="container mx-auto px-5">
       <Header />
-      <div className="flex flex-col items-center mt-16 mb-8">
-        <div className="w-full max-w-md aspect-[4/3] rounded-xl overflow-hidden shadow-lg mb-8">
-          <HoverShaderImage src="/images/posts/フランス/1.jpg" strength={0.7} className="w-full h-full" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-16 mb-16 items-start">
+        <div className="w-full aspect-[4/3] rounded-xl overflow-hidden shadow-lg">
+          <HoverShaderImage src="/images/posts/about.jpeg" strength={0.7} className="w-full h-full" />
         </div>
+        <article className="prose lg:prose-lg dark:prose-invert blog-content">
+          <Markdown>{content}</Markdown>
+        </article>
       </div>
-      <article className="prose lg:prose-lg dark:prose-invert mx-auto mt-10 mb-10 blog-content">
-        <Markdown>{content}</Markdown>
-      </article>
       <Footer />
     </div>
   );
