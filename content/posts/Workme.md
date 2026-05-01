@@ -3,9 +3,9 @@ number: 5
 slug: "workme"
 tags:
   - ""
-date: "2026-04-22"
-updated: "2026-04-22"
-location: ""
+date: "2026-04-30"
+updated: "2026-04-30"
+location: "Tokyo, Japan"
 title: "一緒に働くあなたへ"
 description: ""
 metaTags:

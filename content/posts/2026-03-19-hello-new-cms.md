@@ -14,7 +14,7 @@ metaTags:
   - markdown
 coverImage: "/images/placeholder.webp"
 featured: false
-draft: false
+draft: true
 ---
 
 ## はじめに
@@ -29,14 +29,14 @@ draft: false
 
 記事の先頭に以下のメタデータを記述します。
 
-| フィールド | 説明 |
-|-----------|------|
-| `number` | 記事の連番 |
-| `slug` | URLに使われる識別子 |
-| `tags` | タグ（複数可） |
-| `date` | 公開日時 |
-| `location` | 撮影・執筆場所 |
-| `title` | 記事タイトル |
+| フィールド    | 説明                      |
+| ------------- | ------------------------- |
+| `number`      | 記事の連番                |
+| `slug`        | URLに使われる識別子       |
+| `tags`        | タグ（複数可）            |
+| `date`        | 公開日時                  |
+| `location`    | 撮影・執筆場所            |
+| `title`       | 記事タイトル              |
 | `description` | 概要（OGP・カード表示用） |
 
 ---
