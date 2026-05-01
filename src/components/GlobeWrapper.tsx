@@ -26,7 +26,7 @@ export default function GlobeWrapper({ isVisible = true, onReady, locationPosts,
       />
       <div
         className={cn(
-          "transition-all duration-1000 ease-out",
+          "w-full max-w-[600px] transition-all duration-1000 ease-out",
           isVisible
             ? "translate-y-0 scale-100 opacity-100"
             : "translate-y-10 scale-[0.97] opacity-0"

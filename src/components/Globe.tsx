@@ -1,10 +1,11 @@
 "use client";
 
 import createGlobe from "cobe";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { POST_LOCATIONS } from "@/lib/locations";
 import LocationCardOverlay from "@/components/LocationCardOverlay";
 import PolaroidCard from "@/components/PolaroidCard";
+import DepartureBoardOverlay from "@/components/DepartureBoardOverlay";
 import type { Post } from "@/types/content";
 
 const DRAG_SENSITIVITY = 0.005;
@@ -48,6 +49,7 @@ type GlobeProps = {
 };
 
 export default function Globe({ onReady, locationPosts, selectedLocation, setSelectedLocation }: GlobeProps) {
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const onReadyRef = useRef(onReady);
   const focusRef = useRef<[number, number]>(
@@ -60,6 +62,13 @@ export default function Globe({ onReady, locationPosts, selectedLocation, setSel
   // ボタンを押した時の「予約地点」。到着したらカードを開く
   const pendingLocationRef = useRef<PostLocation | null>(null);
   selectedLocationRef.current = selectedLocation;
+
+  const handleNavigate = useCallback((loc: PostLocation) => {
+    stopMotionRef.current();
+    focusRef.current = locationToAngles(loc.lat, loc.lng);
+    pendingLocationRef.current = loc;
+    setSelectedLocation(null);
+  }, [setSelectedLocation]);
 
   useEffect(() => {
     onReadyRef.current = onReady;
@@ -322,23 +331,7 @@ export default function Globe({ onReady, locationPosts, selectedLocation, setSel
         />
       ))}
 
-      <div className="flex flex-wrap justify-center items-center gap-2 mt-3">
-        <span className="text-sm text-muted-foreground">Rotate to:</span>
-        {POST_LOCATIONS.map((loc) => (
-          <button
-            key={loc.slug}
-            onClick={() => {
-              stopMotionRef.current();
-              focusRef.current = locationToAngles(loc.lat, loc.lng);
-              pendingLocationRef.current = loc;  // 到着したらカードを開く予約
-              setSelectedLocation(null);         // 前のカードを即閉じる
-            }}
-            className="bg-white/10 hover:bg-white/20 transition-colors rounded-lg px-3 py-1 text-sm cursor-pointer"
-          >
-            {loc.name}
-          </button>
-        ))}
-      </div>
+      <DepartureBoardOverlay locationPosts={locationPosts} onNavigate={handleNavigate} />
 
       {/* LocationCardOverlayはHomeHeroでグローバル管理するためここでは描画しない */}
 
