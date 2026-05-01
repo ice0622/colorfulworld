@@ -316,6 +316,7 @@ export default function Globe({ onReady, locationPosts }: GlobeProps) {
           location={loc}
           isActive={frontmostSlug === loc.slug}
           post={locationPosts[loc.slug] ?? null}
+          onSelect={() => setSelectedLocation(loc)}
         />
       ))}
 

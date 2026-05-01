@@ -2,7 +2,6 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { GeistPixelSquare } from "geist/font/pixel";
 import { PostLocation } from "@/lib/locations";
 import type { Post } from "@/types/content";
@@ -13,6 +12,8 @@ type Props = {
   location: PostLocation;
   isActive: boolean;
   post: Post | null;
+  /** クリック時に LocationCardOverlay を開くためのコールバック */
+  onSelect?: () => void;
 };
 
 // ---- サイズ定数 ----
@@ -40,7 +41,7 @@ function getTiltAngle(slug: string): number {
   return sign * magnitude;
 }
 
-export default function PolaroidCard({ location, isActive, post }: Props) {
+export default function PolaroidCard({ location, isActive, post, onSelect }: Props) {
   const label =
     location.slug.charAt(0).toUpperCase() + location.slug.slice(1);
 
@@ -76,7 +77,11 @@ export default function PolaroidCard({ location, isActive, post }: Props) {
       }}
     >
       {post ? (
-        <Link href={`/blog/${post.slug}`} className="block">
+        <button
+          type="button"
+          onClick={onSelect}
+          className="block text-left cursor-pointer"
+        >
           <div
             className={`bg-white shadow-xl border border-gray-200 ${CARD_WIDTH} ${PADDING_TOP} ${PADDING_BTM}`}
           >
@@ -102,7 +107,7 @@ export default function PolaroidCard({ location, isActive, post }: Props) {
               {label}
             </div>
           </div>
-        </Link>
+        </button>
       ) : null}
     </div>
   );
