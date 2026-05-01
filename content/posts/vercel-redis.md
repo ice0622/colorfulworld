@@ -7,7 +7,7 @@ date: "2025-11-06"
 updated: "2026-04-23"
 location: ""
 title: "Vercel で Upstash Redis を作ったけど削除できない問題"
-description: "何回もAPI叩いてもうまくいかなかった。。。"
+description: "何回API叩いてもうまくいかなかった。。。"
 metaTags:
   - ""
 coverImage: "/images/posts/TECH/public.jpg"
