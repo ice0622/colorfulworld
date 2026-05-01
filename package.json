@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
+    "dev": "npm run sync-locations && next dev --turbopack",
+    "build": "npm run sync-locations && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "sync-locations": "npx tsx scripts/sync-locations.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

@@ -6,8 +6,8 @@ tags:
 date: "2025-03-13"
 updated: "2026-04-22"
 location: 
-  - "uk"
-  - "china"
+  - "London, UK"
+  - "China"
 title: "帰るまでが遠足 イギリス 中国編 上"
 description: "エヴァンゲリオンって面白いですよね。。。"
 metaTags:

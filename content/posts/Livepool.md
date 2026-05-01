@@ -5,7 +5,7 @@ tags:
   - "TRIP"
 date: "2025-02-21"
 updated: "2026-01-01"
-location: "liverpool"
+location: "Liverpool, UK"
 title: "音の流れに川の流れに リヴァプール"
 description: "カモメだらけでした"
 metaTags:

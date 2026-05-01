@@ -12,6 +12,7 @@ import type {
   GetRelatedPostsResult,
   Tag,
 } from "@/types/content";
+import { locationQueryToSlug } from "@/lib/locations";
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 
@@ -78,9 +79,9 @@ async function parsePostFile(
     featured: data.featured ?? false,
     draft: data.draft ?? false,
     location: Array.isArray(data.location)
-      ? data.location.map((l: string) => l.trim().toLowerCase()).filter(Boolean)
+      ? data.location.map((l: string) => locationQueryToSlug(l.trim())).filter(Boolean)
       : typeof data.location === "string" && data.location.trim()
-        ? [data.location.trim().toLowerCase()]
+        ? [locationQueryToSlug(data.location.trim())]
         : [],
     metaTags,
     author: null,

@@ -5,7 +5,7 @@ tags:
   - "TRIP"
 date: "2025-02-21"
 updated: "2026-01-01"
-location: "manchester"
+location: "Manchester, UK"
 title: "世界を変えたマンチェスター"
 description: "産業革命が起こった場所はとてもブルーでした"
 metaTags:

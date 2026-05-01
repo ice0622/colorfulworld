@@ -23,14 +23,6 @@ function formatBoardDate(post: Post | null | undefined): string {
   }
 }
 
-const LOCATION_EN: Record<string, string> = {
-  tokyo: "TOKYO",
-  france: "FRANCE",
-  manchester: "MANCHESTER",
-  liverpool: "LIVERPOOL",
-  uk: "LONDON",
-  china: "CHINA",
-};
 
 type Props = {
   locationPosts: Record<string, Post | null>;
@@ -94,7 +86,7 @@ export default function DepartureBoardOverlay({ locationPosts, onNavigate }: Pro
               ◎
             </span>
             <span className="text-white flex-1 text-sm tracking-widest" style={{ textShadow: "0 0 6px rgba(255,255,255,0.4)" }}>
-              {LOCATION_EN[loc.slug] ?? loc.slug.toUpperCase()}
+              {loc.query.split(",")[0].trim().toUpperCase()}
             </span>
             <span className="text-white/80 text-sm tabular-nums shrink-0" style={{ textShadow: "0 0 6px rgba(255,255,255,0.5)", letterSpacing: "0.05em" }}>
               {formatBoardDate(locationPosts[loc.slug])}
