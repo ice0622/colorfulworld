@@ -33,8 +33,6 @@ I would like to share that story with you.
 
 ## ロンドン
 
-![](/images/posts/China/6.jpg)
-
 ヨーロッパ旅行を終え、クタクタな体と冷めない興奮を一緒に引き摺りながらマンチェスターからロンドンへと向かいました
 After finishing my Europe trip, with my exhausted body and the excitement still lingering, I headed from Manchester to London.
 
