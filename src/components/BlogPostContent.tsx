@@ -7,6 +7,7 @@ import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
 import sanitize, { defaults } from "sanitize-html";
 import { motion } from "framer-motion";
+import HoverShaderImage from "@/components/HoverShaderImage";
 // 参考コードに合わせて画像ハイライトのトグルを用意（存在する場合のみ有効）
 import ImageHighright from "./ImageHighright";
 
@@ -14,6 +15,22 @@ const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
+
+// remark-html は standalone 画像を <p><img></p> として出力する
+// 画像の直後にキャプションテキストが続く場合（<p><img/>テキスト</p>）も処理する
+function extractImgEl(block: ChildNode): { img: Element; caption?: string } | null {
+  if (block.nodeName === "IMG") return { img: block as Element };
+  if (block.nodeName === "P") {
+    const children = Array.from((block as Element).childNodes).filter(
+      (n) => !(n.nodeName === "#text" && !n.textContent?.trim())
+    );
+    if (children.length >= 1 && children[0].nodeName === "IMG") {
+      const caption = children.slice(1).map((n) => n.textContent).join("").trim();
+      return { img: children[0] as Element, caption: caption || undefined };
+    }
+  }
+  return null;
+}
 
 export const PostContent = ({ content }: { content: string }) => {
   const [showSlider, setShowSlider] = useState(false);
@@ -55,7 +72,7 @@ export const PostContent = ({ content }: { content: string }) => {
       a: ["href", "title", "target", "rel"],
       img: ["src", "alt", "title", "width", "height", "loading"],
       iframe: ["src", "allowfullscreen", "style"],
-      code: ["class"], // 言語クラスを残すとハイライトが効く
+      code: ["class"],
       pre: [],
     },
     allowedIframeHostnames: ["www.youtube.com", "www.youtube-nocookie.com"],
@@ -76,22 +93,33 @@ export const PostContent = ({ content }: { content: string }) => {
   return (
     <div className="blog-content mx-auto">
       <div className="space-y-6">
-        {contentBlocks.map((block, index) => (
-          <motion.div
-            key={index}
-            variants={fadeInUp}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.1 }}
-            className="prose lg:prose-xl dark:prose-invert mx-auto"
-          >
-            {block.nodeType === Node.ELEMENT_NODE ? (
-              <div dangerouslySetInnerHTML={{ __html: (block as Element).outerHTML }} />
-            ) : (
-              <p>{block.textContent}</p>
-            )}
-          </motion.div>
-        ))}
+        {contentBlocks.map((block, index) => {
+          const imgData = extractImgEl(block);
+          return (
+            <motion.div
+              key={index}
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              className="prose lg:prose-xl dark:prose-invert mx-auto"
+            >
+              {imgData ? (
+                <>
+                  <HoverShaderImage
+                    src={imgData.img.getAttribute("src") ?? ""}
+                    alt={imgData.img.getAttribute("alt") ?? undefined}
+                  />
+                  {imgData.caption && <p>{imgData.caption}</p>}
+                </>
+              ) : block.nodeName !== "#text" && block.nodeName !== "#comment" ? (
+                <div dangerouslySetInnerHTML={{ __html: (block as Element).outerHTML }} />
+              ) : (
+                <p>{block.textContent}</p>
+              )}
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* 参考実装に合わせたハイライト画像のトグル（任意） */}

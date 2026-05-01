@@ -34,15 +34,32 @@ function animateStrength(
 
 type Props = {
   src: string;
+  alt?: string;
   strength?: number; // アイドル時の絵画強度 (0.0〜1.0)
   className?: string;
+  onClick?: () => void;
 };
 
-export default function HoverShaderImage({ src, strength: idleStrength = 0.85, className }: Props) {
+export default function HoverShaderImage({ src, alt, strength: idleStrength = 0.85, className, onClick }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const strengthRef = useRef(idleStrength);
   const [strength, setStrength] = useState(idleStrength);
   const cancelAnim = useRef<(() => void) | null>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [hasBeenVisible, setHasBeenVisible] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+        if (entry.isIntersecting) setHasBeenVisible(true);
+      },
+      { threshold: 0.1 }
+    );
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     cancelAnim.current?.();
@@ -60,13 +77,25 @@ export default function HoverShaderImage({ src, strength: idleStrength = 0.85, c
 
   return (
     <div
+      ref={containerRef}
       className={`relative select-none ${className ?? ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onTouchStart={() => setIsHovered(true)}
       onTouchEnd={() => setIsHovered(false)}
     >
-      <PainterlyCanvas src={src} strength={strength} isLocked={false} />
+      <img
+        src={src}
+        alt={alt}
+        onClick={onClick}
+        className="w-full block cursor-pointer"
+        style={{ visibility: hasBeenVisible ? "hidden" : "visible" }}
+      />
+      {hasBeenVisible && (
+        <div className="absolute inset-0" onClick={onClick}>
+          <PainterlyCanvas src={src} strength={strength} isLocked={!isInView} />
+        </div>
+      )}
     </div>
   );
 }
