@@ -1,8 +1,9 @@
 import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
-import GlobeWrapper from "@/components/GlobeWrapper";
-import Link from "next/link";
+import HomeHero from "@/components/HomeHero";
 import { config } from "@/config";
+import { getPosts } from "@/lib/content";
+import { POST_LOCATIONS } from "@/lib/locations";
+import type { Post } from "@/types/content";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,28 +12,20 @@ export const metadata: Metadata = {
   },
 };
 
-const Page = () => {
+const Page = async () => {
+  // 全ロケーションの代表記事をサーバーサイドで一括取得（クライアントAPIコールをゼロにする）
+  const locationPostsEntries = await Promise.all(
+    POST_LOCATIONS.map(async (loc) => {
+      const result = await getPosts({ locationSlug: loc.slug, limit: 1 });
+      return [loc.slug, result.posts[0] ?? null] as [string, Post | null];
+    })
+  );
+  const locationPosts = Object.fromEntries(locationPostsEntries) as Record<string, Post | null>;
+
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="container mx-auto px-5">
-        <Header />
-      </div>
-
-      {/* メインコンテンツ：地球儀ヒーロー */}
-      <main className="flex-1 flex flex-col items-center justify-center gap-6 py-10">
-        <div className="text-center space-y-2">
-          <h1 className="text-3xl font-bold tracking-tight">
-            旅の記録
-          </h1>
-        </div>
-        <GlobeWrapper />
-
-        <Link
-          href="/blog"
-          className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground transition-colors"
-        >
-          すべての記事を見る →
-        </Link>
+      <main className="flex-1 items-center justify-center">
+        <HomeHero locationPosts={locationPosts} />
       </main>
 
       <div className="container mx-auto px-5">

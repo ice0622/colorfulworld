@@ -11,6 +11,7 @@ import { Analytics } from "@vercel/analytics/next"
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://colorfulworld.jp"),
   title: {
     absolute: config.blog.metadata.title.absolute,
     default: config.blog.metadata.title.default,
@@ -20,6 +21,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: config.blog.metadata.title.default,
     description: config.blog.metadata.description,
+    url: "https://colorfulworld.jp",
+    siteName: config.blog.name,
     images: [
       signOgImageUrl({
         title: config.blog.name,
@@ -37,6 +40,9 @@ export default function RootLayout({
     <html lang="en">
       <head>
         <meta name="google-site-verification" content="Zz6bJhYQXG5-XM8xBRrvrtx1DcqdS8FzXOzolhqq_xg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Hannari&display=swap" rel="stylesheet" />
       </head>
       <body
         className={cn(
@@ -48,7 +54,7 @@ export default function RootLayout({
           <SpeedInsights />
           <Analytics />
           <main>
-            <div className="max-w-4xl mx-auto px-4">
+            <div className="max-w-4xl mx-auto px-4 pt-20">
               {children}
             </div>
           </main>

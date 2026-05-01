@@ -1,57 +1,63 @@
 export type PostLocation = {
-  // URLや内部識別子（小文字英数字）
   slug: string;
-  // 地図上の表示名
-  name: string;
-  // 緯度
+  query: string; // Nominatim API query e.g. "Tokyo, Japan"
+  name: string;  // display name
   lat: number;
-  // 経度
   lng: number;
-  // ピンの大きさ（0.03〜0.1 が目安）
   size: number;
-  // Wisp CMS に付けたタグ名（大文字・複数対応）
-  wispTags: string[];
 };
+
+export function locationQueryToSlug(query: string): string {
+  return query.split(",")[0].trim().toLowerCase().replace(/\s+/g, "-");
+}
 
 export const POST_LOCATIONS: PostLocation[] = [
   {
     slug: "tokyo",
-    name: "東京",
-    lat: 35.6895,
-    lng: 139.6917,
-    size: 0.07,
-    wispTags: ["TOKYO"],
+    query: "Tokyo, Japan",
+    name: "Tokyo",
+    lat: 35.6769,
+    lng: 139.7639,
+    size: 0.02,
+  },
+  {
+    slug: "china",
+    query: "China",
+    name: "China",
+    lat: 35.0001,
+    lng: 104.9999,
+    size: 0.02,
   },
   {
     slug: "france",
-    name: "フランス",
-    lat: 48.8566,
-    lng: 2.3522,
-    size: 0.07,
-    wispTags: ["FRANCE"],
-  },
-  {
-    slug: "manchester",
-    name: "マンチェスター",
-    lat: 53.4808,
-    lng: -2.2426,
-    size: 0.07,
-    wispTags: ["MANCHESTER"],
+    query: "France",
+    name: "France",
+    lat: 46.6034,
+    lng: 1.8883,
+    size: 0.02,
   },
   {
     slug: "liverpool",
-    name: "リバプール",
-    lat: 53.4084,
-    lng: -2.9916,
-    size: 0.07,
-    wispTags: ["LIVERPOOL"],
+    query: "Liverpool, UK",
+    name: "Liverpool",
+    lat: 53.3933,
+    lng: -2.9166,
+    size: 0.02,
   },
   {
-    slug: "shanghai",
-    name: "上海",
-    lat: 31.2304,
-    lng: 121.4737,
-    size: 0.07,
-    wispTags: ["CHINA"],
+    slug: "manchester",
+    query: "Manchester, UK",
+    name: "Manchester",
+    lat: 53.4795,
+    lng: -2.2451,
+    size: 0.02,
+  },
+  {
+    slug: "london",
+    query: "London, UK",
+    name: "London",
+    lat: 51.5074,
+    lng: -0.1278,
+    size: 0.02,
   },
 ];

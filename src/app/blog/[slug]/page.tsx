@@ -1,5 +1,4 @@
 import { BlogPostContent } from "@/components/BlogPostContent";
-import { CommentSection } from "@/components/CommentSection";
 import LikeButton from "@/components/LikeButton";
 import { TagList } from "@/components/TagList";
 import { Footer } from "@/components/Footer";
@@ -7,7 +6,7 @@ import { Header } from "@/components/Header";
 import { RelatedPosts } from "@/components/RelatedPosts";
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
-import { wisp } from "@/lib/wisp";
+import { getPost, getRelatedPosts } from "@/lib/content";
 import { notFound } from "next/navigation";
 import type { Metadata, ResolvingMetadata } from "next";
 import type { BlogPosting, WithContext } from "schema-dts";
@@ -18,7 +17,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const params = await props.params;
   const { slug } = params;
-  const result = await wisp.getPost(slug);
+  const result = await getPost(slug);
 
   if (!result?.post) {
     return { title: "Not Found" };
@@ -47,8 +46,8 @@ export async function generateMetadata(
 const Page = async (props: { params: Promise<{ slug: string }> }) => {
   const params = await props.params;
   const { slug } = params;
-  const result = await wisp.getPost(slug);
-  const { posts } = await wisp.getRelatedPosts({ slug, limit: 3 });
+  const result = await getPost(slug);
+  const { posts } = await getRelatedPosts({ slug, limit: 3 });
 
   if (!result?.post) return notFound();
 
@@ -76,7 +75,6 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
           <BlogPostContent post={result.post} />
           <LikeButton postId={result.post.id} title={title} slug={slug} />
           <RelatedPosts posts={posts} />
-          <CommentSection slug={slug} />
         </div>
         <TagList />
         <Footer />

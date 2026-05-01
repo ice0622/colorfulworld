@@ -3,13 +3,13 @@ export const revalidate = 3600; // 1 hour
 import { NextResponse } from "next/server";
 import RSS from "rss";
 import urlJoin from "url-join";
-import { wisp } from "../../lib/wisp";
+import { getPosts } from "../../lib/content";
 import { config } from "@/config";
 
 const baseUrl = config.baseUrl;
 
 export async function GET() {
-  const result = await wisp.getPosts({ limit: 20 });
+  const result = await getPosts({ limit: 20 });
 
   const posts = result.posts.map((post) => {
     return {
