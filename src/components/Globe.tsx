@@ -2,7 +2,7 @@
 
 import createGlobe from "cobe";
 import { useEffect, useRef, useState } from "react";
-import { POST_LOCATIONS, PostLocation } from "@/lib/locations";
+import { POST_LOCATIONS } from "@/lib/locations";
 import LocationCardOverlay from "@/components/LocationCardOverlay";
 import PolaroidCard from "@/components/PolaroidCard";
 import type { Post } from "@/types/content";
@@ -39,19 +39,21 @@ const LOCATION_ANGLES = POST_LOCATIONS.map((location) => ({
   angles: locationToAngles(location.lat, location.lng),
 }));
 
+import type { PostLocation } from "@/lib/locations";
 type GlobeProps = {
   onReady?: () => void;
   locationPosts: Record<string, Post | null>;
+  selectedLocation: PostLocation | null;
+  setSelectedLocation: (loc: PostLocation | null) => void;
 };
 
-export default function Globe({ onReady, locationPosts }: GlobeProps) {
+export default function Globe({ onReady, locationPosts, selectedLocation, setSelectedLocation }: GlobeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const onReadyRef = useRef(onReady);
   const focusRef = useRef<[number, number]>(
     locationToAngles(POST_LOCATIONS[0].lat, POST_LOCATIONS[0].lng)
   );
   const stopMotionRef = useRef<() => void>(() => { });
-  const [selectedLocation, setSelectedLocation] = useState<PostLocation | null>(null);
   const [frontmostSlug, setFrontmostSlug] = useState<string | null>(POST_LOCATIONS[0].slug);
   const selectedLocationRef = useRef<PostLocation | null>(null);
   const frontmostSlugRef = useRef<string | null>(POST_LOCATIONS[0].slug);
@@ -338,12 +340,7 @@ export default function Globe({ onReady, locationPosts }: GlobeProps) {
         ))}
       </div>
 
-      <LocationCardOverlay
-        location={selectedLocation}
-        onClose={() => {
-          setSelectedLocation(null); // カードを閉じる
-        }}
-      />
+      {/* LocationCardOverlayはHomeHeroでグローバル管理するためここでは描画しない */}
 
     </div>
   );

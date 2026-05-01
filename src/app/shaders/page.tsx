@@ -86,7 +86,7 @@ export default function PainterlyShaderPage() {
       >
         {/* Canvas 全面 */}
         <div className="absolute inset-0">
-          <PainterlyCanvas src={DEMO_IMAGE} strength={strength} />
+          <PainterlyCanvas src={DEMO_IMAGE} strength={strength} isLocked={false} />
         </div>
 
         {/* 暗めのグラデーションオーバーレイ（テキスト可読性のため） */}

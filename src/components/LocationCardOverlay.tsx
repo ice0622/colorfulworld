@@ -56,7 +56,7 @@ export default function LocationCardOverlay({ location, onClose, onVisible }: Pr
   return (
     // 背景・カードともに visible になってから表示（データ取得後にまとめてフェードイン）
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 dark:bg-black/80 backdrop-blur-sm"
       onClick={onClose}
     >
       {/* データ取得完了後にのみカードをレンダリング（loading中は何も出さない） */}

@@ -1,6 +1,8 @@
 "use client";
 
 import GlobeWrapper from "@/components/GlobeWrapper";
+import LocationCardOverlay from "@/components/LocationCardOverlay";
+import { POST_LOCATIONS, PostLocation } from "@/lib/locations";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
@@ -12,14 +14,22 @@ type Props = {
 
 export default function HomeHero({ locationPosts }: Props) {
   const [isGlobeReady, setIsGlobeReady] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<PostLocation | null>(null);
 
   return (
     <section className="relative flex flex-col items-center justify-center">
+      {/* LocationCardOverlayをページ全体で表示 */}
+      <LocationCardOverlay
+        location={selectedLocation}
+        onClose={() => setSelectedLocation(null)}
+      />
       <div className="relative z-10 flex w-full max-w-4xl flex-col items-center gap-6 text-center">
         <GlobeWrapper
           isVisible={isGlobeReady}
           onReady={() => setIsGlobeReady(true)}
           locationPosts={locationPosts}
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
         />
 
         <motion.div

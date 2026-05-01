@@ -6,13 +6,16 @@ import type { Post } from "@/types/content";
 
 const Globe = dynamic(() => import("@/components/Globe"), { ssr: false });
 
+import type { PostLocation } from "@/lib/locations";
 type GlobeWrapperProps = {
   isVisible?: boolean;
   onReady?: () => void;
   locationPosts: Record<string, Post | null>;
+  selectedLocation: PostLocation | null;
+  setSelectedLocation: (loc: PostLocation | null) => void;
 };
 
-export default function GlobeWrapper({ isVisible = true, onReady, locationPosts }: GlobeWrapperProps) {
+export default function GlobeWrapper({ isVisible = true, onReady, locationPosts, selectedLocation, setSelectedLocation }: GlobeWrapperProps) {
   return (
     <div className="relative my-10 flex min-h-[26rem] w-full justify-center">
       <div
@@ -29,7 +32,12 @@ export default function GlobeWrapper({ isVisible = true, onReady, locationPosts 
             : "translate-y-10 scale-[0.97] opacity-0"
         )}
       >
-        <Globe onReady={onReady} locationPosts={locationPosts} />
+        <Globe
+          onReady={onReady}
+          locationPosts={locationPosts}
+          selectedLocation={selectedLocation}
+          setSelectedLocation={setSelectedLocation}
+        />
       </div>
     </div>
   );
