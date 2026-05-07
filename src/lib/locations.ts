@@ -60,4 +60,12 @@ export const POST_LOCATIONS: PostLocation[] = [
     lng: -0.1278,
     size: 0.02,
   },
+  {
+    slug: "oita",
+    query: "Oita, Japan",
+    name: "Oita",
+    lat: 33.2394,
+    lng: 131.6097,
+    size: 0.02,
+  },
 ];
