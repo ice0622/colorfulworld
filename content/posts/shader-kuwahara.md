@@ -10,12 +10,12 @@ title: "写真を絵みたいにしよう - Kuwaharaフィルタで作ったイ�
 description: "GLSLとKuwaharaフィルタを使って写真を絵画風にするシェーダーを実装した記録"
 metaTags:
   - ""
-coverImage: "/images/posts/shader-kuwahara/1.png"
+coverImage: "/images/posts/shader-kuwahara/image.png"
 featured: false
 draft: false
 ---
 
-![](/images/posts/shader-kuwahara/1.png)
+![](/images/posts/shader-kuwahara/image.png)
 
 ブログに写真を貼るとき、ただ並べるだけじゃなんだかなーと思っていました
 
