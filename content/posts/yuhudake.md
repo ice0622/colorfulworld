@@ -3,7 +3,7 @@ number: 0
 slug: "mt-bungofuji"
 tags:
   - ""
-date: "2025-01-01"
+date: "2026-03-16"
 updated: "2026-01-01"
 location: "Oita, Japan"
 title: "由布岳登山_2026-03-15.log"
