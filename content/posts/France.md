@@ -7,7 +7,7 @@ date: "2025-02-18"
 updated: "2026-04-21"
 location: "France"
 title: "お花のお都 おフランス"
-description: "意識はしてなかったのですが思い返せば、結果として初めてのルーブルとシン・エヴァンゲリオンの聖地巡りをしてきました"
+description: "意識はしてなかったのですが思い返せば、初めてのルーブルとシン・エヴァの聖地巡りをしてきました"
 metaTags:
   - ""
 coverImage: "/images/posts/フランス/36.jpg"
