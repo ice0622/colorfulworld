@@ -3,7 +3,7 @@ number: 0
 slug: "vagrant-xdebug"
 tags:
   - "TECH"
-date: "2025-01-01"
+date: "2025-10-21"
 updated: "2026-01-01"
 location: ""
 title: "Vagrant 環境で Xdebug をソースインストールしようとして cannot run C compiled programs が出る理由と対処法"

@@ -100,8 +100,6 @@ I never imagined it would turn out like that...
 
 ## 上海浦東空港
 
-![](/images/posts/UK-China/)
-
 無事上海へと上陸して手続きを済ませた後、次の飛行機まで3時間もある状況でした
 After landing safely in Shanghai and finishing the necessary procedures, I had three hours until my next flight.
 
