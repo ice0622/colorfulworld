@@ -9,9 +9,9 @@ import { usePathname } from "next/navigation";
 import { FunctionComponent, useEffect, useState } from "react";
 
 const menuItems = [
-  { name: "Home", href: "/" },
-  { name: "Blog", href: "/blog" },
-  { name: "About", href: "/about" },
+  { name: "旅する", href: "/" },
+  { name: "話す",   href: "/blog" },
+  { name: "知る",   href: "/about" },
 ];
 
 export const Header: FunctionComponent = () => {
@@ -79,8 +79,8 @@ export const Header: FunctionComponent = () => {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "px-3 py-1 text-sm rounded-xl",
-                  pathname === item.href && "font-semibold"
+                  "px-3 py-1 text-sm rounded-xl font-['Hannari']",
+                  pathname === item.href && "underline underline-offset-4"
                 )}
               >
                 {item.name}
@@ -106,9 +106,9 @@ export const Header: FunctionComponent = () => {
                     key={item.href}
                     href={item.href}
                     className={cn(
-                      "px-3 py-2 rounded-xl text-sm",
+                      "px-3 py-2 rounded-xl text-sm font-['Hannari']",
                       "hover:bg-gray-900/10 dark:hover:bg-white/10",
-                      pathname === item.href && "font-semibold"
+                      pathname === item.href && "underline underline-offset-4"
                     )}
                   >
                     {item.name}
