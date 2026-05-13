@@ -13,10 +13,7 @@ export const Footer: FunctionComponent = () => {
         <div className="text-sm text-muted-foreground">
           © {config.blog.copyright} {new Date().getFullYear()}
         </div>
-        <div className="text-xs text-muted-foreground hidden lg:block">
-          {config.blog.copyright}
-        </div>
-        <div className="flex items-center gap-2">
+<div className="flex items-center gap-2">
           <Link href="/rss" className="w-auto inline-flex">
             <Button variant="ghost" className="p-2">
               <Rss className="w-4 h-4" />
@@ -24,10 +21,6 @@ export const Footer: FunctionComponent = () => {
           </Link>
           <DarkModeToggle />
         </div>
-      </div>
-      {/* 小画面用コピーライト */}
-      <div className="text-xs text-muted-foreground lg:hidden">
-        © {config.blog.copyright} {new Date().getFullYear()}
       </div>
     </footer>
   );
