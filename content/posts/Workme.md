@@ -12,7 +12,7 @@ metaTags:
   - ""
 coverImage: "/images/posts/workme/Image_20260430_160240.jpeg"
 featured: false
-draft: false
+draft: true
 ---
 
 ![](/images/posts/workme/Image_20260430_160240.jpeg)
