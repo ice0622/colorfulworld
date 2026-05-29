@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { GetPostResult } from "@/types/content";
 import Link from "next/link";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
 import sanitize, { defaults } from "sanitize-html";
 import { motion } from "framer-motion";
-import HoverShaderImage from "@/components/HoverShaderImage";
 // 参考コードに合わせて画像ハイライトのトグルを用意（存在する場合のみ有効）
 import ImageHighright from "./ImageHighright";
 
@@ -106,9 +105,11 @@ export const PostContent = ({ content }: { content: string }) => {
             >
               {imgData ? (
                 <>
-                  <HoverShaderImage
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
                     src={imgData.img.getAttribute("src") ?? ""}
-                    alt={imgData.img.getAttribute("alt") ?? undefined}
+                    alt={imgData.img.getAttribute("alt") ?? ""}
+                    className="w-full rounded-lg"
                   />
                   {imgData.caption && <p>{imgData.caption}</p>}
                 </>
@@ -137,9 +138,18 @@ export const PostContent = ({ content }: { content: string }) => {
 };
 
 export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const [titleExtraHeight, setTitleExtraHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    if (titleRef.current) {
+      // scaleY(2) で視覚的高さが2倍になるが layout 高さは変わらないため差分を補正
+      setTitleExtraHeight(titleRef.current.offsetHeight);
+    }
+  }, [post?.title]);
+
   useEffect(() => {
     if (!post?.content) return;
-    // 念のため、ページ初回表示でもハイライトを走らせる
     document.querySelectorAll("pre code").forEach((el) => {
       hljs.highlightElement(el as HTMLElement);
     });
@@ -151,9 +161,21 @@ export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
 
   return (
     <div>
-      {/* タイトルエリア：本文proseの外に出して大きく表示 */}
-      <div className="mx-auto max-w-4xl mb-8 mt-4">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight break-words">
+      {/* タイトルエリア */}
+      <div className="mx-auto max-w-4xl mt-4" style={{ paddingBottom: `${titleExtraHeight + 32}px` }}>
+        <h1
+          ref={titleRef}
+          className="text-3xl sm:text-4xl lg:text-5xl font-black break-words leading-tight"
+          style={{
+            fontFamily: "var(--font-noto-serif-jp)",
+            fontWeight: 900,
+            transform: "scaleY(1.6)",
+            transformOrigin: "top left",
+            letterSpacing: "-0.06em",
+            display: "inline-block",
+            width: "100%",
+          }}
+        >
           {title}
         </h1>
       </div>

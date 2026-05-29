@@ -7,7 +7,7 @@ date: "2025-10-09"
 updated: "2026-04-23"
 location: ""
 title: "２万行にもなるOpenAPIをどう管理していくか"
-description: "肥大化していて便利なのか不便なのかよくわからない"
+description: "プロジェクトで2万行を超えたOpenAPI定義ファイルの肥大化原因を分析し、エンドポイント単位での分割・統合スクリプトによる管理手法を解説します。"
 metaTags:
   - ""
 coverImage: "/images/posts/TECH/openapi.png"

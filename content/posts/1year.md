@@ -7,7 +7,7 @@ date: "2025-10-16"
 updated: "2026-01-01"
 location: ""
 title: "文系未経験新卒バックエンドサーバーサイドアプリケーションソリューションコンサルティング課（一部架空）、一年目活動記録"
-description: "この長い肩書大好き"
+description: "文系未経験からバックエンドエンジニアになった1年目の振り返り。PHP・CodeIgniter4・Xdebugを触りながら感じた成長と反省、2年目の目標を正直に書きます。"
 metaTags:
   - ""
 coverImage: "/images/posts/1year/1.png"
@@ -15,7 +15,7 @@ featured: false
 draft: false
 ---
 
-![](/images/posts/1year/1.png)
+![文系未経験から1年間バックエンドエンジニアとして働いた振り返りのイメージ](/images/posts/1year/1.png)
 
 2024年4月入社の24卒なのですが、研修やイベント業務に従事したのもあって、今月位でちょうどエンジニア歴は１年経ちました
 

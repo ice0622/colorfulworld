@@ -7,6 +7,7 @@ import type { Post } from "@/types/content";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
+  description: "旅・技術・日常をつづる個人ブログ。Web開発の知見や海外旅行の記録を発信しています。",
   alternates: {
     canonical: config.baseUrl,
   },
