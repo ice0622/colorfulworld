@@ -23,7 +23,7 @@ Google Seacrh Consoleに登録してSitemapを登録しようとしたところ
 
 のエラーがでました
 
-![](/images/posts/TECH/2.jpg)
+![Google Search Consoleに「sitemapを取得できませんでした」と表示されているエラー画面](/images/posts/TECH/2.jpg)
 
 
 一か月舞ったり🕺、待ったり、サイトマップを登録し直したり、動的生成から静的生成にしたりと色々試したが解決せず。。。
@@ -32,14 +32,14 @@ Google Seacrh Consoleに登録してSitemapを登録しようとしたところ
 
 結局、ドメインを購入してサイトマップを登録したら正常に取得できました
 
-![](/images/posts/TECH/3.jpg)
+![Google Search Consoleでsitemapが正常に取得できたことを示す成功画面](/images/posts/TECH/3.jpg)
 
 めちゃくちゃ調べて色々やったが結局ドメイン取るだけで一発で解決しました
 今まで調べてきて「ドメイン取ったら解決した！」っていう内容を見てなかったのでverce.appで戦ってやろうと思ってたんですが、気が向いてドメイン取得して登録し直したらすんなりいったので拍子抜けです
 
 ## ドメインのお話
 
-![](/images/posts/TECH/4.jpg)
+![お名前ドットコムのドメイン検索結果 - 高額なドメイン価格が表示されている画面](/images/posts/TECH/4.jpg)
 
 お名前ドットコムでドメイン取得しようとしたんですけど、こんな金額が出てきて詐欺サイトに飛ばされたかと思った
 

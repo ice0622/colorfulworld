@@ -3,6 +3,8 @@ import { BlogPostsPagination } from "@/components/BlogPostsPagination";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Badge } from "@/components/ui/badge";
+import { config } from "@/config";
+import { signOgImageUrl } from "@/lib/og-image";
 import { getPosts } from "@/lib/content";
 import { CircleX } from "lucide-react";
 import Link from "next/link";
@@ -24,7 +26,13 @@ export async function generateMetadata(
 
   return {
     title: `#${slug}`,
-    description: `Posts tagged with #${slug}`,
+    description: `#${slug} タグの記事一覧`,
+    alternates: { canonical: `${config.baseUrl}/tag/${slug}` },
+    openGraph: {
+      title: `#${slug}`,
+      description: `#${slug} タグの記事一覧`,
+      images: [signOgImageUrl({ title: `#${slug}`, brand: config.blog.name })],
+    },
   };
 }
 

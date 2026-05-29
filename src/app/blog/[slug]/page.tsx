@@ -51,7 +51,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
 
   if (!result?.post) return notFound();
 
-  const { title, publishedAt, updatedAt, image, author } = result.post;
+  const { title, publishedAt, updatedAt, image, author, tags } = result.post;
 
   // JSON-LD
   const jsonLd: WithContext<BlogPosting> = {
@@ -61,6 +61,13 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
     image: image || undefined,
     datePublished: publishedAt?.toString(),
     dateModified: updatedAt?.toString(),
+    author: { "@type": "Person", name: author ?? "Ayase" },
+    keywords: tags?.map((t) => t.name).join(", "),
+    url: `${config.baseUrl}/blog/${slug}`,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": `${config.baseUrl}/blog/${slug}`,
+    },
   };
 
   return (

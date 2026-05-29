@@ -7,7 +7,7 @@ date: "2025-10-21"
 updated: "2026-01-01"
 location: ""
 title: "Vagrant 環境で Xdebug をソースインストールしようとして cannot run C compiled programs が出る理由と対処法"
-description: "Xdebug本当にありがとう"
+description: "Vagrant共有ディレクトリ（/vagrant）でXdebugのソースビルド時に発生する「cannot run C compiled programs」エラーの原因はnoexecマウントオプションです。対処法とLinuxでのビルドディレクトリの選び方を解説します。"
 metaTags:
   - ""
 coverImage: "/images/posts/TECH/linux_pen.png"

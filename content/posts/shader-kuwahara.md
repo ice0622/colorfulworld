@@ -7,7 +7,7 @@ date: "2026-05-01"
 updated: "2026-05-01"
 location: ""
 title: "写真を絵みたいにしよう - Kuwaharaフィルタで作ったインタラクションの話"
-description: "GLSLとKuwaharaフィルタを使って写真を絵画風にするシェーダーを実装した記録"
+description: "GLSLとKuwaharaフィルタを使ってリアルタイムで写真を絵画風に変換するシェーダーをNext.jsに実装した記録。ホバーでインタラクティブに切り替わる体験を作るまでの設計判断も紹介します。"
 metaTags:
   - ""
 coverImage: "/images/posts/shader-kuwahara/image.png"
@@ -15,7 +15,7 @@ featured: false
 draft: false
 ---
 
-![](/images/posts/shader-kuwahara/image.png)
+![KuwaharaフィルタをかけたNext.jsブログの写真表示 - 絵画風に変換されたサンプル画像](/images/posts/shader-kuwahara/image.png)
 
 ブログに写真を貼るとき、ただ並べるだけじゃなんだかなーと思っていました
 
