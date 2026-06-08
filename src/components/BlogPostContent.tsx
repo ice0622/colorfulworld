@@ -31,7 +31,13 @@ function extractImgEl(block: ChildNode): { img: Element; caption?: string } | nu
   return null;
 }
 
-export const PostContent = ({ content }: { content: string }) => {
+export const PostContent = ({
+  content,
+  chrome = true,
+}: {
+  content: string;
+  chrome?: boolean;
+}) => {
   const [showSlider, setShowSlider] = useState(false);
 
   // 許可タグ・属性を明示してサニタイズ
@@ -123,16 +129,20 @@ export const PostContent = ({ content }: { content: string }) => {
         })}
       </div>
 
-      {/* 参考実装に合わせたハイライト画像のトグル（任意） */}
-      <div className="flex justify-center mt-4">
-        <button
-          className="p-2 bg-white text-black border border-black rounded hover:bg-black hover:text-white transition-colors duration-300"
-          onClick={() => setShowSlider((v) => !v)}
-        >
-          {showSlider ? "閉じる" : "ハイライト"}
-        </button>
-      </div>
-      {showSlider && <ImageHighright content={sanitizedContent} />}
+      {/* 参考実装に合わせたハイライト画像のトグル（任意・プレビューでは非表示） */}
+      {chrome && (
+        <>
+          <div className="flex justify-center mt-4">
+            <button
+              className="p-2 bg-white text-black border border-black rounded hover:bg-black hover:text-white transition-colors duration-300"
+              onClick={() => setShowSlider((v) => !v)}
+            >
+              {showSlider ? "閉じる" : "ハイライト"}
+            </button>
+          </div>
+          {showSlider && <ImageHighright content={sanitizedContent} />}
+        </>
+      )}
     </div>
   );
 };
