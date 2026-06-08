@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -13,10 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ChipInput } from "./ChipInput";
-import {
-  MarkdownTextarea,
-  type MarkdownTextareaHandle,
-} from "./MarkdownTextarea";
+import { MarkdownTextarea } from "./MarkdownTextarea";
 import { ImageUploader, uploadImage } from "./ImageUploader";
 import { LivePreview } from "./LivePreview";
 
@@ -27,8 +24,6 @@ type Props = {
 export function PostEditor({ initial }: Props) {
   const router = useRouter();
   const { toast } = useToast();
-  const mdRef = useRef<MarkdownTextareaHandle>(null);
-  const imgInputRef = useRef<HTMLInputElement>(null);
   const [tab, setTab] = useState<"edit" | "preview">("edit");
   const [saving, setSaving] = useState(false);
   const [slugTouched, setSlugTouched] = useState(Boolean(initial?.slug));
@@ -85,19 +80,6 @@ export function PostEditor({ initial }: Props) {
 
   const onSaveDraft = handleSubmit((v) => doSave(v, false));
   const onPublish = handleSubmit((v) => doSave(v, true));
-
-  const insertImage = async (file: File) => {
-    try {
-      const url = await uploadImage(file);
-      mdRef.current?.insert(`\n![](${url})\n`);
-      toast({ description: "画像を挿入しました" });
-    } catch (e) {
-      toast({
-        variant: "destructive",
-        description: e instanceof Error ? e.message : "アップロード失敗",
-      });
-    }
-  };
 
   return (
     <div className="pb-24">
@@ -250,36 +232,13 @@ export function PostEditor({ initial }: Props) {
             </div>
           </div>
 
-          <input
-            ref={imgInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={(e) => {
-              const f = e.target.files?.[0];
-              if (f) insertImage(f);
-              e.target.value = "";
-            }}
-          />
-
           <div className="grid gap-4 lg:grid-cols-2">
-            <div
-              className={tab === "edit" ? "block" : "hidden lg:block"}
-              onDrop={(e) => {
-                const f = e.dataTransfer.files?.[0];
-                if (f && f.type.startsWith("image/")) {
-                  e.preventDefault();
-                  insertImage(f);
-                }
-              }}
-              onDragOver={(e) => e.preventDefault()}
-            >
+            <div className={tab === "edit" ? "block" : "hidden lg:block"}>
               <MarkdownTextarea
-                ref={mdRef}
                 value={body}
                 onChange={(v) => setValue("bodyMd", v)}
-                placeholder="Markdown で本文を書く。画像はドラッグ&ドロップ or ツールバーから。"
-                onRequestImage={() => imgInputRef.current?.click()}
+                onUpload={uploadImage}
+                placeholder="Markdown で本文を書く。画像はドラッグ&ドロップ / 貼り付け / ツールバーから。"
               />
             </div>
             <div className={tab === "preview" ? "block" : "hidden lg:block"}>
