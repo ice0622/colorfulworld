@@ -38,13 +38,17 @@ export async function saveDraft(values: PostFormValues): Promise<ActionResult> {
   }
   const v = parsed.data;
 
-  if (await slugExists(v.slug, v.id)) {
-    return { ok: false, error: `slug "${v.slug}" は既に使われています` };
+  // slug 未入力なら自動生成（書きかけでも下書き保存できるように）
+  const slugInput =
+    v.slug.trim() || `draft-${Math.random().toString(36).slice(2, 8)}`;
+
+  if (await slugExists(slugInput, v.id)) {
+    return { ok: false, error: `slug "${slugInput}" は既に使われています` };
   }
 
   const { id, slug } = await upsertPost({
     id: v.id,
-    slug: v.slug,
+    slug: slugInput,
     title: v.title,
     description: v.description,
     bodyMd: v.bodyMd,
@@ -87,6 +91,12 @@ export async function deletePostAction(id: string): Promise<void> {
 export async function saveAndPublish(
   values: PostFormValues
 ): Promise<ActionResult> {
+  if (!values.title.trim()) {
+    return { ok: false, error: "公開にはタイトルが必要です" };
+  }
+  if (!values.slug.trim()) {
+    return { ok: false, error: "公開には slug が必要です" };
+  }
   const res = await saveDraft(values);
   if (!res.ok) return res;
   await setPublished(res.id, true);
