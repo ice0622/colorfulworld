@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { PostContent } from "@/components/BlogPostContent";
 
 // 本文 markdown を本番同一パイプラインで HTML 化してプレビュー（debounce）
-export function LivePreview({ body, title }: { body: string; title?: string }) {
+// スクロール同期のため、外側スクロール要素を ref で公開する
+export const LivePreview = forwardRef<
+  HTMLDivElement,
+  { body: string; title?: string }
+>(function LivePreview({ body, title }, ref) {
   const [html, setHtml] = useState("");
 
   useEffect(() => {
@@ -22,7 +26,7 @@ export function LivePreview({ body, title }: { body: string; title?: string }) {
       } catch {
         /* プレビュー失敗は黙殺 */
       }
-    }, 500);
+    }, 400);
     return () => {
       cancelled = true;
       clearTimeout(t);
@@ -30,15 +34,16 @@ export function LivePreview({ body, title }: { body: string; title?: string }) {
   }, [body]);
 
   return (
-    <div className="h-full overflow-auto rounded-md border border-input p-4">
-      {title && (
-        <h1 className="mb-4 text-2xl font-bold tracking-tight">{title}</h1>
-      )}
+    <div
+      ref={ref}
+      className="h-[50vh] overflow-auto rounded-md border border-input p-4 lg:h-[70vh]"
+    >
+      {title && <h1 className="mb-4 text-2xl font-bold tracking-tight">{title}</h1>}
       {html ? (
-        <PostContent content={html} chrome={false} />
+        <PostContent content={html} chrome={false} animate={false} />
       ) : (
         <p className="text-sm text-muted-foreground">プレビュー…</p>
       )}
     </div>
   );
-}
+});

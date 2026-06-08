@@ -3,8 +3,22 @@
 import { useRef, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
+// HEIC/HEIF（iPhone 写真など）はブラウザで表示できないので JPEG に変換してから扱う
+async function convertHeicIfNeeded(file: File): Promise<File> {
+  const isHeic =
+    /image\/hei[cf]/i.test(file.type) || /\.(heic|heif)$/i.test(file.name);
+  if (!isHeic) return file;
+
+  const heic2any = (await import("heic2any")).default;
+  const out = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 });
+  const blob = Array.isArray(out) ? out[0] : out;
+  const name = file.name.replace(/\.(heic|heif)$/i, "") + ".jpg";
+  return new File([blob], name, { type: "image/jpeg" });
+}
+
 // 画像をアップロードして URL を返す。アップロード自体は呼び出し側が onUploaded で受け取る。
-export async function uploadImage(file: File): Promise<string> {
+export async function uploadImage(input: File): Promise<string> {
+  const file = await convertHeicIfNeeded(input);
   const form = new FormData();
   form.append("file", file);
   const res = await fetch("/api/admin/upload", { method: "POST", body: form });

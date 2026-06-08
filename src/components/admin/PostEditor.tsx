@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -36,6 +36,15 @@ export function PostEditor({ initial }: Props) {
   const [saving, setSaving] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [slugTouched, setSlugTouched] = useState(Boolean(initial?.slug));
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  // エディタのスクロール割合にプレビューを追従させる
+  const syncPreviewScroll = (ratio: number) => {
+    const el = previewRef.current;
+    if (!el) return;
+    const max = el.scrollHeight - el.clientHeight;
+    el.scrollTop = ratio * max;
+  };
 
   const {
     register,
@@ -163,11 +172,12 @@ export function PostEditor({ initial }: Props) {
             value={body}
             onChange={(v) => setValue("bodyMd", v)}
             onUpload={uploadImage}
+            onScrollRatio={syncPreviewScroll}
             placeholder="ここに本文を Markdown で。画像はドラッグ&ドロップ / 貼り付けでOK。タイトルや slug は右上「設定」で後から。"
           />
         </div>
         <div className={tab === "preview" ? "block" : "hidden lg:block"}>
-          <LivePreview body={body} title={title} />
+          <LivePreview ref={previewRef} body={body} title={title} />
         </div>
       </div>
 
