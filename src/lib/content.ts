@@ -7,12 +7,23 @@ import remarkBreaks from "remark-breaks";
 import remarkHtml from "remark-html";
 import type {
   Post,
+  PostCategory,
   GetPostsResult,
   GetPostResult,
   GetRelatedPostsResult,
   Tag,
 } from "@/types/content";
 import { locationQueryToSlug } from "@/lib/locations";
+
+// tags（TRIP / TECH / LIFE）からカテゴリを導出する。
+// 該当タグが無ければ location の有無でフォールバック（あり=旅 / なし=日常）。
+function deriveCategory(tagNames: string[], hasLocation: boolean): PostCategory {
+  const upper = tagNames.map((t) => t.toUpperCase());
+  if (upper.includes("TRIP")) return "trip";
+  if (upper.includes("TECH")) return "tech";
+  if (upper.includes("LIFE")) return "daily";
+  return hasLocation ? "trip" : "daily";
+}
 
 const POSTS_DIR = path.join(process.cwd(), "content/posts");
 
@@ -63,6 +74,12 @@ async function parsePostFile(
 
   const coverImage: string | null = data.coverImage || null;
 
+  const locationArr = Array.isArray(data.location)
+    ? data.location.map((l: string) => locationQueryToSlug(l.trim())).filter(Boolean)
+    : typeof data.location === "string" && data.location.trim()
+      ? [locationQueryToSlug(data.location.trim())]
+      : [];
+
   return {
     id: data.slug,
     number: data.number ?? 0,
@@ -73,16 +90,13 @@ async function parsePostFile(
     image: coverImage,
     coverImage,
     tags,
+    category: deriveCategory(tags.map((t) => t.name), locationArr.length > 0),
     publishedAt: data.date || null,
     createdAt: data.date || new Date().toISOString(),
     updatedAt: data.updated || null,
     featured: data.featured ?? false,
     draft: data.draft ?? false,
-    location: Array.isArray(data.location)
-      ? data.location.map((l: string) => locationQueryToSlug(l.trim())).filter(Boolean)
-      : typeof data.location === "string" && data.location.trim()
-        ? [locationQueryToSlug(data.location.trim())]
-        : [],
+    location: locationArr,
     metaTags,
     author: null,
   };

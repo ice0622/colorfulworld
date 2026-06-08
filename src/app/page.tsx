@@ -1,4 +1,5 @@
 import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
 import { PostIndexList } from "@/components/PostIndexList";
 import { config } from "@/config";
 import { getPosts } from "@/lib/content";
@@ -15,21 +16,16 @@ const Page = async () => {
   const { posts } = await getPosts({ limit: "all" });
 
   return (
-    <div className="mb-20">
-      {/* ヘッダー部：サイト名 ＋ 一言紹介 */}
-      <header className="mb-8 px-4">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          {config.blog.name}
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          旅・技術・日常の記録。
-        </p>
-      </header>
+    <>
+      <Header />
+      <div className="mb-20">
+        <h1 className="sr-only">{config.blog.name}</h1>
 
-      <PostIndexList posts={posts} />
+        <PostIndexList posts={posts} />
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 };
 
