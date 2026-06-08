@@ -2,11 +2,11 @@
 number: 0
 slug: "mt-bungofuji"
 tags:
-  - ""
+  - "TRIP"
 date: "2026-03-16"
 updated: "2026-01-01"
 location: "Oita, Japan"
-title: "由布岳登山_2026-03-15.log"
+title: "由布岳登山.log"
 description: "ハイキングだと思ったら登山でした。ちくしょーー"
 metaTags:
   - "TRIP"

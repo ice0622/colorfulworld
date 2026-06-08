@@ -5,6 +5,10 @@ export interface PostTag {
   name: string;
 }
 
+// 記事カテゴリ（index ページのセクション分け）
+// tags の TRIP / TECH / LIFE から導出する
+export type PostCategory = "trip" | "tech" | "daily";
+
 export interface Post {
   id: string;          // slug と同値（LikeButton / RelatedPosts のキー用）
   number: number;      // 記事連番
@@ -15,6 +19,7 @@ export interface Post {
   image: string | null; // coverImage のエイリアス（既存コンポーネント互換）
   coverImage: string | null;
   tags: PostTag[];
+  category: PostCategory;
   publishedAt: string | null;
   createdAt: string;
   updatedAt: string | null;

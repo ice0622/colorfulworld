@@ -1,9 +1,8 @@
 import { Footer } from "@/components/Footer";
-import HomeHero from "@/components/HomeHero";
+import { Header } from "@/components/Header";
+import { PostIndexList } from "@/components/PostIndexList";
 import { config } from "@/config";
 import { getPosts } from "@/lib/content";
-import { POST_LOCATIONS } from "@/lib/locations";
-import type { Post } from "@/types/content";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,25 +13,19 @@ export const metadata: Metadata = {
 };
 
 const Page = async () => {
-  // 全ロケーションの代表記事をサーバーサイドで一括取得（クライアントAPIコールをゼロにする）
-  const locationPostsEntries = await Promise.all(
-    POST_LOCATIONS.map(async (loc) => {
-      const result = await getPosts({ locationSlug: loc.slug, limit: 1 });
-      return [loc.slug, result.posts[0] ?? null] as [string, Post | null];
-    })
-  );
-  const locationPosts = Object.fromEntries(locationPostsEntries) as Record<string, Post | null>;
+  const { posts } = await getPosts({ limit: "all" });
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-1 items-center justify-center">
-        <HomeHero locationPosts={locationPosts} />
-      </main>
+    <>
+      <Header />
+      <div className="mb-20">
+        <h1 className="sr-only">{config.blog.name}</h1>
 
-      <div className="container mx-auto px-5">
+        <PostIndexList posts={posts} />
+
         <Footer />
       </div>
-    </div>
+    </>
   );
 };
 
