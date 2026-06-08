@@ -100,6 +100,7 @@ export const PostContent = ({
       <div className="space-y-6">
         {contentBlocks.map((block, index) => {
           const imgData = extractImgEl(block);
+          const imgSrc = imgData?.img.getAttribute("src") ?? "";
           return (
             <motion.div
               key={index}
@@ -109,16 +110,21 @@ export const PostContent = ({
               viewport={{ once: true, amount: 0.1 }}
               className="prose lg:prose-xl dark:prose-invert mx-auto"
             >
-              {imgData ? (
+              {imgData && imgSrc ? (
                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={imgData.img.getAttribute("src") ?? ""}
+                    src={imgSrc}
                     alt={imgData.img.getAttribute("alt") ?? ""}
                     className="w-full rounded-lg"
                   />
                   {imgData.caption && <p>{imgData.caption}</p>}
                 </>
+              ) : imgData && !imgSrc ? (
+                // src 未確定（アップロード中のプレースホルダ等）は alt をテキスト表示
+                <p className="text-muted-foreground">
+                  {imgData.img.getAttribute("alt") || ""}
+                </p>
               ) : block.nodeName !== "#text" && block.nodeName !== "#comment" ? (
                 <div dangerouslySetInnerHTML={{ __html: (block as Element).outerHTML }} />
               ) : (
