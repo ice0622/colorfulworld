@@ -104,7 +104,7 @@ export const PostContent = ({
         {contentBlocks.map((block, index) => {
           const imgData = extractImgEl(block);
           const imgSrc = imgData?.img.getAttribute("src") ?? "";
-          const blockClass = "prose lg:prose-xl dark:prose-invert mx-auto";
+          const blockClass = "prose prose-neutral dark:prose-invert mx-auto";
           const inner = (
             <>
               {imgData && imgSrc ? (
@@ -113,7 +113,7 @@ export const PostContent = ({
                   <img
                     src={imgSrc}
                     alt={imgData.img.getAttribute("alt") ?? ""}
-                    className="w-full rounded-lg"
+                    className="mx-auto max-h-[80vh] w-auto max-w-full rounded-lg"
                   />
                   {imgData.caption && <p>{imgData.caption}</p>}
                 </>
@@ -193,7 +193,7 @@ export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
   return (
     <div>
       {/* タイトルエリア */}
-      <div className="mx-auto max-w-4xl mt-4" style={{ paddingBottom: `${titleExtraHeight + 32}px` }}>
+      <div className="mx-auto max-w-2xl mt-4" style={{ paddingBottom: `${titleExtraHeight + 32}px` }}>
         <h1
           ref={titleRef}
           className="text-3xl sm:text-4xl lg:text-5xl font-black break-words leading-tight"
@@ -211,7 +211,7 @@ export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
         </h1>
       </div>
       <div
-        className="prose lg:prose-lg dark:prose-invert mx-auto max-w-4xl mb-10 break-words"
+        className="prose prose-neutral dark:prose-invert mx-auto max-w-2xl mb-10 break-words"
       >
         {/* ふわっと要素単位で表示 */}
         <PostContent content={content} />

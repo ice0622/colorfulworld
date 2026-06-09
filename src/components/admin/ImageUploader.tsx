@@ -16,18 +16,83 @@ async function convertHeicIfNeeded(file: File): Promise<File> {
   return new File([blob], name, { type: "image/jpeg" });
 }
 
-// 画像をアップロードして URL を返す。アップロード自体は呼び出し側が onUploaded で受け取る。
+// アップロード前に長辺 maxDim までリサイズ＆再エンコードして転送量を減らす
+const MAX_DIM = 1920;
+const JPEG_QUALITY = 0.82;
+
+async function downscaleImage(file: File): Promise<File> {
+  if (!file.type.startsWith("image/")) return file;
+
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+  } catch {
+    return file; // デコードできなければそのまま送る
+  }
+
+  const { width, height } = bitmap;
+  const scale = Math.min(1, MAX_DIM / Math.max(width, height));
+  // 既に十分小さい（縮小不要かつ 1MB 未満）なら再エンコードしない
+  if (scale === 1 && file.size < 1_000_000) {
+    bitmap.close();
+    return file;
+  }
+
+  const w = Math.round(width * scale);
+  const h = Math.round(height * scale);
+  const canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    bitmap.close();
+    return file;
+  }
+  ctx.drawImage(bitmap, 0, 0, w, h);
+  bitmap.close();
+
+  // PNG は透過維持のため PNG、それ以外は JPEG
+  const outType = file.type === "image/png" ? "image/png" : "image/jpeg";
+  const blob = await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob(resolve, outType, JPEG_QUALITY)
+  );
+  if (!blob) return file;
+
+  const ext = outType === "image/png" ? "png" : "jpg";
+  const name = file.name.replace(/\.[^.]+$/, "") + "." + ext;
+  return new File([blob], name, { type: outType });
+}
+
+// 画像をアップロードして URL を返す。HEIC変換→リサイズ→送信。60秒でタイムアウト。
 export async function uploadImage(input: File): Promise<string> {
-  const file = await convertHeicIfNeeded(input);
+  const converted = await convertHeicIfNeeded(input);
+  const file = await downscaleImage(converted);
+
   const form = new FormData();
   form.append("file", file);
-  const res = await fetch("/api/admin/upload", { method: "POST", body: form });
-  if (!res.ok) {
-    const { error } = await res.json().catch(() => ({ error: "アップロード失敗" }));
-    throw new Error(error || "アップロード失敗");
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 60_000);
+  try {
+    const res = await fetch("/api/admin/upload", {
+      method: "POST",
+      body: form,
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      const { error } = await res.json().catch(() => ({ error: "アップロード失敗" }));
+      throw new Error(error || "アップロード失敗");
+    }
+    const { url } = (await res.json()) as { url: string };
+    return url;
+  } catch (e) {
+    if (e instanceof DOMException && e.name === "AbortError") {
+      throw new Error("アップロードがタイムアウトしました（60秒）");
+    }
+    throw e;
+  } finally {
+    clearTimeout(timer);
   }
-  const { url } = (await res.json()) as { url: string };
-  return url;
 }
 
 type Props = {
