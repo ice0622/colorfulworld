@@ -73,10 +73,12 @@ export const MarkdownTextarea = forwardRef<MarkdownTextareaHandle, Props>(
       }
     };
 
+    // HEIC は file.type が空のことがあるので拡張子でも画像判定する
+    const isImageFile = (f: File) =>
+      f.type.startsWith("image/") || /\.(heic|heif)$/i.test(f.name);
+
     const handleFiles = (files: FileList | File[] | null | undefined) => {
-      const images = Array.from(files ?? []).filter((f) =>
-        f.type.startsWith("image/")
-      );
+      const images = Array.from(files ?? []).filter(isImageFile);
       images.forEach((f) => void uploadAndInsert(f));
     };
 
@@ -164,9 +166,7 @@ export const MarkdownTextarea = forwardRef<MarkdownTextareaHandle, Props>(
             }
           }}
           onPaste={(e) => {
-            const files = Array.from(e.clipboardData.files).filter((f) =>
-              f.type.startsWith("image/")
-            );
+            const files = Array.from(e.clipboardData.files).filter(isImageFile);
             if (files.length) {
               e.preventDefault();
               handleFiles(files);
