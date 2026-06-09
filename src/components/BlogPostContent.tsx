@@ -34,9 +34,12 @@ function extractImgEl(block: ChildNode): { img: Element; caption?: string } | nu
 export const PostContent = ({
   content,
   chrome = true,
+  animate = true,
 }: {
   content: string;
   chrome?: boolean;
+  /** false にすると fade-in アニメを無効化（プレビューのチラつき防止） */
+  animate?: boolean;
 }) => {
   const [showSlider, setShowSlider] = useState(false);
 
@@ -101,15 +104,9 @@ export const PostContent = ({
         {contentBlocks.map((block, index) => {
           const imgData = extractImgEl(block);
           const imgSrc = imgData?.img.getAttribute("src") ?? "";
-          return (
-            <motion.div
-              key={index}
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
-              className="prose lg:prose-xl dark:prose-invert mx-auto"
-            >
+          const blockClass = "prose lg:prose-xl dark:prose-invert mx-auto";
+          const inner = (
+            <>
               {imgData && imgSrc ? (
                 <>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -130,7 +127,25 @@ export const PostContent = ({
               ) : (
                 <p>{block.textContent}</p>
               )}
+            </>
+          );
+
+          // animate=false（プレビュー）では fade を使わず、その場でレンダリング
+          return animate ? (
+            <motion.div
+              key={index}
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              className={blockClass}
+            >
+              {inner}
             </motion.div>
+          ) : (
+            <div key={index} className={blockClass}>
+              {inner}
+            </div>
           );
         })}
       </div>

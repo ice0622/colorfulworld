@@ -14,10 +14,15 @@ type Props = {
   placeholder?: string;
   /** 画像ファイルをアップロードして URL を返す */
   onUpload: (file: File) => Promise<string>;
+  /** スクロール位置（0..1）通知（プレビュー同期用） */
+  onScrollRatio?: (ratio: number) => void;
 };
 
 export const MarkdownTextarea = forwardRef<MarkdownTextareaHandle, Props>(
-  function MarkdownTextarea({ value, onChange, placeholder, onUpload }, ref) {
+  function MarkdownTextarea(
+    { value, onChange, placeholder, onUpload, onScrollRatio },
+    ref
+  ) {
     const taRef = useRef<HTMLTextAreaElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const seqRef = useRef(0);
@@ -137,6 +142,11 @@ export const MarkdownTextarea = forwardRef<MarkdownTextareaHandle, Props>(
           ref={taRef}
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onScroll={(e) => {
+            const el = e.currentTarget;
+            const max = el.scrollHeight - el.clientHeight;
+            onScrollRatio?.(max > 0 ? el.scrollTop / max : 0);
+          }}
           placeholder={placeholder}
           spellCheck={false}
           onDragOver={(e) => {
@@ -162,7 +172,7 @@ export const MarkdownTextarea = forwardRef<MarkdownTextareaHandle, Props>(
               handleFiles(files);
             }
           }}
-          className="min-h-[50vh] flex-1 resize-none bg-background p-3 font-mono text-sm leading-relaxed outline-none"
+          className="h-[50vh] flex-1 resize-none bg-background p-3 font-mono text-sm leading-relaxed outline-none lg:h-[70vh]"
         />
 
         {/* ドラッグ中のオーバーレイ */}

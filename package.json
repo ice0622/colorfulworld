@@ -43,6 +43,7 @@
     "framer-motion": "^12.4.7",
     "geist": "^1.7.0",
     "gray-matter": "^4.0.3",
+    "heic2any": "^0.0.4",
     "highlight.js": "^11.11.1",
     "lucide-react": "^0.424.0",
     "next": "^15.5.4",

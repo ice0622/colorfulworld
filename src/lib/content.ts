@@ -358,8 +358,12 @@ async function getTagsMd(): Promise<{ tags: Tag[]; counts: Record<string, number
 
 // ============================================================
 // 公開 API（シグネチャ不変）— DB あれば DB、無ければ markdown
-// DB 読み出しは unstable_cache でタグ付けし、公開時に revalidateTag で無効化する
+// DB 読み出しは unstable_cache でタグ付け：
+//  - 公開時の revalidateTag で即時無効化（操作したデプロイ）
+//  - revalidate 秒で時間経過後に自動再検証（別環境で編集した場合の追従）
 // ============================================================
+const REVALIDATE_SECONDS = 60;
+
 export async function getPosts(options?: {
   limit?: number | "all";
   page?: number;
@@ -371,7 +375,7 @@ export async function getPosts(options?: {
   const cached = unstable_cache(
     () => getPostsDb(options),
     ["getPosts", JSON.stringify(options ?? {})],
-    { tags: ["posts"] }
+    { tags: ["posts"], revalidate: REVALIDATE_SECONDS }
   );
   return cached();
 }
@@ -380,6 +384,7 @@ export async function getPost(slug: string): Promise<GetPostResult> {
   if (!hasDb) return getPostMd(slug);
   const cached = unstable_cache(() => getPostDb(slug), ["getPost", slug], {
     tags: ["posts", `post:${slug}`],
+    revalidate: REVALIDATE_SECONDS,
   });
   return cached();
 }
@@ -392,7 +397,7 @@ export async function getRelatedPosts(options: {
   const cached = unstable_cache(
     () => getRelatedPostsDb(options),
     ["getRelatedPosts", JSON.stringify(options)],
-    { tags: ["posts"] }
+    { tags: ["posts"], revalidate: REVALIDATE_SECONDS }
   );
   return cached();
 }
@@ -404,6 +409,7 @@ export async function getTags(): Promise<{
   if (!hasDb) return getTagsMd();
   const cached = unstable_cache(() => getTagsDb(), ["getTags"], {
     tags: ["posts", "tags"],
+    revalidate: REVALIDATE_SECONDS,
   });
   return cached();
 }
