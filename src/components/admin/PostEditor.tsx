@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
+import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -21,9 +22,17 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { ChipInput } from "./ChipInput";
-import { MarkdownTextarea } from "./MarkdownTextarea";
 import { ImageUploader, uploadImage } from "./ImageUploader";
-import { LivePreview } from "./LivePreview";
+
+// WYSIWYG は DOM 依存なのでクライアント専用で読み込む
+const WysiwygEditor = dynamic(() => import("./WysiwygEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-[60vh] items-center justify-center rounded-md border border-input text-sm text-muted-foreground">
+      エディタを読み込み中…
+    </div>
+  ),
+});
 
 type Props = {
   initial?: Partial<PostFormValues> & { id?: string };
@@ -32,19 +41,9 @@ type Props = {
 export function PostEditor({ initial }: Props) {
   const router = useRouter();
   const { toast } = useToast();
-  const [tab, setTab] = useState<"edit" | "preview">("edit");
   const [saving, setSaving] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [slugTouched, setSlugTouched] = useState(Boolean(initial?.slug));
-  const previewRef = useRef<HTMLDivElement>(null);
-
-  // エディタのスクロール割合にプレビューを追従させる
-  const syncPreviewScroll = (ratio: number) => {
-    const el = previewRef.current;
-    if (!el) return;
-    const max = el.scrollHeight - el.clientHeight;
-    el.scrollTop = ratio * max;
-  };
 
   const {
     register,
@@ -69,7 +68,6 @@ export function PostEditor({ initial }: Props) {
     },
   });
 
-  const body = watch("bodyMd");
   const title = watch("title");
   const tags = watch("tags");
   const location = watch("location");
@@ -147,39 +145,12 @@ export function PostEditor({ initial }: Props) {
         </div>
       </div>
 
-      {/* モバイル用 編集/プレビュー切替 */}
-      <div className="mb-2 flex justify-end gap-1 lg:hidden">
-        <button
-          type="button"
-          onClick={() => setTab("edit")}
-          className={`rounded px-2 py-1 text-xs ${tab === "edit" ? "bg-muted font-medium" : "text-muted-foreground"}`}
-        >
-          編集
-        </button>
-        <button
-          type="button"
-          onClick={() => setTab("preview")}
-          className={`rounded px-2 py-1 text-xs ${tab === "preview" ? "bg-muted font-medium" : "text-muted-foreground"}`}
-        >
-          プレビュー
-        </button>
-      </div>
-
-      {/* 本文（主役）：左エディタ / 右プレビュー */}
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className={tab === "edit" ? "block" : "hidden lg:block"}>
-          <MarkdownTextarea
-            value={body}
-            onChange={(v) => setValue("bodyMd", v)}
-            onUpload={uploadImage}
-            onScrollRatio={syncPreviewScroll}
-            placeholder="ここに本文を Markdown で。画像はドラッグ&ドロップ / 貼り付けでOK。タイトルや slug は右上「設定」で後から。"
-          />
-        </div>
-        <div className={tab === "preview" ? "block" : "hidden lg:block"}>
-          <LivePreview ref={previewRef} body={body} title={title} />
-        </div>
-      </div>
+      {/* 本文（主役）：Obsidian 風インライン WYSIWYG（1ペイン・ずれ無し） */}
+      <WysiwygEditor
+        defaultValue={initial?.bodyMd ?? ""}
+        onChange={(md) => setValue("bodyMd", md)}
+        onUpload={uploadImage}
+      />
 
       {/* メタ情報サイドパネル */}
       <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
