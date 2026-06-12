@@ -129,3 +129,26 @@
 .prose>div> :last-child {
   margin-bottom: 0 !important;
 }
+
+/* ===== 管理画面の Crepe エディタを公開記事の見た目に寄せる ===== */
+/* Crepe 既定（Noto Sans / Noto Serif）→ サイトと同じ Inter に統一 */
+.milkdown-host {
+  --crepe-font-title: var(--font-sans), system-ui, sans-serif;
+  --crepe-font-default: var(--font-sans), system-ui, sans-serif;
+}
+
+/* 見出しサイズを公開記事（h1=2xl / h2=xl / h3=lg）に合わせる */
+.milkdown-host .milkdown .ProseMirror h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.milkdown-host .milkdown .ProseMirror h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.milkdown-host .milkdown .ProseMirror h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
