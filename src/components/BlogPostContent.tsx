@@ -100,7 +100,7 @@ export const PostContent = ({
 
   return (
     <div className="blog-content mx-auto">
-      <div className="space-y-6">
+      <div className="blog-flow">
         {contentBlocks.map((block, index) => {
           const imgData = extractImgEl(block);
           const imgSrc = imgData?.img.getAttribute("src") ?? "";

@@ -76,7 +76,8 @@
   }
 
   .blog-content img {
-    @apply w-full;
+    /* width:100% を強制しない（比率維持）。はみ出しだけ防ぐ */
+    @apply max-w-full h-auto;
   }
 }
 
@@ -128,6 +129,39 @@
 
 .prose>div> :last-child {
   margin-bottom: 0 !important;
+}
+
+/* ===== 記事本文の縦リズム（8pxグリッドの刻みで規則化） ===== */
+/* 行間 */
+.blog-content p,
+.blog-content li {
+  line-height: 1.9;
+}
+
+/* ブロック間（段落間）= 24px を基本に、見出し前だけ広げてセクション感を出す */
+.blog-flow>* {
+  margin-top: 1.5rem;
+  /* 24px 段落間 */
+}
+
+.blog-flow> :first-child {
+  margin-top: 0;
+}
+
+/* サブセクション（### の前）= 40px */
+.blog-flow> *:has(h3) {
+  margin-top: 2.5rem;
+}
+
+/* セクション（## / # の前）= 56px */
+.blog-flow> *:has(h2),
+.blog-flow> *:has(h1) {
+  margin-top: 3.5rem;
+}
+
+/* 先頭ブロックが見出しでも上余白は付けない */
+.blog-flow> :first-child {
+  margin-top: 0 !important;
 }
 
 /* ===== 管理画面の Crepe エディタを公開記事の見た目に寄せる ===== */
