@@ -104,7 +104,12 @@ export const PostContent = ({
         {contentBlocks.map((block, index) => {
           const imgData = extractImgEl(block);
           const imgSrc = imgData?.img.getAttribute("src") ?? "";
-          const blockClass = "prose prose-neutral dark:prose-invert mx-auto";
+          const blockClass =
+            "prose prose-neutral dark:prose-invert mx-auto " +
+            // 既定より控えめだが本文との差は残す見出しサイズ
+            "prose-h1:text-2xl prose-h1:font-bold " +
+            "prose-h2:text-xl prose-h2:font-semibold " +
+            "prose-h3:text-lg prose-h3:font-semibold";
           const inner = (
             <>
               {imgData && imgSrc ? (
