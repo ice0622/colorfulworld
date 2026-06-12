@@ -76,7 +76,8 @@
   }
 
   .blog-content img {
-    @apply w-full;
+    /* width:100% を強制しない（比率維持）。はみ出しだけ防ぐ */
+    @apply max-w-full h-auto;
   }
 }
 
