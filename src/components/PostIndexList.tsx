@@ -80,7 +80,7 @@ export function PostIndexList({ posts }: Props) {
   };
 
   return (
-    <div ref={containerRef} className="relative" onMouseLeave={() => setActive(false)}>
+    <div ref={containerRef} className="relative max-w-2xl mx-auto" onMouseLeave={() => setActive(false)}>
       {/* セグメンテッドコントロール：ガラスのピルが選択中へスライド */}
       <div
         className="relative z-10 mb-8 px-4"

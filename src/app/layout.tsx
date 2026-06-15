@@ -2,7 +2,7 @@ import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import { Inter, Noto_Serif_JP } from "next/font/google";
+import { Inter, Noto_Serif_JP, Klee_One } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -15,6 +15,14 @@ const notoSerifJP = Noto_Serif_JP({
   weight: ["900"],
   subsets: ["latin"],
   variable: "--font-noto-serif-jp",
+  display: "swap",
+});
+
+// 手書き風フォント（「画像なし」などの一言メモ用）
+const kleeOne = Klee_One({
+  weight: ["400", "600"],
+  subsets: ["latin"],
+  variable: "--font-hand",
   display: "swap",
 });
 
@@ -80,7 +88,8 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background font-sans antialiased max-w-6xl m-auto",
           fontSans.variable,
-          notoSerifJP.variable
+          notoSerifJP.variable,
+          kleeOne.variable
         )}
       >
         <Providers>

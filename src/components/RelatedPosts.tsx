@@ -5,6 +5,7 @@ import type { GetRelatedPostsResult } from "@/types/content";
 import Image from "next/image";
 import Link from "next/link";
 import type { FunctionComponent } from "react";
+import { NoImageCover } from "@/components/NoImageCover";
 
 export const RelatedPosts: FunctionComponent<{
   posts: GetRelatedPostsResult["posts"];
@@ -26,12 +27,16 @@ export const RelatedPosts: FunctionComponent<{
             className="bg-muted overflow-hidden rounded-lg relative transition-transform duration-500 ease-in-out hover:scale-105 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary"
           >
             <AspectRatio ratio={16 / 9} className="w-full">
-              <Image
-                src={post.image || "/images/placeholder.png"}
-                alt={post.title}
-                fill
-                className="h-full min-h-full min-w-full object-cover object-center"
-              />
+              {post.image ? (
+                <Image
+                  src={post.image}
+                  alt={post.title}
+                  fill
+                  className="h-full min-h-full min-w-full object-cover object-center"
+                />
+              ) : (
+                <NoImageCover />
+              )}
             </AspectRatio>
             <div className="prose prose-sm dark:prose-invert p-4">
               <h3 className="line-clamp-2">{post.title}</h3>
