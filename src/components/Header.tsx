@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FunctionComponent } from "react";
 import { DarkModeToggle } from "./DarkModeToggle";
+import { SleepingCat } from "./SleepingCat";
 
 /**
  * ミニマルなフローティングヘッダー。
@@ -30,7 +31,7 @@ export const Header: FunctionComponent = () => {
     >
       <nav
         className={cn(
-          "flex items-center justify-between rounded-2xl px-4 py-2.5",
+          "relative flex items-center justify-between rounded-2xl px-4 py-2.5",
           "backdrop-blur-md",
           "bg-white/60 dark:bg-black/40",
           "border border-white/40 dark:border-white/10",
@@ -48,6 +49,11 @@ export const Header: FunctionComponent = () => {
         >
           {config.blog.name}
         </Link>
+
+        {/* ど真ん中の寝てる猫 */}
+        <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-muted-foreground/70">
+          <SleepingCat variant="lying" size={80} />
+        </span>
 
         <div className="flex items-center gap-1">
           <Link
