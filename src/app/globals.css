@@ -171,6 +171,20 @@
   --crepe-font-default: var(--font-sans), system-ui, sans-serif;
 }
 
+/* スマホでは Crepe 既定の横パディング(120px)が広すぎて本文域が潰れるので詰める */
+.milkdown-host .milkdown .ProseMirror {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 1.25rem;
+}
+
+/* md 以上は従来の広い余白に戻す */
+@media (min-width: 768px) {
+  .milkdown-host .milkdown .ProseMirror {
+    padding: 60px 120px;
+  }
+}
+
 /* 見出しサイズを公開記事（h1=2xl / h2=xl / h3=lg）に合わせる */
 .milkdown-host .milkdown .ProseMirror h1 {
   font-size: 1.5rem;

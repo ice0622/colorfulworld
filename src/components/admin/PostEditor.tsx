@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/sheet";
 import { ChipInput } from "./ChipInput";
 import { ImageUploader, uploadImage } from "./ImageUploader";
+import { EditorToolbar } from "./EditorToolbar";
+import type { WysiwygHandle } from "./WysiwygEditor";
 
 // WYSIWYG は DOM 依存なのでクライアント専用で読み込む
 const WysiwygEditor = dynamic(() => import("./WysiwygEditor"), {
@@ -44,6 +46,7 @@ export function PostEditor({ initial }: Props) {
   const [saving, setSaving] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const [slugTouched, setSlugTouched] = useState(Boolean(initial?.slug));
+  const editorRef = useRef<WysiwygHandle>(null);
 
   const {
     register,
@@ -116,9 +119,9 @@ export function PostEditor({ initial }: Props) {
   const onPublish = handleSubmit((v) => doSave(v, true));
 
   return (
-    <div className="pb-24">
+    <div className="pb-28">
       {/* アクションバー */}
-      <div className="sticky top-0 z-20 -mx-4 mb-4 flex items-center justify-between gap-2 border-b border-border/60 bg-background/80 px-4 py-3 backdrop-blur">
+      <div className="sticky top-0 z-20 -mx-4 mb-4 flex items-center justify-between gap-2 border-b border-border/60 bg-background/80 px-4 py-3 pt-[max(0.75rem,env(safe-area-inset-top))] backdrop-blur">
         <span className="min-w-0 truncate text-sm">
           {title ? (
             <span className="font-medium text-foreground">{title}</span>
@@ -147,6 +150,7 @@ export function PostEditor({ initial }: Props) {
 
       {/* 本文（主役）：Obsidian 風インライン WYSIWYG（1ペイン・ずれ無し） */}
       <WysiwygEditor
+        ref={editorRef}
         defaultValue={initial?.bodyMd ?? ""}
         onChange={(md) => setValue("bodyMd", md)}
         onUpload={uploadImage}
@@ -261,6 +265,9 @@ export function PostEditor({ initial }: Props) {
           </div>
         </SheetContent>
       </Sheet>
+
+      {/* 執筆中つねに見える固定ツールバー（画像を追加） */}
+      <EditorToolbar onInsert={(url) => editorRef.current?.insertImage(url)} />
     </div>
   );
 }

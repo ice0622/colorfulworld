@@ -1,13 +1,20 @@
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Serif_JP, Klee_One } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 import { Agentation } from "agentation";
+
+// safe-area-inset を効かせるため viewport-fit: cover を明示（ズームは潰さない）
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
