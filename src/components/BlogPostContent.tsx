@@ -105,7 +105,7 @@ export const PostContent = ({
           const imgData = extractImgEl(block);
           const imgSrc = imgData?.img.getAttribute("src") ?? "";
           const blockClass =
-            "prose prose-neutral dark:prose-invert mx-auto " +
+            "prose prose-neutral mx-auto " +
             // 既定より控えめだが本文との差は残す見出しサイズ
             "prose-h1:text-2xl prose-h1:font-bold " +
             "prose-h2:text-xl prose-h2:font-semibold " +
@@ -160,7 +160,7 @@ export const PostContent = ({
         <>
           <div className="flex justify-center mt-4">
             <button
-              className="p-2 bg-white text-black border border-black rounded hover:bg-black hover:text-white transition-colors duration-300"
+              className="p-2 bg-background text-foreground border border-foreground rounded hover:bg-foreground hover:text-background transition-colors duration-300"
               onClick={() => setShowSlider((v) => !v)}
             >
               {showSlider ? "閉じる" : "ハイライト"}
@@ -216,7 +216,7 @@ export const BlogPostContent = ({ post }: { post: GetPostResult["post"] }) => {
         </h1>
       </div>
       <div
-        className="prose prose-neutral dark:prose-invert mx-auto max-w-2xl mb-10 break-words"
+        className="prose prose-neutral mx-auto max-w-2xl mb-10 break-words"
       >
         {/* ふわっと要素単位で表示 */}
         <PostContent content={content} />

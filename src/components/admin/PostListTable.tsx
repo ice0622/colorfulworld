@@ -9,6 +9,7 @@ import {
   deletePostAction,
 } from "@/app/(admin)/admin/actions";
 import { Button } from "@/components/ui/button";
+import { Check, Pencil } from "lucide-react";
 import type { AdminListItem } from "@/lib/admin/repo";
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -52,11 +53,13 @@ export function PostListTable({ items }: { items: AdminListItem[] }) {
                 {p.title || "(無題)"}
               </Link>
               {p.draft ? (
-                <span className="shrink-0 rounded-full bg-amber-500/15 px-2 py-0.5 text-[11px] text-amber-600 dark:text-amber-400">
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/15 px-2 py-0.5 text-[11px] text-foreground/80">
+                  <Pencil className="h-3 w-3 text-brand" />
                   下書き
                 </span>
               ) : (
-                <span className="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] text-emerald-600 dark:text-emerald-400">
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/20 px-2 py-0.5 text-[11px] text-foreground/80">
+                  <Check className="h-3 w-3 text-link" />
                   公開
                 </span>
               )}

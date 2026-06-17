@@ -56,7 +56,7 @@ export default function LocationCardOverlay({ location, onClose, onVisible }: Pr
   return (
     // 背景・カードともに visible になってから表示（データ取得後にまとめてフェードイン）
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 dark:bg-black/80 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/70 backdrop-blur-sm"
       onClick={onClose}
     >
       {/* データ取得完了後にのみカードをレンダリング（loading中は何も出さない） */}
@@ -65,7 +65,7 @@ export default function LocationCardOverlay({ location, onClose, onVisible }: Pr
           onClick={(e) => e.stopPropagation()}
           className={[
             "relative w-full max-w-sm rounded-2xl overflow-hidden",
-            "bg-background/90 backdrop-blur-md border border-white/10 shadow-2xl",
+            "bg-background/90 backdrop-blur-md border border-border shadow-2xl",
             "transition-all duration-500 ease-out",
             visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6",
           ].join(" ")}
@@ -73,7 +73,7 @@ export default function LocationCardOverlay({ location, onClose, onVisible }: Pr
           {/* 閉じるボタン */}
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 z-10 text-white/70 hover:text-white bg-black/40 rounded-full w-7 h-7 flex items-center justify-center"
+            className="absolute top-3 right-3 z-10 text-muted-foreground hover:text-foreground bg-foreground/10 rounded-full w-7 h-7 flex items-center justify-center"
           >
             ✕
           </button>
@@ -85,12 +85,12 @@ export default function LocationCardOverlay({ location, onClose, onVisible }: Pr
 
           {/* 記事一覧 */}
           {posts.length > 0 && (
-            <ul className="overflow-y-auto max-h-[70vh] divide-y divide-white/10 pb-4">
+            <ul className="overflow-y-auto max-h-[70vh] divide-y divide-border pb-4">
               {posts.map((post) => (
                 <li key={post.slug}>
                   <Link
                     href={`/blog/${post.slug}`}
-                    className="flex gap-3 px-4 py-3 hover:bg-white/5 transition-colors"
+                    className="flex gap-3 px-4 py-3 hover:bg-foreground/5 transition-colors"
                     onClick={onClose}
                   >
                     {/* サムネイル */}

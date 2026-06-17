@@ -1,8 +1,9 @@
 ---
 number: 0
 slug: "post-slug"
+# カテゴリは tags の TRIP（旅）/ TECH（技術）/ LIFE（日常）で決まる
 tags:
-  - ""
+  - "TRIP"
 date: "2025-01-01"
 updated: "2026-01-01"
 location: ""

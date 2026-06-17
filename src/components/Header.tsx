@@ -7,13 +7,11 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FunctionComponent } from "react";
-import { DarkModeToggle } from "./DarkModeToggle";
-import { SleepingCat } from "./SleepingCat";
 
 /**
  * ミニマルなフローティングヘッダー。
  * 下スクロールで隠れ、上スクロール（停止時）で出てくる。
- * 中身は サイト名(=Home) / About / テーマ。現在地はテキストの濃さで明示。
+ * 中身は サイト名(=Home) / About。現在地はテキストの濃さで明示。
  */
 export const Header: FunctionComponent = () => {
   const pathname = usePathname() ?? "";
@@ -31,11 +29,11 @@ export const Header: FunctionComponent = () => {
     >
       <nav
         className={cn(
-          "relative flex items-center justify-between rounded-2xl px-4 py-2.5",
+          "flex items-center justify-between rounded-2xl px-4 py-2.5",
           "backdrop-blur-md",
-          "bg-white/60 dark:bg-black/40",
-          "border border-white/40 dark:border-white/10",
-          "shadow-[0_4px_24px_rgba(0,0,0,0.08)]"
+          "bg-card/70",
+          "border border-border/60",
+          "shadow-[0_4px_24px_hsl(var(--foreground)/0.08)]"
         )}
       >
         <Link
@@ -43,17 +41,12 @@ export const Header: FunctionComponent = () => {
           className={cn(
             "text-sm font-semibold tracking-tight transition-colors",
             isHome
-              ? "text-gray-900 dark:text-white"
-              : "text-gray-700 hover:text-gray-900 dark:text-white/70 dark:hover:text-white"
+              ? "text-foreground"
+              : "text-muted-foreground hover:text-foreground"
           )}
         >
           {config.blog.name}
         </Link>
-
-        {/* ど真ん中の寝てる猫 */}
-        <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-muted-foreground/70">
-          <SleepingCat variant="lying" size={80} />
-        </span>
 
         <div className="flex items-center gap-1">
           <Link
@@ -61,13 +54,12 @@ export const Header: FunctionComponent = () => {
             className={cn(
               "rounded-md px-3 py-1.5 text-sm transition-colors",
               isAbout
-                ? "font-medium text-gray-900 dark:text-white"
-                : "text-gray-600 hover:text-gray-900 dark:text-white/60 dark:hover:text-white"
+                ? "font-medium text-foreground"
+                : "text-muted-foreground hover:text-foreground"
             )}
           >
             About
           </Link>
-          <DarkModeToggle />
         </div>
       </nav>
     </motion.header>

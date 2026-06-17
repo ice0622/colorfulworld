@@ -75,22 +75,22 @@ export default function LikeButton({
   return (
     <div className="w-full max-w-sm mx-auto">
       <div className="text-center mb-3">
-        <span className="text-2xl font-semibold text-black dark:text-white">
+        <span className="text-2xl font-semibold text-foreground">
           {total}
         </span>
-        <div className="text-xs text-black/60 dark:text-white/60">
+        <div className="text-xs text-muted-foreground">
           みんなの「🦎」合計
         </div>
       </div>
 
       <div className="flex items-center justify-center mb-3">
-        <div className="px-3 py-2 rounded-md min-h-[44px] flex items-center gap-2 border border-black/10 dark:border-white/10">
+        <div className="px-3 py-2 rounded-md min-h-[44px] flex items-center gap-2 border border-border">
           <span className="text-lg select-none">{lizards}</span>
           {!reachedLimit && (
             <span
               aria-hidden
               style={{ width: 12, display: "inline-block", textAlign: "left", animation: "blink 1s step-end infinite" }}
-              className="text-lg text-black dark:text-white"
+              className="text-lg text-foreground"
             >
               |
             </span>
@@ -104,15 +104,15 @@ export default function LikeButton({
             onClick={handleClick}
             aria-label="いいね"
             className={`relative flex items-center justify-center w-14 h-14 rounded-full transition-transform focus:outline-none
-              bg-gray-200 dark:bg-gray-700 text-black dark:text-white shadow-sm hover:scale-105 active:scale-95`}
-            style={{ border: "1px solid rgba(0,0,0,0.06)" }}
+              bg-muted text-foreground shadow-sm hover:scale-105 active:scale-95`}
+            style={{ border: "1px solid hsl(var(--border))" }}
           >
             <span className={`${pulse ? "scale-110" : ""} inline-block text-xl`} aria-hidden>
               🦎
             </span>
           </button>
         ) : (
-          <div className="px-4 py-2 rounded-lg inline-flex items-center gap-3 justify-center w-fit text-black dark:text-white font-medium">
+          <div className="px-4 py-2 rounded-lg inline-flex items-center gap-3 justify-center w-fit text-foreground font-medium">
             Thank you Lizard
           </div>
         )}

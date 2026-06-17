@@ -83,9 +83,9 @@ export default function PolaroidCard({ location, isActive, post, onSelect }: Pro
           className="block text-left cursor-pointer"
         >
           <div
-            className={`bg-white shadow-xl border border-gray-200 ${CARD_WIDTH} ${PADDING_TOP} ${PADDING_BTM}`}
+            className={`bg-card shadow-xl border border-border ${CARD_WIDTH} ${PADDING_TOP} ${PADDING_BTM}`}
           >
-            <div className="relative aspect-square overflow-hidden bg-gray-100">
+            <div className="relative aspect-square overflow-hidden bg-muted">
               {post.image ? (
                 <Image
                   src={post.image}
@@ -95,14 +95,14 @@ export default function PolaroidCard({ location, isActive, post, onSelect }: Pro
                   sizes={PHOTO_SIZES}
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-400 text-[10px] p-1 text-center leading-tight">
+                <div className="w-full h-full flex items-center justify-center text-muted-foreground text-[10px] p-1 text-center leading-tight">
                   {post.title}
                 </div>
               )}
             </div>
 
             <div
-              className={`mt-1 text-center text-gray-800 tracking-[0.08em] ${LABEL_SIZE} ${geistPixel.className}`}
+              className={`mt-1 text-center text-foreground tracking-[0.08em] ${LABEL_SIZE} ${geistPixel.className}`}
             >
               {label}
             </div>
