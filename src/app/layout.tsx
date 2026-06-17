@@ -1,13 +1,20 @@
 import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
-import { Inter, Noto_Serif_JP } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter, Noto_Serif_JP, Klee_One } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Analytics } from "@vercel/analytics/next"
 import { Agentation } from "agentation";
+
+// safe-area-inset を効かせるため viewport-fit: cover を明示（ズームは潰さない）
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 const fontSans = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -15,6 +22,14 @@ const notoSerifJP = Noto_Serif_JP({
   weight: ["900"],
   subsets: ["latin"],
   variable: "--font-noto-serif-jp",
+  display: "swap",
+});
+
+// 手書き風フォント（「画像なし」などの一言メモ用）
+const kleeOne = Klee_One({
+  weight: ["400", "600"],
+  subsets: ["latin"],
+  variable: "--font-hand",
   display: "swap",
 });
 
@@ -80,7 +95,8 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background font-sans antialiased max-w-6xl m-auto",
           fontSans.variable,
-          notoSerifJP.variable
+          notoSerifJP.variable,
+          kleeOne.variable
         )}
       >
         <Providers>

@@ -7,7 +7,7 @@ export const TagList = async () => {
   if (tags.length === 0) return null;
 
   return (
-    <section className="mt-8 md:mt-16 mb-12">
+    <section className="mt-8 md:mt-16 mb-12 max-w-2xl mx-auto">
       <h2 className="text-xs font-semibold tracking-wider text-muted-foreground mb-2 border-t border-current pt-2">
         CATEGORIES
       </h2>

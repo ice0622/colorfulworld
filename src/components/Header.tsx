@@ -26,7 +26,7 @@ export const Header: FunctionComponent = () => {
     <motion.header
       animate={{ y: isVisible ? 0 : "-150%" }}
       transition={{ type: "spring", stiffness: 260, damping: 28 }}
-      className="fixed left-0 right-0 top-4 z-50 mx-auto w-[calc(100%-1rem)] max-w-lg"
+      className="fixed left-0 right-0 top-4 z-50 mx-auto w-[calc(100%-1rem)] max-w-2xl"
     >
       <nav
         className={cn(

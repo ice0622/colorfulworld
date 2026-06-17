@@ -7,7 +7,7 @@ import { Button } from "./ui/button";
 
 export const Footer: FunctionComponent = () => {
   return (
-    <footer className="mt-8 md:mt-16 mb-12">
+    <footer className="mt-8 md:mt-16 mb-12 max-w-2xl mx-auto w-full">
       <div className="flex items-center justify-between mb-6">
         <div className="text-sm text-muted-foreground">
           © {config.blog.copyright} {new Date().getFullYear()}

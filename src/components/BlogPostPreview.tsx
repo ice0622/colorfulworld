@@ -5,6 +5,7 @@ import { formatDate } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { FunctionComponent, useEffect, useRef, useState } from "react";
+import { NoImageCover } from "@/components/NoImageCover";
 
 export const BlogPostPreview: FunctionComponent<{
   post: GetPostsResult["posts"][0];
@@ -45,12 +46,16 @@ export const BlogPostPreview: FunctionComponent<{
     >
       <Link href={`/blog/${post.slug}`}>
         <div className="aspect-[16/9] relative overflow-hidden transition-transform duration-500 ease-in-out hover:scale-105 hover:ovacity-90">
-          <Image
-            alt={post.title}
-            className="object-cover"
-            src={post.image || "/images/placeholder.webp"}
-            fill
-          />
+          {post.image ? (
+            <Image
+              alt={post.title}
+              className="object-cover"
+              src={post.image}
+              fill
+            />
+          ) : (
+            <NoImageCover />
+          )}
         </div>
       </Link>
       <div className="grid grid-cols-1 gap-3 md:col-span-2 mt-4">

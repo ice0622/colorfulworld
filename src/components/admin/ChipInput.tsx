@@ -59,7 +59,7 @@ export function ChipInput({ value, onChange, placeholder, suggestions }: Props) 
             }
           }}
           placeholder={placeholder}
-          className="min-w-[8rem] flex-1 bg-transparent text-sm outline-none"
+          className="min-w-[8rem] flex-1 bg-transparent text-base outline-none md:text-sm"
         />
       </div>
       {suggestions && suggestions.length > 0 && (
