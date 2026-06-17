@@ -41,7 +41,7 @@ export default function Page() {
         <div className="w-full aspect-[4/3] rounded-xl overflow-hidden shadow-lg">
           <HoverShaderImage src="/images/posts/about.jpeg" strength={0.7} className="w-full h-full" />
         </div>
-        <article className="prose lg:prose-lg dark:prose-invert blog-content">
+        <article className="prose lg:prose-lg blog-content">
           <Markdown>{content}</Markdown>
         </article>
       </div>

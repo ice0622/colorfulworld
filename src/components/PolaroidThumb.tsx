@@ -37,9 +37,9 @@ export default function PolaroidThumb({ src, alt, seed, widthClass = "w-36" }: P
   return (
     <div
       style={{ transform: `rotate(${tilt}deg)` }}
-      className="bg-white p-1 pb-1.5 shadow-xl ring-1 ring-black/5"
+      className="bg-card p-1 pb-1.5 shadow-xl ring-1 ring-foreground/5"
     >
-      <div className={`relative aspect-[4/3] ${widthClass} overflow-hidden bg-gray-100`}>
+      <div className={`relative aspect-[4/3] ${widthClass} overflow-hidden bg-muted`}>
         {src ? (
           <Image
             src={src}
@@ -50,7 +50,7 @@ export default function PolaroidThumb({ src, alt, seed, widthClass = "w-36" }: P
             sizes="320px"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center p-1 text-center text-[10px] leading-tight text-gray-400">
+          <div className="flex h-full w-full items-center justify-center p-1 text-center text-[10px] leading-tight text-muted-foreground">
             {alt}
           </div>
         )}

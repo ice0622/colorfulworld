@@ -40,7 +40,7 @@ export default function HomeHero({ locationPosts }: Props) {
         >
           <Link
             href="/blog"
-            className="text-sm text-gray-700 underline underline-offset-4 transition-colors hover:text-gray-900 dark:text-white/70 dark:hover:text-white"
+            className="text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
           >
             すべての記事を見る →
           </Link>

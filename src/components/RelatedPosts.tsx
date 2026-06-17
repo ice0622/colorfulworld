@@ -38,7 +38,7 @@ export const RelatedPosts: FunctionComponent<{
                 <NoImageCover />
               )}
             </AspectRatio>
-            <div className="prose prose-sm dark:prose-invert p-4">
+            <div className="prose prose-sm p-4">
               <h3 className="line-clamp-2">{post.title}</h3>
               <p className="line-clamp-3">{post.description}</p>
               <strong className="underline decoration-transparent hover:decoration-primary transition">

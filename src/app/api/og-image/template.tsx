@@ -14,10 +14,10 @@ export const generateBannerImage = (
           width: "100%",
           display: "flex",
           flexDirection: "column",
-          backgroundColor: "#fcf6f1",
+          backgroundColor: "#F0EEE6",
           justifyContent: "space-between",
           fontFamily: "Inter-SemiBold",
-          color: "#212121",
+          color: "#1F1E1D",
           padding: "40px",
         }}
       >
@@ -32,8 +32,8 @@ export const generateBannerImage = (
               style={{
                 marginRight: "auto",
                 marginBottom: "40px",
-                color: "#fcf6f1",
-                background: "#060606",
+                color: "#F0EEE6",
+                background: "#1F1E1D",
                 padding: "5px 10px",
                 fontWeight: "600",
                 fontSize: "24px",
@@ -50,7 +50,7 @@ export const generateBannerImage = (
               lineHeight: "6rem",
               padding: "0 0 100px 0",
               letterSpacing: "-0.025em",
-              color: "#212121",
+              color: "#1F1E1D",
               fontFamily: "Inter-SemiBold",
               lineClamp: 4,
             }}

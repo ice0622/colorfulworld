@@ -2,6 +2,9 @@ import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
 const config = {
+  // 固定の単一パレット運用。`dark` クラスはどこからも付与しないため
+  // class 方式のままで dark: は常に不活性＝ライト固定になる。
+  // （darkMode を削除すると既定の "media" になり OS のダーク設定で dark: が発火してしまうので残す）
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -53,6 +56,16 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        brand: {
+          DEFAULT: "hsl(var(--brand))",
+          foreground: "hsl(var(--brand-foreground))",
+        },
+        "brand-strong": {
+          DEFAULT: "hsl(var(--brand-strong))",
+          foreground: "hsl(var(--brand-strong-foreground))",
+        },
+        "brand-warm": "hsl(var(--brand-warm))",
+        link: "hsl(var(--link))",
       },
       borderRadius: {
         lg: "var(--radius)",

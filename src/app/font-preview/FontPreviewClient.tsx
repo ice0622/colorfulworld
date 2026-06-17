@@ -38,7 +38,7 @@ function Slider({
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <span className="text-xs font-medium text-gray-500 uppercase tracking-widest">
+        <span className="text-xs font-medium text-muted-foreground uppercase tracking-widest">
           {label}
         </span>
         <span className="text-xs font-mono tabular-nums">{display}</span>
@@ -50,7 +50,7 @@ function Slider({
         step={step}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
-        className="w-full accent-black dark:accent-white"
+        className="w-full accent-primary"
       />
     </div>
   );
@@ -85,14 +85,14 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
     <div className="min-h-screen py-8">
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-1">フォントプレビュー</h2>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           フォント選択 + scaleY / letter-spacing でリアルタイム調整
         </p>
       </div>
 
       {/* ── プレビューエリア ── */}
-      <div className="border rounded-2xl p-8 mb-6 bg-gray-50 dark:bg-gray-900/50 overflow-hidden">
-        <div className="text-xs text-gray-400 mb-4 tracking-widest uppercase">
+      <div className="border rounded-2xl p-8 mb-6 bg-muted overflow-hidden">
+        <div className="text-xs text-muted-foreground mb-4 tracking-widest uppercase">
           {selected.name} · scaleY {scaleY.toFixed(2)} · tracking{" "}
           {letterSpacing.toFixed(3)}em
         </div>
@@ -102,12 +102,12 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
         >
           {customTitle}
         </div>
-        <div className="flex items-center gap-3 mt-6 text-sm text-gray-400">
+        <div className="flex items-center gap-3 mt-6 text-sm text-muted-foreground">
           <span>2025年05月29日</span>
           <span>#旅行</span>
           <span>#エッセイ</span>
           {!selected.supportsJP && (
-            <span className="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 text-xs px-2 py-0.5 rounded">
+            <span className="bg-brand/15 text-foreground/80 text-xs px-2 py-0.5 rounded">
               ラテン文字のみ
             </span>
           )}
@@ -135,7 +135,7 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
           onChange={setLetterSpacing}
         />
         <div>
-          <div className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-1.5">
+          <div className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1.5">
             サイズ
           </div>
           <div className="flex gap-1.5">
@@ -145,8 +145,8 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
                 onClick={() => setFontSize(s)}
                 className={`px-3 py-1.5 rounded-lg text-sm border transition-colors ${
                   fontSize === s
-                    ? "bg-black dark:bg-white text-white dark:text-black border-black dark:border-white"
-                    : "hover:border-gray-400"
+                    ? "bg-foreground text-background border-foreground"
+                    : "hover:border-foreground/40"
                 }`}
               >
                 {s}
@@ -155,7 +155,7 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
           </div>
         </div>
         <div>
-          <div className="text-xs font-medium text-gray-500 uppercase tracking-widest mb-1.5">
+          <div className="text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1.5">
             リセット
           </div>
           <button
@@ -163,7 +163,7 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
               setScaleY(1.0);
               setLetterSpacing(-0.02);
             }}
-            className="px-3 py-1.5 rounded-lg text-sm border hover:border-gray-400 transition-colors"
+            className="px-3 py-1.5 rounded-lg text-sm border hover:border-foreground/40 transition-colors"
           >
             デフォルトに戻す
           </button>
@@ -172,21 +172,21 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
 
       {/* ── タイトル入力 ── */}
       <div className="mb-8">
-        <label className="block text-xs font-medium text-gray-500 uppercase tracking-widest mb-1.5">
+        <label className="block text-xs font-medium text-muted-foreground uppercase tracking-widest mb-1.5">
           タイトルを入力
         </label>
         <input
           type="text"
           value={customTitle}
           onChange={(e) => setCustomTitle(e.target.value)}
-          className="w-full border rounded-lg px-4 py-2.5 bg-background text-base focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+          className="w-full border rounded-lg px-4 py-2.5 bg-background text-base focus:outline-none focus:ring-2 focus:ring-ring"
         />
         <div className="flex gap-1.5 mt-2 flex-wrap">
           {SAMPLE_TITLES.map((t) => (
             <button
               key={t}
               onClick={() => setCustomTitle(t)}
-              className="text-xs border rounded-full px-3 py-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors truncate max-w-[200px]"
+              className="text-xs border rounded-full px-3 py-1 hover:bg-muted transition-colors truncate max-w-[200px]"
             >
               {t}
             </button>
@@ -202,8 +202,8 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
             onClick={() => setSelectedId(font.id)}
             className={`border rounded-xl p-4 text-left transition-all ${
               selectedId === font.id
-                ? "border-black dark:border-white bg-black dark:bg-white text-white dark:text-black"
-                : "hover:border-gray-400 dark:hover:border-gray-500"
+                ? "border-foreground bg-foreground text-background"
+                : "hover:border-foreground/40"
             }`}
           >
             <div
@@ -222,7 +222,7 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
             <div className="text-xs font-mono leading-snug mt-2">{font.name}</div>
             <div
               className={`text-xs mt-0.5 ${
-                selectedId === font.id ? "opacity-60" : "text-gray-400"
+                selectedId === font.id ? "opacity-60" : "text-muted-foreground"
               }`}
             >
               {font.tag}
@@ -235,7 +235,7 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
       <div>
         <h3 className="text-base font-bold mb-4">
           全フォント比較{" "}
-          <span className="text-xs font-normal text-gray-400">
+          <span className="text-xs font-normal text-muted-foreground">
             スライダーの値が反映されます
           </span>
         </h3>
@@ -246,12 +246,12 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
               onClick={() => setSelectedId(font.id)}
               className={`border rounded-xl px-5 pt-5 pb-4 cursor-pointer transition-all overflow-hidden ${
                 selectedId === font.id
-                  ? "border-black dark:border-white"
-                  : "hover:border-gray-300 dark:hover:border-gray-600"
+                  ? "border-foreground"
+                  : "hover:border-foreground/30"
               }`}
             >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-mono text-gray-400">
+                <span className="text-xs font-mono text-muted-foreground">
                   {font.name}
                 </span>
                 <div className="flex gap-1.5">
@@ -259,11 +259,11 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
                     {font.tag}
                   </span>
                   {font.supportsJP ? (
-                    <span className="text-xs border border-green-300 text-green-600 dark:text-green-400 rounded px-1.5 py-0.5">
+                    <span className="text-xs border border-primary/40 text-link rounded px-1.5 py-0.5">
                       JP✓
                     </span>
                   ) : (
-                    <span className="text-xs border border-yellow-300 text-yellow-600 dark:text-yellow-400 rounded px-1.5 py-0.5">
+                    <span className="text-xs border border-brand/50 text-brand rounded px-1.5 py-0.5">
                       JP×
                     </span>
                   )}
