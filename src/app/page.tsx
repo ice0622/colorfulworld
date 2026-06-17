@@ -18,7 +18,7 @@ const Page = async () => {
   return (
     <>
       <Header />
-      <div className="mb-20">
+      <div className="mb-20 pt-6 sm:pt-10">
         <h1 className="sr-only">{config.blog.name}</h1>
 
         <PostIndexList posts={posts} />
