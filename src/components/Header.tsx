@@ -25,15 +25,17 @@ export const Header: FunctionComponent = () => {
     <motion.header
       animate={{ y: isVisible ? 0 : "-150%" }}
       transition={{ type: "spring", stiffness: 260, damping: 28 }}
-      className="fixed left-0 right-0 top-4 z-50 mx-auto w-[calc(100%-1rem)] max-w-2xl"
+      className="fixed inset-x-0 top-4 z-50 flex justify-center px-4"
     >
       <nav
         className={cn(
-          "flex items-center justify-between rounded-2xl px-4 py-2.5",
+          // 内容幅にぴったり収まる小型ピル（横に広げない）
+          "flex items-center gap-1 rounded-full py-1.5 pl-4 pr-1.5",
           "backdrop-blur-md",
           "bg-card/70",
           "border border-border/60",
-          "shadow-[0_4px_24px_hsl(var(--foreground)/0.08)]"
+          // 影は軽く。カードが「浮く」印象を抑える
+          "shadow-[0_2px_12px_hsl(var(--foreground)/0.06)]"
         )}
       >
         <Link
@@ -48,19 +50,19 @@ export const Header: FunctionComponent = () => {
           {config.blog.name}
         </Link>
 
-        <div className="flex items-center gap-1">
-          <Link
-            href="/about"
-            className={cn(
-              "rounded-md px-3 py-1.5 text-sm transition-colors",
-              isAbout
-                ? "font-medium text-foreground"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            About
-          </Link>
-        </div>
+        <span aria-hidden className="mx-1.5 h-3.5 w-px bg-border/70" />
+
+        <Link
+          href="/about"
+          className={cn(
+            "rounded-full px-3 py-1 text-sm transition-colors",
+            isAbout
+              ? "font-medium text-foreground"
+              : "text-muted-foreground hover:text-foreground"
+          )}
+        >
+          About
+        </Link>
       </nav>
     </motion.header>
   );

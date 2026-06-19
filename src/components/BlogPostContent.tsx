@@ -7,8 +7,6 @@ import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
 import sanitize, { defaults } from "sanitize-html";
 import { motion } from "framer-motion";
-// 参考コードに合わせて画像ハイライトのトグルを用意（存在する場合のみ有効）
-import ImageHighright from "./ImageHighright";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
@@ -33,16 +31,12 @@ function extractImgEl(block: ChildNode): { img: Element; caption?: string } | nu
 
 export const PostContent = ({
   content,
-  chrome = true,
   animate = true,
 }: {
   content: string;
-  chrome?: boolean;
   /** false にすると fade-in アニメを無効化（プレビューのチラつき防止） */
   animate?: boolean;
 }) => {
-  const [showSlider, setShowSlider] = useState(false);
-
   // 許可タグ・属性を明示してサニタイズ
   const sanitizedContent = sanitize(content, {
     allowedTags: [
@@ -154,21 +148,6 @@ export const PostContent = ({
           );
         })}
       </div>
-
-      {/* 参考実装に合わせたハイライト画像のトグル（任意・プレビューでは非表示） */}
-      {chrome && (
-        <>
-          <div className="flex justify-center mt-4">
-            <button
-              className="p-2 bg-background text-foreground border border-foreground rounded hover:bg-foreground hover:text-background transition-colors duration-300"
-              onClick={() => setShowSlider((v) => !v)}
-            >
-              {showSlider ? "閉じる" : "ハイライト"}
-            </button>
-          </div>
-          {showSlider && <ImageHighright content={sanitizedContent} />}
-        </>
-      )}
     </div>
   );
 };
