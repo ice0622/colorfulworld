@@ -53,13 +53,13 @@ export function PostListTable({ items }: { items: AdminListItem[] }) {
                 {p.title || "(無題)"}
               </Link>
               {p.draft ? (
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand/15 px-2 py-0.5 text-[11px] text-foreground/80">
-                  <Pencil className="h-3 w-3 text-brand" />
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
+                  <Pencil className="h-3 w-3" />
                   下書き
                 </span>
               ) : (
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary/20 px-2 py-0.5 text-[11px] text-foreground/80">
-                  <Check className="h-3 w-3 text-link" />
+                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-foreground/10 px-2 py-0.5 text-[11px] text-foreground">
+                  <Check className="h-3 w-3" />
                   公開
                 </span>
               )}

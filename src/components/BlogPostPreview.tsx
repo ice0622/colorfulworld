@@ -59,10 +59,10 @@ export const BlogPostPreview: FunctionComponent<{
         </div>
       </Link>
       <div className="grid grid-cols-1 gap-3 md:col-span-2 mt-4">
-        <h1 className="font-sans font-semibold tracking-tighter text-primary text-xl md:text-2xl">
+        <h1 className="font-sans font-semibold tracking-tighter text-foreground text-xl md:text-2xl">
           <Link
             href={`/blog/${post.slug}`}
-            className="underline decoration-2 underline-offset-4 decoration-transparent hover:decoration-primary transition"
+            className="underline decoration-2 underline-offset-4 decoration-transparent hover:decoration-foreground transition"
           >
             {post.title}
           </Link>

@@ -20,7 +20,7 @@ export default function GlobeWrapper({ isVisible = true, onReady, locationPosts,
     <div className="relative my-10 flex min-h-[26rem] w-full justify-center">
       <div
         className={cn(
-          "absolute inset-x-6 top-1/2 h-64 -translate-y-1/2 rounded-full bg-primary/10 blur-3xl transition-opacity duration-1000",
+          "absolute inset-x-6 top-1/2 h-64 -translate-y-1/2 rounded-full bg-foreground/5 blur-3xl transition-opacity duration-1000",
           isVisible ? "opacity-100" : "opacity-60"
         )}
       />

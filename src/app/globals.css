@@ -4,48 +4,43 @@
 
 @layer base {
   /*
-   * 固定の単一パレット（猫視覚最適 × Claudeクリーム基調）。
-   * ダーク/ライトの切替は廃止。darkMode は class 方式のまま残すが
-   * `dark` クラスをどこからも付与しないため dark: 修飾子は常に不活性＝ライト固定。
-   * 値は提示HEXをHSLチャンネルに変換（Tailwind の /opacity 修飾子を効かせるため）。
-   * 面・差し色は原色に忠実、文字を載せる前景はWCAG AA(4.5:1)を満たす濃色に寄せている。
+   * 単一の真実：モノクロ × クリーム基調パレット（このブロックが色の唯一の出所）。
+   * 方針：アクセント色なし。クリーム地＋暖色系グレー＋ほぼ黒の文字だけ。
+   *   - コントラストは色相ではなく明度（濃淡）と余白で作る。
+   *   - 状態（成否/下書き公開/危険）は色に頼らず、アイコン＋文字＋濃淡で表す。
+   * 値は HSL チャンネル（空白区切り）。Tailwind の /opacity 修飾子を効かせるため hsl(var()) 前提。
+   * グレーは地のクリームに合わせて hue≈40 の暖色低彩度で統一する。
+   * ダーク/ライト切替は廃止（darkMode は class のまま、dark クラスを付与しない＝ライト固定）。
+   * 使い分けの詳細ルールは docs/design-system.md を参照。
    */
   :root {
-    --background: 48 25% 92%;        /* Canvas  #F0EEE6 */
-    --foreground: 30 3% 12%;         /* Text    #1F1E1D */
+    --background: 48 25% 92%;        /* 地：Canvas クリーム #F0EEE6 */
+    --foreground: 30 3% 12%;         /* 文字：ほぼ黒 #1F1E1D */
 
-    --card: 45 43% 96%;              /* Surface #FAF8F2 */
+    --card: 45 43% 96%;              /* 面：Surface #FAF8F2 */
     --card-foreground: 30 3% 12%;
 
     --popover: 45 43% 96%;
     --popover-foreground: 30 3% 12%;
 
-    --primary: 204 22% 58%;          /* Primary #7B98AB（塗り。前景は濃色でAA確保） */
-    --primary-foreground: 30 3% 12%;
+    --primary: 30 3% 12%;            /* 主要な塗り＝ほぼ黒（ボタン等）。アクセント色ではない */
+    --primary-foreground: 45 43% 96%;/* 黒面に載る明色 */
 
-    --secondary: 209 20% 88%;        /* Blue Mist の淡色＝補助面 */
-    --secondary-foreground: 202 25% 30%;
+    --secondary: 40 12% 88%;         /* 補助面：暖色の淡いグレー */
+    --secondary-foreground: 36 5% 26%;
 
-    --muted: 44 24% 90%;             /* クリーム寄りの控えめ面 */
-    --muted-foreground: 40 5% 34%;   /* Text Sub #5B5852 */
+    --muted: 44 24% 90%;             /* 控えめ面：クリーム寄りグレー */
+    --muted-foreground: 40 5% 34%;   /* 補助文字 #5B5852 */
 
-    --accent: 45 35% 91%;            /* hover地用の中立クリーム（ブランド差し色とは別） */
+    --accent: 45 35% 91%;            /* hover 地用の中立クリーム */
     --accent-foreground: 30 3% 12%;
 
-    --destructive: 15 52% 58%;       /* Accent クレイ #CC785C（赤を廃し注意色をクレイに） */
-    --destructive-foreground: 30 3% 12%;
+    --destructive: 30 4% 30%;        /* 危険操作：色に頼らず濃いグレー＋アイコン＋確認で表す */
+    --destructive-foreground: 45 43% 96%;
 
-    --border: 209 18% 82%;           /* Blue Mist 寄りの淡い区切り */
-    --input: 209 18% 82%;
-    --ring: 202 22% 45%;             /* Primary Deep 寄りのフォーカス輪郭 */
-
-    /* ブランドの差し色／CTA／暖色つなぎ／リンク */
-    --brand: 15 52% 58%;             /* Accent        #CC785C */
-    --brand-foreground: 30 3% 12%;
-    --brand-strong: 28 80% 52%;      /* Accent Strong #E67D22（最重要操作のみ） */
-    --brand-strong-foreground: 30 3% 12%;
-    --brand-warm: 25 50% 66%;        /* Warm Neutral  #D4A27F */
-    --link: 202 25% 36%;             /* Primary Deep を深めてリンク文字でAA確保 */
+    --border: 40 10% 84%;            /* 区切り：暖色の淡いグレー */
+    --input: 40 10% 84%;
+    --ring: 30 3% 30%;               /* フォーカス輪郭：中立グレー */
 
     --radius: 0.5rem;
   }

@@ -37,7 +37,7 @@ export default async function Page() {
           <Link
             key={tag.id}
             href={`/tag/${tag.name}`}
-            className="text-primary mr-2 inline-block"
+            className="text-foreground mr-2 inline-block"
           >
             #{tag.name}
           </Link>
