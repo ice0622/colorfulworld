@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
+import { CatLogo } from "@/components/CatLogo";
 
 const MAX_MY_LIKES = 10;
 
@@ -12,11 +14,14 @@ export default function LikeButton({
   title?: string;
   slug?: string;
 }) {
-  const [total, setTotal] = useState<number | string>("Loading...");
+  const [total, setTotal] = useState<number | string>("…");
   const [myCount, setMyCount] = useState(0);
   const [pulse, setPulse] = useState(false);
+  // クリック毎にインクリメントし、+1 要素を再マウントしてアニメを必ずやり直す
+  const [bumpKey, setBumpKey] = useState(0);
 
   const clientIdRef = useRef<string>("");
+  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // --- 初回 clientId を決める ---
   useEffect(() => {
@@ -28,11 +33,10 @@ export default function LikeButton({
     clientIdRef.current = id;
   }, []);
 
-  // --- 初期ロード ---
+  // --- 初期ロード（みんなの合計） ---
   useEffect(() => {
     if (!postId) return;
 
-    // ① みんなの合計
     fetch(`/api/like?postId=${encodeURIComponent(postId)}`)
       .then((res) => res.json())
       .then((data) => {
@@ -42,11 +46,20 @@ export default function LikeButton({
       .catch(() => setTotal(0));
   }, [postId]);
 
+  // --- アンマウント時にタイマーを掃除 ---
+  useEffect(() => {
+    return () => {
+      if (pulseTimer.current) clearTimeout(pulseTimer.current);
+    };
+  }, []);
+
+  const reachedLimit = myCount >= MAX_MY_LIKES;
+
   const handleClick = () => {
     if (!postId) return;
-    if (myCount >= MAX_MY_LIKES) return;
+    if (reachedLimit) return;
 
-    // UI 即時更新（total が "Loading..." の場合は 1 にする）
+    // UI 即時更新（total が未取得の場合は 1 にする）
     setMyCount((c) => c + 1);
     setTotal((t) => (typeof t === "number" ? t + 1 : 1));
 
@@ -65,60 +78,80 @@ export default function LikeButton({
       // 通信失敗しても UI は戻さない
     });
 
+    // 連打しても毎回 +1 を再生する：key を進めて再マウント＋タイマーをやり直す
+    setBumpKey((k) => k + 1);
     setPulse(true);
-    setTimeout(() => setPulse(false), 420);
+    if (pulseTimer.current) clearTimeout(pulseTimer.current);
+    pulseTimer.current = setTimeout(() => setPulse(false), 600);
   };
 
-  const reachedLimit = myCount >= MAX_MY_LIKES;
-  const lizards = "🦎".repeat(myCount);
+  const display = typeof total === "number" ? total : "…";
 
   return (
-    <div className="w-full max-w-sm mx-auto">
-      <div className="text-center mb-3">
-        <span className="text-2xl font-semibold text-foreground">
-          {total}
-        </span>
-        <div className="text-xs text-muted-foreground">
-          みんなの「🦎」合計
-        </div>
-      </div>
-
-      <div className="flex items-center justify-center mb-3">
-        <div className="px-3 py-2 rounded-md min-h-[44px] flex items-center gap-2 border border-border">
-          <span className="text-lg select-none">{lizards}</span>
-          {!reachedLimit && (
-            <span
-              aria-hidden
-              style={{ width: 12, display: "inline-block", textAlign: "left", animation: "blink 1s step-end infinite" }}
-              className="text-lg text-foreground"
-            >
-              |
-            </span>
+    <div className="mx-auto flex w-full max-w-sm flex-col items-center gap-3">
+      {/* 猫だけのタップ用ピル。数字は切り離して下に置く。タップで +1 */}
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={reachedLimit}
+        aria-label="猫を贈る（いいね）"
+        className={cn(
+          // ホバー拡大は撤去（境界でのちらつき防止）。押下時のみ scale。
+          "relative inline-flex transform-gpu items-center justify-center rounded-full border border-border bg-card px-7 py-3 shadow-sm transition",
+          "hover:bg-accent active:scale-95",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "disabled:cursor-default disabled:hover:bg-card"
+        )}
+      >
+        <CatLogo
+          className={cn(
+            "h-9 w-auto origin-center transition-transform duration-300",
+            pulse && "scale-110"
           )}
-        </div>
+        />
+
+        {/* タップ時の +1 フィードバック（key でクリック毎に必ず再生） */}
+        {pulse && (
+          <span
+            key={bumpKey}
+            aria-hidden
+            className="pointer-events-none absolute -top-1 right-3 text-sm font-medium text-muted-foreground"
+            style={{ animation: "floatUp 0.6s ease-out forwards" }}
+          >
+            +1
+          </span>
+        )}
+      </button>
+
+      {/* みんなの合計（猫とは切り離した控えめなキャプション） */}
+      <div className="text-sm text-muted-foreground">
+        みんなの合計{" "}
+        <span className="font-medium tabular-nums text-foreground">{display}</span>
       </div>
 
-      <div className="flex items-center justify-center">
-        {!reachedLimit ? (
-          <button
-            onClick={handleClick}
-            aria-label="いいね"
-            className={`relative flex items-center justify-center w-14 h-14 rounded-full transition-transform focus:outline-none
-              bg-muted text-foreground shadow-sm hover:scale-105 active:scale-95`}
-            style={{ border: "1px solid hsl(var(--border))" }}
-          >
-            <span className={`${pulse ? "scale-110" : ""} inline-block text-xl`} aria-hidden>
-              🦎
-            </span>
-          </button>
+      {/* 自分の貢献（最大 10）。色相に頼らず濃淡のドットで表現 */}
+      <div className="flex h-5 items-center justify-center gap-1 text-xs text-muted-foreground">
+        {reachedLimit ? (
+          <span className="flex items-center gap-1.5 font-medium text-foreground">
+            Thank you Cat
+            <CatLogo className="h-4 w-auto" />
+          </span>
         ) : (
-          <div className="px-4 py-2 rounded-lg inline-flex items-center gap-3 justify-center w-fit text-foreground font-medium">
-            Thank you Lizard
-          </div>
+          <span className="flex items-center gap-1" aria-hidden>
+            {Array.from({ length: MAX_MY_LIKES }).map((_, i) => (
+              <span
+                key={i}
+                className={cn(
+                  "h-1.5 w-1.5 rounded-full transition-colors",
+                  i < myCount ? "bg-foreground" : "bg-foreground/15"
+                )}
+              />
+            ))}
+          </span>
         )}
       </div>
 
-      <style>{`@keyframes blink { 50% { opacity: 0; } }`}</style>
+      <style>{`@keyframes floatUp { 0% { opacity: 0; transform: translateY(2px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-14px); } }`}</style>
     </div>
   );
 }

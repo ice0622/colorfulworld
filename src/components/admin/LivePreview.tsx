@@ -40,7 +40,7 @@ export const LivePreview = forwardRef<
     >
       {title && <h1 className="mb-4 text-2xl font-bold tracking-tight">{title}</h1>}
       {html ? (
-        <PostContent content={html} chrome={false} animate={false} />
+        <PostContent content={html} animate={false} />
       ) : (
         <p className="text-sm text-muted-foreground">プレビュー…</p>
       )}

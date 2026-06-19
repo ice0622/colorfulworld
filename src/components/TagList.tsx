@@ -16,7 +16,7 @@ export const TagList = async () => {
           <div key={tag.id} className="flex items-center gap-1">
             <Link
               href={`/tag/${tag.name}`}
-              className="text-sm text-primary hover:underline inline underline decoration-2 underline-offset-4 decoration-transparent hover:decoration-primary transition"
+              className="text-sm text-foreground hover:underline inline underline decoration-2 underline-offset-4 decoration-transparent hover:decoration-foreground transition"
             >
               {tag.name}
             </Link>

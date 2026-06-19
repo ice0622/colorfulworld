@@ -56,16 +56,6 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        brand: {
-          DEFAULT: "hsl(var(--brand))",
-          foreground: "hsl(var(--brand-foreground))",
-        },
-        "brand-strong": {
-          DEFAULT: "hsl(var(--brand-strong))",
-          foreground: "hsl(var(--brand-strong-foreground))",
-        },
-        "brand-warm": "hsl(var(--brand-warm))",
-        link: "hsl(var(--link))",
       },
       borderRadius: {
         lg: "var(--radius)",

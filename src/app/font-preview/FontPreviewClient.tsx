@@ -107,7 +107,7 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
           <span>#旅行</span>
           <span>#エッセイ</span>
           {!selected.supportsJP && (
-            <span className="bg-brand/15 text-foreground/80 text-xs px-2 py-0.5 rounded">
+            <span className="bg-muted text-muted-foreground text-xs px-2 py-0.5 rounded">
               ラテン文字のみ
             </span>
           )}
@@ -259,11 +259,11 @@ export function FontPreviewClient({ fonts }: { fonts: FontOption[] }) {
                     {font.tag}
                   </span>
                   {font.supportsJP ? (
-                    <span className="text-xs border border-primary/40 text-link rounded px-1.5 py-0.5">
+                    <span className="text-xs border border-border text-foreground rounded px-1.5 py-0.5">
                       JP✓
                     </span>
                   ) : (
-                    <span className="text-xs border border-brand/50 text-brand rounded px-1.5 py-0.5">
+                    <span className="text-xs border border-border text-muted-foreground rounded px-1.5 py-0.5">
                       JP×
                     </span>
                   )}
