@@ -44,6 +44,42 @@
 
     --radius: 0.5rem;
   }
+
+  /*
+   * 期間限定オーバーレイ：ワールドカップ「侍ブルー」配色（背景=濃紺／文字=白の反転）。
+   * 通常はクリーム固定。html[data-theme="samurai"] のときだけ :root を上書きする。
+   * 適用/解除は Git で管理（適用=コミット、解除=git revert）。
+   * 明度(L)は通常版の前景/背景の差を反転して踏襲し、コントラスト差を維持する。
+   */
+  [data-theme="samurai"] {
+    --background: 223 60% 20%;          /* 侍ブルーの地（濃紺） */
+    --foreground: 210 30% 97%;          /* ほぼ白（わずかに寒色） */
+
+    --card: 223 50% 26%;                /* 地より明るい紺＝面が浮く */
+    --card-foreground: 210 30% 97%;
+
+    --popover: 223 50% 26%;
+    --popover-foreground: 210 30% 97%;
+
+    --primary: 210 30% 97%;             /* 主要な塗り＝白ボタン */
+    --primary-foreground: 223 55% 20%;  /* 白面に載る紺文字 */
+
+    --secondary: 223 45% 30%;
+    --secondary-foreground: 210 25% 90%;
+
+    --muted: 223 45% 28%;
+    --muted-foreground: 215 25% 76%;    /* 補助文字＝淡い青グレー */
+
+    --accent: 223 45% 32%;              /* hover 地 */
+    --accent-foreground: 210 30% 97%;
+
+    --destructive: 220 12% 75%;         /* 危険＝淡グレー（色相に頼らない）＋アイコン */
+    --destructive-foreground: 223 55% 20%;
+
+    --border: 223 35% 40%;              /* 紺地で見える区切り */
+    --input: 223 35% 40%;
+    --ring: 213 40% 72%;                /* フォーカス＝淡い青白 */
+  }
 }
 
 @layer base {
@@ -100,6 +136,27 @@
 .prose code::before,
 .prose code::after {
   content: none !important;
+}
+
+/*
+ * 侍ブルー時：Tailwind Typography(prose) は独自のグレー階調(--tw-prose-*)を使い
+ * トークンに追従しないため、紺地で本文グレー・見出し黒になる。トークン色へ上書きして白にする。
+ */
+[data-theme="samurai"] .prose {
+  --tw-prose-body: hsl(var(--foreground));
+  --tw-prose-headings: hsl(var(--foreground));
+  --tw-prose-lead: hsl(var(--muted-foreground));
+  --tw-prose-links: hsl(var(--foreground));
+  --tw-prose-bold: hsl(var(--foreground));
+  --tw-prose-counters: hsl(var(--muted-foreground));
+  --tw-prose-bullets: hsl(var(--border));
+  --tw-prose-hr: hsl(var(--border));
+  --tw-prose-quotes: hsl(var(--foreground));
+  --tw-prose-quote-borders: hsl(var(--border));
+  --tw-prose-captions: hsl(var(--muted-foreground));
+  --tw-prose-code: hsl(var(--foreground));
+  --tw-prose-th-borders: hsl(var(--border));
+  --tw-prose-td-borders: hsl(var(--border));
 }
 
 /* ブロックごとに prose div が分かれていても先頭・末尾マージンをリセット */
