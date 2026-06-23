@@ -1,9 +1,30 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CatLogo } from "@/components/CatLogo";
 
 const MAX_MY_LIKES = 10;
+
+// 合計値をスプリングで滑らかにカウントアップ（数字が転がる）
+function AnimatedCount({ value }: { value: number }) {
+  const mv = useMotionValue(value);
+  const spring = useSpring(mv, { stiffness: 130, damping: 20, mass: 0.6 });
+  const text = useTransform(spring, (v) => Math.round(v).toLocaleString());
+  useEffect(() => {
+    mv.set(value);
+  }, [value, mv]);
+  return (
+    <motion.span className="font-medium tabular-nums text-foreground">
+      {text}
+    </motion.span>
+  );
+}
 
 export default function LikeButton({
   postId,
@@ -14,29 +35,17 @@ export default function LikeButton({
   title?: string;
   slug?: string;
 }) {
-  const [total, setTotal] = useState<number | string>("…");
+  const [total, setTotal] = useState<number | null>(null);
   const [myCount, setMyCount] = useState(0);
-  const [pulse, setPulse] = useState(false);
-  // クリック毎にインクリメントし、+1 要素を再マウントしてアニメを必ずやり直す
-  const [bumpKey, setBumpKey] = useState(0);
+  const [bursts, setBursts] = useState<number[]>([]);
 
-  const clientIdRef = useRef<string>("");
-  const pulseTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const myCountRef = useRef(0); // 長押しループ内で最新値を参照するため
+  const burstId = useRef(0);
+  const holdTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // --- 初回 clientId を決める ---
-  useEffect(() => {
-    let id = localStorage.getItem("like-client-id");
-    if (!id) {
-      id = crypto.randomUUID();
-      localStorage.setItem("like-client-id", id);
-    }
-    clientIdRef.current = id;
-  }, []);
-
-  // --- 初期ロード（みんなの合計） ---
+  // 初期ロード（みんなの合計）
   useEffect(() => {
     if (!postId) return;
-
     fetch(`/api/like?postId=${encodeURIComponent(postId)}`)
       .then((res) => res.json())
       .then((data) => {
@@ -46,112 +55,154 @@ export default function LikeButton({
       .catch(() => setTotal(0));
   }, [postId]);
 
-  // --- アンマウント時にタイマーを掃除 ---
-  useEffect(() => {
-    return () => {
-      if (pulseTimer.current) clearTimeout(pulseTimer.current);
-    };
-  }, []);
+  const stopHold = () => {
+    if (holdTimer.current) {
+      clearTimeout(holdTimer.current);
+      holdTimer.current = null;
+    }
+  };
+
+  // アンマウント時にタイマー掃除
+  useEffect(() => stopHold, []);
 
   const reachedLimit = myCount >= MAX_MY_LIKES;
 
-  const handleClick = () => {
-    if (!postId) return;
-    if (reachedLimit) return;
+  // 1いいね加算（UI即時＋サーバへ +1 を1回POST）。上限なら false。
+  const addLike = () => {
+    if (!postId) return false;
+    if (myCountRef.current >= MAX_MY_LIKES) return false;
 
-    // UI 即時更新（total が未取得の場合は 1 にする）
-    setMyCount((c) => c + 1);
+    myCountRef.current += 1;
+    setMyCount(myCountRef.current);
     setTotal((t) => (typeof t === "number" ? t + 1 : 1));
 
-    // サーバへ即送信
+    const id = (burstId.current += 1);
+    setBursts((b) => [...b, id]);
+    setTimeout(() => setBursts((b) => b.filter((x) => x !== id)), 700);
+
     fetch("/api/like", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        postId,
-        title,
-        slug,
-        clientId: clientIdRef.current,
-        add: 1,
-      }),
+      body: JSON.stringify({ postId, title, slug }),
     }).catch(() => {
       // 通信失敗しても UI は戻さない
     });
-
-    // 連打しても毎回 +1 を再生する：key を進めて再マウント＋タイマーをやり直す
-    setBumpKey((k) => k + 1);
-    setPulse(true);
-    if (pulseTimer.current) clearTimeout(pulseTimer.current);
-    pulseTimer.current = setTimeout(() => setPulse(false), 600);
+    return true;
   };
 
-  const display = typeof total === "number" ? total : "…";
+  // 長押し：最初の1回 → 少し置いて加速連打
+  const startHold = () => {
+    if (!addLike()) return;
+    let delay = 300;
+    const tick = () => {
+      if (!addLike()) {
+        stopHold();
+        return;
+      }
+      delay = Math.max(80, delay * 0.82);
+      holdTimer.current = setTimeout(tick, delay);
+    };
+    holdTimer.current = setTimeout(tick, delay);
+  };
+
+  const CIRC = 2 * Math.PI * 27;
+  const dashoffset = CIRC * (1 - myCount / MAX_MY_LIKES);
 
   return (
-    <div className="mx-auto flex w-full max-w-sm flex-col items-center gap-3">
-      {/* 猫だけのタップ用ピル。数字は切り離して下に置く。タップで +1 */}
-      <button
-        type="button"
-        onClick={handleClick}
-        disabled={reachedLimit}
-        aria-label="猫を贈る（いいね）"
-        className={cn(
-          // ホバー拡大は撤去（境界でのちらつき防止）。押下時のみ scale。
-          "relative inline-flex transform-gpu items-center justify-center rounded-full border border-border bg-card px-7 py-3 shadow-sm transition",
-          "hover:bg-accent active:scale-95",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-          "disabled:cursor-default disabled:hover:bg-card"
-        )}
-      >
-        <CatLogo
-          className={cn(
-            "h-9 w-auto origin-center transition-transform duration-300",
-            pulse && "scale-110"
-          )}
-        />
+    <div className="mx-auto flex w-full max-w-sm flex-col items-center gap-3 py-2">
+      <div className="relative h-16 w-16">
+        {/* 進捗リング（あなたの貢献 / 最大10） */}
+        <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 64 64">
+          <circle cx="32" cy="32" r="27" fill="none" stroke="hsl(var(--foreground) / 0.12)" strokeWidth="2.5" />
+          <circle
+            cx="32"
+            cy="32"
+            r="27"
+            fill="none"
+            stroke="hsl(var(--foreground))"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeDasharray={CIRC}
+            strokeDashoffset={dashoffset}
+            style={{ transition: "stroke-dashoffset 0.5s cubic-bezier(0.22,1,0.36,1)" }}
+          />
+        </svg>
 
-        {/* タップ時の +1 フィードバック（key でクリック毎に必ず再生） */}
-        {pulse && (
-          <span
-            key={bumpKey}
+        {/* タップごとのリップル＋「+1」 */}
+        {bursts.map((id) => (
+          <motion.span
+            key={`r${id}`}
             aria-hidden
-            className="pointer-events-none absolute -top-1 right-3 text-sm font-medium text-muted-foreground"
-            style={{ animation: "floatUp 0.6s ease-out forwards" }}
+            className="pointer-events-none absolute inset-0 rounded-full border border-foreground/25"
+            initial={{ scale: 0.75, opacity: 0.5 }}
+            animate={{ scale: 1.7, opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+          />
+        ))}
+        {bursts.map((id) => (
+          <motion.span
+            key={`p${id}`}
+            aria-hidden
+            className="pointer-events-none absolute left-1/2 top-1 -translate-x-1/2 text-xs font-medium text-muted-foreground"
+            initial={{ y: 0, opacity: 0 }}
+            animate={{ y: -24, opacity: [0, 1, 0] }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
           >
             +1
-          </span>
-        )}
-      </button>
+          </motion.span>
+        ))}
 
-      {/* みんなの合計（猫とは切り離した控えめなキャプション） */}
-      <div className="text-sm text-muted-foreground">
-        みんなの合計{" "}
-        <span className="font-medium tabular-nums text-foreground">{display}</span>
+        {/* ボタン本体：タップ=+1／長押し=加速連打 */}
+        <motion.button
+          type="button"
+          disabled={reachedLimit}
+          aria-label="いいね（長押しで増やせます）"
+          whileTap={{ scale: 0.9 }}
+          onPointerDown={startHold}
+          onPointerUp={stopHold}
+          onPointerLeave={stopHold}
+          onPointerCancel={stopHold}
+          onContextMenu={(e) => e.preventDefault()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              addLike();
+            }
+          }}
+          className={cn(
+            "absolute inset-[7px] flex touch-none select-none items-center justify-center rounded-full border border-border bg-card shadow-sm transition-colors",
+            "hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+            "disabled:cursor-default disabled:hover:bg-card"
+          )}
+        >
+          <motion.span
+            key={myCount}
+            initial={{ scale: 1 }}
+            animate={{ scale: myCount > 0 ? [1, 1.28, 1] : 1 }}
+            transition={{ duration: 0.28, ease: "easeOut" }}
+          >
+            <Heart
+              className={cn(
+                "h-[22px] w-[22px] text-foreground transition-[fill,opacity] duration-300",
+                myCount > 0 ? "fill-current" : "fill-transparent"
+              )}
+              strokeWidth={1.75}
+            />
+          </motion.span>
+        </motion.button>
       </div>
 
-      {/* 自分の貢献（最大 10）。色相に頼らず濃淡のドットで表現 */}
-      <div className="flex h-5 items-center justify-center gap-1 text-xs text-muted-foreground">
-        {reachedLimit ? (
-          <span className="flex items-center gap-1.5 font-medium text-foreground">
-            Thank you Cat
-            <CatLogo className="h-4 w-auto" />
-          </span>
+      {/* みんなの合計（ボタンと切り離した控えめなキャプション・スプリングでカウントアップ） */}
+      <div className="flex h-5 items-center gap-1.5 text-sm text-muted-foreground">
+        {total === null ? (
+          <span className="opacity-50">···</span>
         ) : (
-          <span className="flex items-center gap-1" aria-hidden>
-            {Array.from({ length: MAX_MY_LIKES }).map((_, i) => (
-              <span
-                key={i}
-                className={cn(
-                  "h-1.5 w-1.5 rounded-full transition-colors",
-                  i < myCount ? "bg-foreground" : "bg-foreground/15"
-                )}
-              />
-            ))}
-          </span>
+          <>
+            <AnimatedCount value={total} />
+            <span className="text-xs">{reachedLimit ? "ありがとう" : "いいね"}</span>
+          </>
         )}
       </div>
-
-      <style>{`@keyframes floatUp { 0% { opacity: 0; transform: translateY(2px); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(-14px); } }`}</style>
     </div>
   );
 }
