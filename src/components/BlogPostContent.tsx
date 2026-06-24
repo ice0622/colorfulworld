@@ -3,6 +3,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { GetPostResult } from "@/types/content";
 import Link from "next/link";
+import Image from "next/image";
+import { getImageMeta } from "@/lib/imageManifest";
 import LikeButton from "@/components/LikeButton";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
@@ -13,6 +15,55 @@ const fadeInUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
+
+// 本文画像の共通クラス。next/image の inline 寸法を h-auto/w-auto で上書きし、
+// max-w-full でコンテナ幅(672px)に収め、縦長は max-h-[80vh] で抑える。
+const CONTENT_IMG_CLASS =
+  "mx-auto h-auto max-h-[80vh] w-auto max-w-full rounded-lg";
+// 本文の表示幅は最大 672px（prose コンテナ）。これに合わせて最適化バリアントを配信。
+const CONTENT_IMG_SIZES = "(max-width: 672px) 100vw, 672px";
+
+// 本文画像を next/image で最適化配信する。
+// マニフェスト(getImageMeta)から実寸+blurを引き、レイアウトシフトなし+blur→鮮明を実現。
+function ContentImage({ src, alt }: { src: string; alt: string }) {
+  const meta = getImageMeta(src);
+
+  // decode 不能な画像（拡張子詐称のAVIF等）は最適化を回避して素のまま配信（無回帰）。
+  if (meta && "unoptimized" in meta) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt={alt} className={CONTENT_IMG_CLASS} />;
+  }
+
+  // マニフェスト収録: 実寸 + blur プレースホルダ。
+  if (meta) {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        width={meta.w}
+        height={meta.h}
+        quality={90}
+        sizes={CONTENT_IMG_SIZES}
+        placeholder="blur"
+        blurDataURL={meta.blur}
+        className={CONTENT_IMG_CLASS}
+      />
+    );
+  }
+
+  // 未収録（新規アップロード直後でマニフェスト未再生成）: 最適化のみ・blurなし・暫定比。
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={1920}
+      height={1080}
+      quality={90}
+      sizes={CONTENT_IMG_SIZES}
+      className={CONTENT_IMG_CLASS}
+    />
+  );
+}
 
 // 画像とキャプションを解決する。
 // キャプションの出所は 2 系統：
@@ -144,11 +195,7 @@ export const PostContent = ({
             <>
               {imgData && imgSrc ? (
                 <figure className="my-6">
-                  <img
-                    src={imgSrc}
-                    alt={imgData.alt}
-                    className="mx-auto max-h-[80vh] w-auto max-w-full rounded-lg"
-                  />
+                  <ContentImage src={imgSrc} alt={imgData.alt} />
                   {imgData.caption && (
                     <figcaption className="mt-2 text-center text-sm text-muted-foreground">
                       {imgData.caption}
