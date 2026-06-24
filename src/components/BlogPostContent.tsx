@@ -3,6 +3,9 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { GetPostResult } from "@/types/content";
 import Link from "next/link";
+import Image from "next/image";
+import { getImageMeta } from "@/lib/imageManifest";
+import LikeButton from "@/components/LikeButton";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
 import sanitize, { defaults } from "sanitize-html";
@@ -13,8 +16,78 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-function extractImgEl(block: ChildNode): { img: Element; caption?: string } | null {
-  if (block.nodeName === "IMG") return { img: block as Element };
+// 本文画像の共通クラス。next/image の inline 寸法を h-auto/w-auto で上書きし、
+// max-w-full でコンテナ幅(672px)に収め、縦長は max-h-[80vh] で抑える。
+const CONTENT_IMG_CLASS =
+  "mx-auto h-auto max-h-[80vh] w-auto max-w-full rounded-lg";
+// 本文の表示幅は最大 672px（prose コンテナ）。これに合わせて最適化バリアントを配信。
+const CONTENT_IMG_SIZES = "(max-width: 672px) 100vw, 672px";
+
+// 本文画像を next/image で最適化配信する。
+// マニフェスト(getImageMeta)から実寸+blurを引き、レイアウトシフトなし+blur→鮮明を実現。
+function ContentImage({ src, alt }: { src: string; alt: string }) {
+  const meta = getImageMeta(src);
+
+  // decode 不能な画像（拡張子詐称のAVIF等）は最適化を回避して素のまま配信（無回帰）。
+  if (meta && "unoptimized" in meta) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt={alt} className={CONTENT_IMG_CLASS} />;
+  }
+
+  // マニフェスト収録: 実寸 + blur プレースホルダ。
+  if (meta) {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        width={meta.w}
+        height={meta.h}
+        quality={90}
+        sizes={CONTENT_IMG_SIZES}
+        placeholder="blur"
+        blurDataURL={meta.blur}
+        className={CONTENT_IMG_CLASS}
+      />
+    );
+  }
+
+  // 未収録（新規アップロード直後でマニフェスト未再生成）: 最適化のみ・blurなし・暫定比。
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={1920}
+      height={1080}
+      quality={90}
+      sizes={CONTENT_IMG_SIZES}
+      className={CONTENT_IMG_CLASS}
+    />
+  );
+}
+
+// 画像とキャプションを解決する。
+// キャプションの出所は 2 系統：
+//   1) CMS（Crepe 画像ブロック）→ markdown の title 属性に入る（例: ![1.33](url "説明")）
+//   2) 手書き markdown → 画像直後の同段落テキスト（![alt](url) のすぐ次の行）
+// Crepe は alt にアスペクト比の数値を入れるため、数値 alt は意味を持たないものとして扱う。
+function resolveImg(
+  img: Element,
+  trailing?: string
+): { img: Element; caption?: string; alt: string } {
+  const rawAlt = img.getAttribute("alt")?.trim() ?? "";
+  const title = img.getAttribute("title")?.trim();
+  const caption = trailing?.trim() || title || undefined;
+
+  const altIsRatio = rawAlt !== "" && Number.isFinite(Number(rawAlt));
+  const alt = altIsRatio ? (caption ?? "") : rawAlt;
+
+  return { img, caption, alt };
+}
+
+function extractImgEl(
+  block: ChildNode
+): { img: Element; caption?: string; alt: string } | null {
+  if (block.nodeName === "IMG") return resolveImg(block as Element);
 
   if (block.nodeName === "P") {
     const children = Array.from((block as Element).childNodes).filter(
@@ -22,16 +95,13 @@ function extractImgEl(block: ChildNode): { img: Element; caption?: string } | nu
     );
 
     if (children.length >= 1 && children[0].nodeName === "IMG") {
-      const caption = children
+      const trailing = children
         .slice(1)
         .map((n) => n.textContent)
         .join("")
         .trim();
 
-      return {
-        img: children[0] as Element,
-        caption: caption || undefined,
-      };
+      return resolveImg(children[0] as Element, trailing);
     }
   }
 
@@ -124,18 +194,16 @@ export const PostContent = ({
           const inner = (
             <>
               {imgData && imgSrc ? (
-                <>
-                  <img
-                    src={imgSrc}
-                    alt={imgData.img.getAttribute("alt") ?? ""}
-                    className="mx-auto max-h-[80vh] w-auto max-w-full rounded-lg"
-                  />
-                  {imgData.caption && <p>{imgData.caption}</p>}
-                </>
+                <figure className="my-6">
+                  <ContentImage src={imgSrc} alt={imgData.alt} />
+                  {imgData.caption && (
+                    <figcaption className="mt-2 text-center text-sm text-muted-foreground">
+                      {imgData.caption}
+                    </figcaption>
+                  )}
+                </figure>
               ) : imgData && !imgSrc ? (
-                <p className="text-muted-foreground">
-                  {imgData.img.getAttribute("alt") || ""}
-                </p>
+                <p className="text-muted-foreground">{imgData.alt}</p>
               ) : block.nodeName !== "#text" &&
                 block.nodeName !== "#comment" ? (
                 <div
@@ -173,8 +241,10 @@ export const PostContent = ({
 
 export const BlogPostContent = ({
   post,
+  slug,
 }: {
   post: GetPostResult["post"];
+  slug: string;
 }) => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [titleExtraHeight, setTitleExtraHeight] = useState(0);
@@ -228,32 +298,34 @@ export const BlogPostContent = ({
         </h1>
       </div>
 
-      <div className="prose prose-neutral mx-auto max-w-2xl mb-10 break-words">
+      <div className="prose prose-neutral mx-auto max-w-2xl break-words">
         <PostContent content={content} />
+      </div>
 
-        <div className="mt-10 opacity-40 text-sm">
-          {tags.map((tag) => (
-            <Link
-              key={tag.id}
-              href={`/tag/${tag.name}`}
-              className="text-primary mr-2"
-            >
-              #{tag.name}
-            </Link>
-          ))}
+      {/* メタ＋いいね：左に「#タグ・日付」の塊、右にいいねボタンを同じ行で右寄せ */}
+      <div className="mx-auto mt-6 flex max-w-2xl items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm opacity-40">
+          <span className="flex flex-wrap gap-x-2">
+            {tags.map((tag) => (
+              <Link
+                key={tag.id}
+                href={`/tag/${tag.name}`}
+                className="text-primary hover:underline"
+              >
+                #{tag.name}
+              </Link>
+            ))}
+          </span>
+          <span>
+            {new Intl.DateTimeFormat("ja-JP", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }).format(new Date(publishedAt || createdAt))}
+          </span>
         </div>
 
-        <div className="text-sm opacity-40 mt-4">
-          {new Intl.DateTimeFormat("ja-JP", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).format(
-            new Date(
-              publishedAt || createdAt
-            )
-          )}
-        </div>
+        <LikeButton postId={post.id} title={title} slug={slug} />
       </div>
     </div>
   );

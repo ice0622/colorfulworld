@@ -1,5 +1,4 @@
 import { BlogPostContent } from "@/components/BlogPostContent";
-import LikeButton from "@/components/LikeButton";
 import { TagList } from "@/components/TagList";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
@@ -79,8 +78,7 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
       <div className="container mx-auto px-5">
         <Header />
         <div className="max-w-2xl mx-auto text-xl">
-          <BlogPostContent post={result.post} />
-          <LikeButton postId={result.post.id} title={title} slug={slug} />
+          <BlogPostContent post={result.post} slug={slug} />
           <RelatedPosts posts={posts} />
         </div>
         <TagList />
