@@ -109,7 +109,7 @@ export default function LikeButton({
   const dashoffset = CIRC * (1 - myCount / MAX_MY_LIKES);
 
   return (
-    <div className="mx-auto flex w-full max-w-sm flex-col items-center gap-3 py-2">
+    <div className="flex shrink-0 flex-col items-center gap-2">
       <div className="relative h-16 w-16">
         {/* 進捗リング（あなたの貢献 / 最大10） */}
         <svg className="absolute inset-0 h-full w-full -rotate-90" viewBox="0 0 64 64">

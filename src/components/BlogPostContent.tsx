@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { GetPostResult } from "@/types/content";
 import Link from "next/link";
+import LikeButton from "@/components/LikeButton";
 import hljs from "highlight.js";
 import "highlight.js/styles/github-dark.css";
 import sanitize, { defaults } from "sanitize-html";
@@ -13,8 +14,29 @@ const fadeInUp = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
 };
 
-function extractImgEl(block: ChildNode): { img: Element; caption?: string } | null {
-  if (block.nodeName === "IMG") return { img: block as Element };
+// 画像とキャプションを解決する。
+// キャプションの出所は 2 系統：
+//   1) CMS（Crepe 画像ブロック）→ markdown の title 属性に入る（例: ![1.33](url "説明")）
+//   2) 手書き markdown → 画像直後の同段落テキスト（![alt](url) のすぐ次の行）
+// Crepe は alt にアスペクト比の数値を入れるため、数値 alt は意味を持たないものとして扱う。
+function resolveImg(
+  img: Element,
+  trailing?: string
+): { img: Element; caption?: string; alt: string } {
+  const rawAlt = img.getAttribute("alt")?.trim() ?? "";
+  const title = img.getAttribute("title")?.trim();
+  const caption = trailing?.trim() || title || undefined;
+
+  const altIsRatio = rawAlt !== "" && Number.isFinite(Number(rawAlt));
+  const alt = altIsRatio ? (caption ?? "") : rawAlt;
+
+  return { img, caption, alt };
+}
+
+function extractImgEl(
+  block: ChildNode
+): { img: Element; caption?: string; alt: string } | null {
+  if (block.nodeName === "IMG") return resolveImg(block as Element);
 
   if (block.nodeName === "P") {
     const children = Array.from((block as Element).childNodes).filter(
@@ -22,16 +44,13 @@ function extractImgEl(block: ChildNode): { img: Element; caption?: string } | nu
     );
 
     if (children.length >= 1 && children[0].nodeName === "IMG") {
-      const caption = children
+      const trailing = children
         .slice(1)
         .map((n) => n.textContent)
         .join("")
         .trim();
 
-      return {
-        img: children[0] as Element,
-        caption: caption || undefined,
-      };
+      return resolveImg(children[0] as Element, trailing);
     }
   }
 
@@ -124,18 +143,20 @@ export const PostContent = ({
           const inner = (
             <>
               {imgData && imgSrc ? (
-                <>
+                <figure className="my-6">
                   <img
                     src={imgSrc}
-                    alt={imgData.img.getAttribute("alt") ?? ""}
+                    alt={imgData.alt}
                     className="mx-auto max-h-[80vh] w-auto max-w-full rounded-lg"
                   />
-                  {imgData.caption && <p>{imgData.caption}</p>}
-                </>
+                  {imgData.caption && (
+                    <figcaption className="mt-2 text-center text-sm text-muted-foreground">
+                      {imgData.caption}
+                    </figcaption>
+                  )}
+                </figure>
               ) : imgData && !imgSrc ? (
-                <p className="text-muted-foreground">
-                  {imgData.img.getAttribute("alt") || ""}
-                </p>
+                <p className="text-muted-foreground">{imgData.alt}</p>
               ) : block.nodeName !== "#text" &&
                 block.nodeName !== "#comment" ? (
                 <div
@@ -173,8 +194,10 @@ export const PostContent = ({
 
 export const BlogPostContent = ({
   post,
+  slug,
 }: {
   post: GetPostResult["post"];
+  slug: string;
 }) => {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [titleExtraHeight, setTitleExtraHeight] = useState(0);
@@ -228,32 +251,34 @@ export const BlogPostContent = ({
         </h1>
       </div>
 
-      <div className="prose prose-neutral mx-auto max-w-2xl mb-10 break-words">
+      <div className="prose prose-neutral mx-auto max-w-2xl break-words">
         <PostContent content={content} />
+      </div>
 
-        <div className="mt-10 opacity-40 text-sm">
-          {tags.map((tag) => (
-            <Link
-              key={tag.id}
-              href={`/tag/${tag.name}`}
-              className="text-primary mr-2"
-            >
-              #{tag.name}
-            </Link>
-          ))}
+      {/* メタ＋いいね：左に「#タグ・日付」の塊、右にいいねボタンを同じ行で右寄せ */}
+      <div className="mx-auto mt-6 flex max-w-2xl items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm opacity-40">
+          <span className="flex flex-wrap gap-x-2">
+            {tags.map((tag) => (
+              <Link
+                key={tag.id}
+                href={`/tag/${tag.name}`}
+                className="text-primary hover:underline"
+              >
+                #{tag.name}
+              </Link>
+            ))}
+          </span>
+          <span>
+            {new Intl.DateTimeFormat("ja-JP", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }).format(new Date(publishedAt || createdAt))}
+          </span>
         </div>
 
-        <div className="text-sm opacity-40 mt-4">
-          {new Intl.DateTimeFormat("ja-JP", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          }).format(
-            new Date(
-              publishedAt || createdAt
-            )
-          )}
-        </div>
+        <LikeButton postId={post.id} title={title} slug={slug} />
       </div>
     </div>
   );
