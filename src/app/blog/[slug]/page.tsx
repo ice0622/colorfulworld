@@ -77,9 +77,11 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
       />
       <div className="container mx-auto px-5">
         <Header />
-        <div className="max-w-2xl mx-auto text-xl">
+        <div className="text-xl">
           <BlogPostContent post={result.post} slug={slug} />
-          <RelatedPosts posts={posts} />
+          <div className="max-w-2xl mx-auto">
+            <RelatedPosts posts={posts} />
+          </div>
         </div>
         <TagList />
         <Footer />

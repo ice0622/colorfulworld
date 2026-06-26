@@ -22,6 +22,55 @@ const CONTENT_IMG_CLASS =
   "mx-auto h-auto max-h-[80vh] w-auto max-w-full rounded-lg";
 // 本文の表示幅は最大 672px（prose コンテナ）。これに合わせて最適化バリアントを配信。
 const CONTENT_IMG_SIZES = "(max-width: 672px) 100vw, 672px";
+// ヒーローは左寄せで最大 800px に抑える（後段の max-w-[800px] と一致）。
+// ソース実寸 1600px を 800px × DPR2 として使い切り、Retina でも等倍＝シャープにする。
+// （ここを実表示幅より小さく宣言すると小さいバリアントが選ばれて拡大ボケする）
+const HERO_IMG_SIZES = "(max-width: 768px) 100vw, 800px";
+
+// サムネ（cover）を記事先頭のヒーローで大きく見せる。
+// 本文画像と同様に manifest から実寸+blur を引き、CLS なし+blur→鮮明を実現する。
+// 先頭の大画像（LCP）なので priority で先読みする。
+function HeroImage({ src, alt }: { src: string; alt: string }) {
+  const meta = getImageMeta(src);
+
+  // decode 不能な画像は最適化を回避して素のまま配信（無回帰）。
+  if (meta && "unoptimized" in meta) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={src} alt={alt} className="h-auto w-full" />;
+  }
+
+  // マニフェスト収録: 実寸 + blur プレースホルダ（自然なアスペクト比のまま）。
+  if (meta) {
+    return (
+      <Image
+        src={src}
+        alt={alt}
+        width={meta.w}
+        height={meta.h}
+        quality={90}
+        sizes={HERO_IMG_SIZES}
+        placeholder="blur"
+        blurDataURL={meta.blur}
+        className="h-auto w-full"
+        priority
+      />
+    );
+  }
+
+  // 未収録（新規アップロード直後）: 最適化のみ・blurなし・暫定比(16:9)。
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      width={1600}
+      height={900}
+      quality={90}
+      sizes={HERO_IMG_SIZES}
+      className="h-auto w-full"
+      priority
+    />
+  );
+}
 
 // 本文画像を next/image で最適化配信する。
 // マニフェスト(getImageMeta)から実寸+blurを引き、レイアウトシフトなし+blur→鮮明を実現。
@@ -271,32 +320,71 @@ export const BlogPostContent = ({
     createdAt,
     content,
     tags,
+    image,
   } = post;
 
   return (
     <div>
-      <div
-        className="mx-auto max-w-2xl mt-4"
-        style={{
-          paddingBottom: `${titleExtraHeight + 32}px`,
-        }}
-      >
-        <h1
-          ref={titleRef}
-          className="text-3xl sm:text-4xl lg:text-5xl font-black break-words leading-tight"
+      {image ? (
+        // サムネあり：ヒーロー。画像を左に大きく（右側に余白）、
+        // タイトルは右上の余白へずらして右寄せに置く非対称レイアウト。
+        <header className="mt-4 mb-10 sm:mb-14">
+          <div className="grid grid-cols-12 items-start gap-y-6 sm:gap-y-8">
+            <div
+              className="col-span-12 row-start-1 sm:col-start-4 sm:col-span-9"
+              style={{
+                paddingBottom: `${Math.round(titleExtraHeight * 0.6)}px`,
+              }}
+            >
+              <h1
+                ref={titleRef}
+                className="text-3xl sm:text-4xl lg:text-5xl font-black break-words leading-tight"
+                style={{
+                  fontFamily: "var(--font-noto-serif-jp)",
+                  fontWeight: 900,
+                  transform: "scaleY(1.6)",
+                  transformOrigin: "top right",
+                  letterSpacing: "-0.06em",
+                  display: "inline-block",
+                  width: "100%",
+                  textAlign: "right",
+                }}
+              >
+                {title}
+              </h1>
+            </div>
+            {/* 完全左寄せ・最大800px（1600pxソースをRetinaで等倍に使い切る上限）。
+                右側は大きく余白を残し、上のタイトル右寄せと非対称に組む。 */}
+            <div className="col-span-12 row-start-2 max-w-[800px]">
+              <HeroImage src={image} alt={title} />
+            </div>
+          </div>
+        </header>
+      ) : (
+        // サムネなし：従来どおりタイトルのみ（左寄せ・読みやすい幅）。
+        <div
+          className="mx-auto max-w-2xl mt-4"
           style={{
-            fontFamily: "var(--font-noto-serif-jp)",
-            fontWeight: 900,
-            transform: "scaleY(1.6)",
-            transformOrigin: "top left",
-            letterSpacing: "-0.06em",
-            display: "inline-block",
-            width: "100%",
+            paddingBottom: `${titleExtraHeight + 32}px`,
           }}
         >
-          {title}
-        </h1>
-      </div>
+          <h1
+            ref={titleRef}
+            className="text-3xl sm:text-4xl lg:text-5xl font-black break-words leading-tight"
+            style={{
+              fontFamily: "var(--font-noto-serif-jp)",
+              fontWeight: 900,
+              transform: "scaleY(1.6)",
+              transformOrigin: "top left",
+              letterSpacing: "-0.06em",
+              display: "inline-block",
+              width: "100%",
+            }}
+          >
+            {title}
+          </h1>
+        </div>
+      )}
 
       <div className="prose prose-neutral mx-auto max-w-2xl break-words">
         <PostContent content={content} />
