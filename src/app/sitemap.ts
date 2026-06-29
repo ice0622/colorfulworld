@@ -16,6 +16,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: urlJoin(config.baseUrl, "blog", post.slug),
     lastModified: post.updatedAt ? new Date(post.updatedAt) : new Date(),
     priority: 0.8,
+    // cover 画像を画像サイトマップに含める（絶対URL化）。Blob は既に絶対、ルート相対は baseUrl 前置。
+    images: post.image
+      ? [post.image.startsWith("http") ? post.image : urlJoin(config.baseUrl, post.image)]
+      : undefined,
   }));
 
   // タグ (Tag) を取得 (★ TagList.tsx と同じ共通ロジックを使用)

@@ -48,6 +48,10 @@ export type ParsedPost = {
   location: string[]; // slug 済み
   metaTags: string[];
   tags: string[]; // タグ名
+  seoTitle: string | null; // 検索語入りの <title>/OG タイトル（無ければ title）
+  camera: string | null; // 撮影データ: カメラ
+  lens: string | null; // 撮影データ: レンズ
+  filmStock: string | null; // 撮影データ: フィルム銘柄
   publishedAt: string | null; // frontmatter `date`
   updatedAt: string | null; // frontmatter `updated`
 };
@@ -77,9 +81,13 @@ export function parsePostFrontmatter(raw: string): ParsedPost | null {
     slug: data.slug,
     number: data.number ?? 0,
     title: data.title || "",
+    seoTitle: data.seoTitle || null,
     description: data.description || "",
     bodyMd: content,
     coverImage: data.coverImage || null,
+    camera: data.camera || null,
+    lens: data.lens || null,
+    filmStock: data.filmStock || null,
     category: deriveCategory(tags, location.length > 0),
     featured: data.featured ?? false,
     draft: data.draft ?? false,

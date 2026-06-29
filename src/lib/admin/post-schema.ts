@@ -9,9 +9,14 @@ export const postFormSchema = z.object({
     .string()
     .regex(/^[a-z0-9-]*$/, "半角英数字とハイフンのみ使えます（例: my-post）")
     .default(""),
+  seoTitle: z.string().nullable().optional(), // 検索用 <title>（未入力なら title）
   description: z.string().default(""),
   bodyMd: z.string().default(""),
   coverImage: z.string().nullable().optional(),
+  // 撮影データ（作例）
+  camera: z.string().nullable().optional(),
+  lens: z.string().nullable().optional(),
+  filmStock: z.string().nullable().optional(),
   tags: z.array(z.string()).default([]),
   location: z.array(z.string()).default([]),
   metaTags: z.array(z.string()).default([]),

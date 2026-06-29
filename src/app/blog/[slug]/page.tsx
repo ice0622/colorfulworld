@@ -22,18 +22,21 @@ export async function generateMetadata(
     return { title: "Not Found" };
   }
 
-  const { title, description, image } = result.post;
+  const { title, seoTitle, description, image } = result.post;
+  // <title>/OG/Twitter は検索語入りの seoTitle を優先（未入力なら詩的タイトル）。
+  // OG 画像カードのテキストは詩的タイトルのまま（ブランド感を保つ）。
+  const metaTitle = seoTitle || title;
   const generatedOgImage = signOgImageUrl({ title, brand: config.blog.name });
 
   return {
-    title,
+    title: metaTitle,
     description,
     openGraph: {
-      title,
+      title: metaTitle,
       images: image ? [generatedOgImage, image] : [generatedOgImage],
     },
     twitter: {
-      title,
+      title: metaTitle,
       images: image ? [generatedOgImage, image] : [generatedOgImage],
     },
     alternates: {
@@ -50,18 +53,37 @@ const Page = async (props: { params: Promise<{ slug: string }> }) => {
 
   if (!result?.post) return notFound();
 
-  const { title, publishedAt, updatedAt, image, author, tags } = result.post;
+  const { title, seoTitle, publishedAt, updatedAt, image, author, tags, camera, lens, filmStock } =
+    result.post;
+
+  // cover 画像は絶対URL化（Blob は既に絶対、ルート相対なら baseUrl を前置）
+  const imageUrl = image
+    ? image.startsWith("http")
+      ? image
+      : `${config.baseUrl}${image}`
+    : undefined;
+
+  // タグ＋撮影機材を keywords に（作例検索の手がかり）
+  const keywords = [...(tags?.map((t) => t.name) ?? []), camera, lens, filmStock]
+    .filter(Boolean)
+    .join(", ");
 
   // JSON-LD
   const jsonLd: WithContext<BlogPosting> = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    headline: title,
-    image: image || undefined,
+    headline: seoTitle || title,
+    image: imageUrl
+      ? {
+          "@type": "ImageObject",
+          url: imageUrl,
+          creator: { "@type": "Person", name: author ?? "Ayase" },
+        }
+      : undefined,
     datePublished: publishedAt?.toString(),
     dateModified: updatedAt?.toString(),
     author: { "@type": "Person", name: author ?? "Ayase" },
-    keywords: tags?.map((t) => t.name).join(", "),
+    keywords: keywords || undefined,
     url: `${config.baseUrl}/blog/${slug}`,
     mainEntityOfPage: {
       "@type": "WebPage",

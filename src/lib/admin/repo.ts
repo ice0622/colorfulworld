@@ -23,9 +23,13 @@ export type AdminPost = {
   id: string;
   slug: string;
   title: string;
+  seoTitle: string | null;
   description: string;
   bodyMd: string;
   coverImage: string | null;
+  camera: string | null;
+  lens: string | null;
+  filmStock: string | null;
   location: string[];
   metaTags: string[];
   tags: string[];
@@ -73,9 +77,13 @@ export async function getAdminPost(id: string): Promise<AdminPost | null> {
     id: row.id,
     slug: row.slug,
     title: row.title,
+    seoTitle: row.seoTitle,
     description: row.description,
     bodyMd: row.bodyMd,
     coverImage: row.coverImage,
+    camera: row.camera,
+    lens: row.lens,
+    filmStock: row.filmStock,
     location: row.location,
     metaTags: row.metaTags,
     tags: tagMap[row.id] ?? [],
@@ -102,9 +110,13 @@ export type UpsertInput = {
   id?: string;
   slug: string;
   title: string;
+  seoTitle: string | null;
   description: string;
   bodyMd: string;
   coverImage: string | null;
+  camera: string | null;
+  lens: string | null;
+  filmStock: string | null;
   tags: string[];
   location: string[]; // 人間入力（保存時に slug 化）
   metaTags: string[];
@@ -124,9 +136,13 @@ export async function upsertPost(
   const common = {
     slug: input.slug,
     title: input.title,
+    seoTitle: input.seoTitle,
     description: input.description,
     bodyMd: input.bodyMd,
     coverImage: input.coverImage,
+    camera: input.camera,
+    lens: input.lens,
+    filmStock: input.filmStock,
     category,
     location,
     metaTags: input.metaTags,

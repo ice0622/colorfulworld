@@ -27,6 +27,10 @@ export interface Post {
   draft: boolean;
   location: string[];  // 複数ロケーション対応（例: ["uk", "china"]）
   metaTags: string[];
+  seoTitle: string | null; // <title>/OG用の検索語入りタイトル。無ければ title にフォールバック
+  camera: string | null;   // 撮影データ（作例）: カメラ
+  lens: string | null;     // 撮影データ（作例）: レンズ
+  filmStock: string | null; // 撮影データ（作例）: フィルム銘柄
   author: null;        // Wisp互換フィールド（将来拡張用）
 }
 

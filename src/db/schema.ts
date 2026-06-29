@@ -17,9 +17,13 @@ export const posts = pgTable(
     number: integer("number").notNull().default(0), // 連番（並びのタイブレーク）
     slug: text("slug").notNull().unique(), // Post.id と Post.slug
     title: text("title").notNull().default(""),
+    seoTitle: text("seo_title"), // 検索語入りの <title>/OG タイトル（未入力なら title にフォールバック）
     description: text("description").notNull().default(""),
     bodyMd: text("body_md").notNull().default(""), // 生 markdown
     coverImage: text("cover_image"), // coverImage / image（同値）
+    camera: text("camera"), // 撮影データ（作例）: カメラ
+    lens: text("lens"), // 撮影データ（作例）: レンズ
+    filmStock: text("film_stock"), // 撮影データ（作例）: フィルム銘柄
     category: text("category").notNull().default("daily"), // trip|tech|daily（書き込み時に確定）
     featured: boolean("featured").notNull().default(false),
     draft: boolean("draft").notNull().default(true), // 公開 = draft=false

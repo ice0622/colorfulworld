@@ -321,6 +321,9 @@ export const BlogPostContent = ({
     content,
     tags,
     image,
+    camera,
+    lens,
+    filmStock,
   } = post;
 
   return (
@@ -415,6 +418,36 @@ export const BlogPostContent = ({
 
         <LikeButton postId={post.id} title={title} slug={slug} />
       </div>
+
+      {/* 撮影データ（作例）：機材を構造化して表示。値がある時のみ。
+          検索の手がかり（Nikon FE / Portra 400 等）を本文テキストとしても露出する。 */}
+      {(camera || lens || filmStock) && (
+        <div className="mx-auto mt-8 max-w-2xl border-t border-border/60 pt-6">
+          <h2 className="mb-3 text-sm font-semibold text-muted-foreground">
+            撮影データ
+          </h2>
+          <dl className="grid grid-cols-[5rem_1fr] gap-y-1.5 text-sm">
+            {camera && (
+              <>
+                <dt className="text-muted-foreground">カメラ</dt>
+                <dd>{camera}</dd>
+              </>
+            )}
+            {lens && (
+              <>
+                <dt className="text-muted-foreground">レンズ</dt>
+                <dd>{lens}</dd>
+              </>
+            )}
+            {filmStock && (
+              <>
+                <dt className="text-muted-foreground">フィルム</dt>
+                <dd>{filmStock}</dd>
+              </>
+            )}
+          </dl>
+        </div>
+      )}
     </div>
   );
 };

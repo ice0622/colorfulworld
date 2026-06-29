@@ -81,7 +81,7 @@ export default function RootLayout({
 }>) {
   return (
     // data-theme="samurai" = ワールドカップ期間限定の侍ブルー配色（解除は git revert / 詳細 docs/design-system.md）
-    <html lang="en" data-theme="samurai">
+    <html lang="ja" data-theme="samurai">
       <head>
         <script
           type="application/ld+json"

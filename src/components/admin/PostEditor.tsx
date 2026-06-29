@@ -60,9 +60,13 @@ export function PostEditor({ initial }: Props) {
       id: initial?.id,
       title: initial?.title ?? "",
       slug: initial?.slug ?? "",
+      seoTitle: initial?.seoTitle ?? "",
       description: initial?.description ?? "",
       bodyMd: initial?.bodyMd ?? "",
       coverImage: initial?.coverImage ?? null,
+      camera: initial?.camera ?? "",
+      lens: initial?.lens ?? "",
+      filmStock: initial?.filmStock ?? "",
       tags: initial?.tags ?? [],
       location: initial?.location ?? [],
       metaTags: initial?.metaTags ?? [],
@@ -199,6 +203,19 @@ export function PostEditor({ initial }: Props) {
 
             <div>
               <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                SEOタイトル（検索用・任意）
+              </label>
+              <Input
+                {...register("seoTitle")}
+                placeholder="例: お花のお都 おフランス｜Nikon FE × Portra 400で撮るパリのフィルム作例"
+              />
+              <p className="mt-1 text-xs text-muted-foreground">
+                未入力なら記事タイトルを使用。検索結果の見出し・ブラウザのタブに使われます（ページ上の見出しは変わりません）。
+              </p>
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
                 公開日
               </label>
               <Input type="date" {...register("publishedAt")} />
@@ -232,6 +249,20 @@ export function PostEditor({ initial }: Props) {
                 onChange={(v) => setValue("location", v)}
                 placeholder="例: Tokyo, Japan"
               />
+            </div>
+
+            <div>
+              <label className="mb-1 block text-xs font-medium text-muted-foreground">
+                撮影データ（作例・任意）
+              </label>
+              <div className="grid gap-2">
+                <Input {...register("camera")} placeholder="カメラ（例: Nikon FE）" />
+                <Input {...register("lens")} placeholder="レンズ（例: Ai Nikkor 50mm f/2.0）" />
+                <Input {...register("filmStock")} placeholder="フィルム（例: Kodak Portra 400）" />
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                入力すると記事に「撮影データ」として表示され、検索の手がかりになります。
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
