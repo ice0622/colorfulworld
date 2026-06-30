@@ -329,12 +329,12 @@ export const BlogPostContent = ({
   return (
     <div>
       {image ? (
-        // サムネあり：ヒーロー。画像を左に大きく（右側に余白）、
-        // タイトルは右上の余白へずらして右寄せに置く非対称レイアウト。
+        // サムネあり：ヒーロー。タイトルと画像を左端で揃え、
+        // タイトルは画像と同じ幅（max 800px）に収めて左寄せ。右に余白を残す。
         <header className="mt-4 mb-10 sm:mb-14">
           <div className="grid grid-cols-12 items-start gap-y-6 sm:gap-y-8">
             <div
-              className="col-span-12 row-start-1 sm:col-start-4 sm:col-span-9"
+              className="col-span-12 row-start-1 max-w-[800px] pr-6 sm:pr-12"
               style={{
                 paddingBottom: `${Math.round(titleExtraHeight * 0.6)}px`,
               }}
@@ -357,7 +357,7 @@ export const BlogPostContent = ({
               </h1>
             </div>
             {/* 完全左寄せ・最大800px（1600pxソースをRetinaで等倍に使い切る上限）。
-                右側は大きく余白を残し、上のタイトル右寄せと非対称に組む。 */}
+                上のタイトルと左端・幅を揃える。 */}
             <div className="col-span-12 row-start-2 max-w-[800px]">
               <HeroImage src={image} alt={title} />
             </div>
