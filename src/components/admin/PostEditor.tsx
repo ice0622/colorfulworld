@@ -157,7 +157,7 @@ export function PostEditor({ initial }: Props) {
         ref={editorRef}
         defaultValue={initial?.bodyMd ?? ""}
         onChange={(md) => setValue("bodyMd", md)}
-        onUpload={uploadImage}
+        onUpload={(f) => uploadImage(f).then((r) => r.url)}
       />
 
       {/* メタ情報サイドパネル */}

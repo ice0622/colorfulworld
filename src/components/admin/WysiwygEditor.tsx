@@ -2,6 +2,7 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Crepe } from "@milkdown/crepe";
+import { editorViewCtx } from "@milkdown/kit/core";
 import { insertImageCommand } from "@milkdown/kit/preset/commonmark";
 import { callCommand } from "@milkdown/kit/utils";
 import "@milkdown/crepe/theme/common/style.css";
@@ -17,7 +18,7 @@ type Props = {
 
 /** 親から命令的に呼べる操作（画像をカーソル位置に挿入する等） */
 export type WysiwygHandle = {
-  insertImage: (url: string, alt?: string) => void;
+  insertImage: (url: string, caption?: string) => void;
 };
 
 // Obsidian/Notion 風のインライン WYSIWYG（markdown を保ったまま編集）
@@ -32,12 +33,24 @@ const WysiwygEditor = forwardRef<WysiwygHandle, Props>(function WysiwygEditor(
   onChangeRef.current = onChange;
   onUploadRef.current = onUpload;
 
-  // 外部のボタン（固定ツールバー）からカーソル位置に画像を挿入する
+  // 外部のボタン（固定ツールバー / ライブラリ）からカーソル位置に画像を挿入する。
+  // Crepe の「画像ブロック」ノードとして入れる（インライン画像だと右上のキャプション
+  // ボタンが出ないため）。挿入経路による差をなくし、常にキャプションを付けられる。
   useImperativeHandle(ref, () => ({
-    insertImage: (url, alt = "") => {
-      crepeRef.current?.editor.action((ctx) =>
-        callCommand(insertImageCommand.key, { src: url, alt })(ctx)
-      );
+    insertImage: (url, caption = "") => {
+      crepeRef.current?.editor.action((ctx) => {
+        const view = ctx.get(editorViewCtx);
+        const { state, dispatch } = view;
+        const blockType = state.schema.nodes["image-block"];
+        if (blockType) {
+          const node = blockType.create({ src: url, caption, ratio: 1 });
+          dispatch(state.tr.replaceSelectionWith(node).scrollIntoView());
+          view.focus();
+          return;
+        }
+        // フォールバック：万一 image-block スキーマが無ければ従来のインライン挿入
+        callCommand(insertImageCommand.key, { src: url, alt: caption })(ctx);
+      });
     },
   }));
 

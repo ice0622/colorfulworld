@@ -9,7 +9,12 @@ export function AdminNav() {
   const pathname = usePathname() ?? "";
   const isList = pathname === "/admin";
   const isNew = pathname === "/admin/new";
-  const isEdit = pathname.startsWith("/admin/") && !isNew && pathname !== "/admin/login";
+  const isImages = pathname === "/admin/images";
+  const isEdit =
+    pathname.startsWith("/admin/") &&
+    !isNew &&
+    !isImages &&
+    pathname !== "/admin/login";
 
   const linkCls = (active: boolean) =>
     cn(
@@ -27,6 +32,9 @@ export function AdminNav() {
         </Link>
         <Link href="/admin/new" className={linkCls(isNew)}>
           新規
+        </Link>
+        <Link href="/admin/images" className={linkCls(isImages)}>
+          画像
         </Link>
         {/* 編集中は現在地を明示（リンクではなくラベル） */}
         {isEdit && (

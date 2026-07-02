@@ -10,6 +10,7 @@
     "start": "next start",
     "lint": "next lint",
     "sync-locations": "npx tsx scripts/sync-locations.ts",
+    "backfill:media": "npx tsx scripts/backfill-media.ts",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "npx tsx scripts/migrate-md-to-db.ts"

@@ -39,6 +39,31 @@ export const posts = pgTable(
   })
 );
 
+// アップロードした画像の再利用ライブラリ（画像の source of truth）。
+// 記事から独立してメディアを追跡する。削除は deletedAt によるソフト削除で、
+// Blob 実体と URL は残すため、その URL を参照している既存記事は壊れない。
+export const media = pgTable(
+  "media",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    url: text("url").notNull().unique(), // 公開 Blob URL（本文/cover が参照する値と一致）
+    pathname: text("pathname"), // Blob キー（posts/xxx.jpg）。実体操作・参考用
+    filename: text("filename"), // 元ファイル名
+    mime: text("mime"),
+    size: integer("size"), // bytes
+    width: integer("width"),
+    height: integer("height"),
+    blur: text("blur"), // 20px webp の data URL（decode 不可なら null）
+    source: text("source").notNull().default("blob"), // blob | local
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at", { withTimezone: true }), // ソフト削除（非表示化）
+  },
+  (t) => ({
+    // 一覧の主クエリ経路：未削除 → 新しい順
+    listIdx: index("media_list_idx").on(t.deletedAt, t.createdAt),
+  })
+);
+
 // タグ（id=name、現状の {id:name, name:name} に合わせる）
 export const tags = pgTable("tags", {
   id: text("id").primaryKey(),
@@ -65,3 +90,5 @@ export const postTags = pgTable(
 export type PostRow = typeof posts.$inferSelect;
 export type NewPostRow = typeof posts.$inferInsert;
 export type TagRow = typeof tags.$inferSelect;
+export type MediaRow = typeof media.$inferSelect;
+export type NewMediaRow = typeof media.$inferInsert;

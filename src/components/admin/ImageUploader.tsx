@@ -63,14 +63,29 @@ async function downscaleImage(file: File): Promise<File> {
   return new File([blob], name, { type: outType });
 }
 
-// 画像をアップロードして URL を返す。HEIC変換→リサイズ→送信。60秒でタイムアウト。
-export async function uploadImage(input: File): Promise<string> {
+export type UploadResult = {
+  url: string;
+  width: number | null;
+  height: number | null;
+};
+
+// アップロードの段階。バッチ時の進捗チップ表示に使う。
+export type UploadPhase = "converting" | "uploading";
+
+// 画像をアップロードして URL とメタを返す。HEIC変換→リサイズ→送信。60秒でタイムアウト。
+// onPhase で「変換中／アップ中」を通知する（省略可）。
+export async function uploadImage(
+  input: File,
+  onPhase?: (phase: UploadPhase) => void
+): Promise<UploadResult> {
+  onPhase?.("converting");
   const converted = await convertHeicIfNeeded(input);
   const file = await downscaleImage(converted);
 
   const form = new FormData();
   form.append("file", file);
 
+  onPhase?.("uploading");
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 60_000);
   try {
@@ -83,8 +98,12 @@ export async function uploadImage(input: File): Promise<string> {
       const { error } = await res.json().catch(() => ({ error: "アップロード失敗" }));
       throw new Error(error || "アップロード失敗");
     }
-    const { url } = (await res.json()) as { url: string };
-    return url;
+    const { url, width, height } = (await res.json()) as {
+      url: string;
+      width: number | null;
+      height: number | null;
+    };
+    return { url, width: width ?? null, height: height ?? null };
   } catch (e) {
     if (e instanceof DOMException && e.name === "AbortError") {
       throw new Error("アップロードがタイムアウトしました（60秒）");
@@ -114,7 +133,7 @@ export function ImageUploader({ onUploaded, children, className }: Props) {
     setBusy(true);
     toast({ description: "画像をアップロード中…" });
     try {
-      const url = await uploadImage(file);
+      const { url } = await uploadImage(file);
       onUploaded(url);
       toast({ description: "アップロード完了" });
     } catch (e) {
