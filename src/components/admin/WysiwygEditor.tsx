@@ -3,6 +3,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Crepe } from "@milkdown/crepe";
 import { editorViewCtx } from "@milkdown/kit/core";
+import { Fragment, Slice } from "@milkdown/kit/prose/model";
 import { insertImageCommand } from "@milkdown/kit/preset/commonmark";
 import { callCommand } from "@milkdown/kit/utils";
 import "@milkdown/crepe/theme/common/style.css";
@@ -18,7 +19,8 @@ type Props = {
 
 /** 親から命令的に呼べる操作（画像をカーソル位置に挿入する等） */
 export type WysiwygHandle = {
-  insertImage: (url: string, caption?: string) => void;
+  /** 画像URL群をカーソル位置へ「1トランザクションで順番に」挿入する */
+  insertImages: (urls: string[]) => void;
 };
 
 // Obsidian/Notion 風のインライン WYSIWYG（markdown を保ったまま編集）
@@ -35,21 +37,29 @@ const WysiwygEditor = forwardRef<WysiwygHandle, Props>(function WysiwygEditor(
 
   // 外部のボタン（固定ツールバー / ライブラリ）からカーソル位置に画像を挿入する。
   // Crepe の「画像ブロック」ノードとして入れる（インライン画像だと右上のキャプション
-  // ボタンが出ないため）。挿入経路による差をなくし、常にキャプションを付けられる。
+  // ボタンが出ないため）。複数枚は 1 トランザクションでまとめて挿入する:
+  // 1枚ずつ連続挿入すると atom/isolating ノードの選択移動で「一部しか入らない」
+  // 不具合が起きるため。
   useImperativeHandle(ref, () => ({
-    insertImage: (url, caption = "") => {
+    insertImages: (urls) => {
+      if (!urls || urls.length === 0) return;
       crepeRef.current?.editor.action((ctx) => {
         const view = ctx.get(editorViewCtx);
-        const { state, dispatch } = view;
+        const { state } = view;
         const blockType = state.schema.nodes["image-block"];
         if (blockType) {
-          const node = blockType.create({ src: url, caption, ratio: 1 });
-          dispatch(state.tr.replaceSelectionWith(node).scrollIntoView());
+          const nodes = urls.map((url) =>
+            blockType.create({ src: url, caption: "", ratio: 1 })
+          );
+          const slice = new Slice(Fragment.fromArray(nodes), 0, 0);
+          view.dispatch(state.tr.replaceSelection(slice).scrollIntoView());
           view.focus();
           return;
         }
-        // フォールバック：万一 image-block スキーマが無ければ従来のインライン挿入
-        callCommand(insertImageCommand.key, { src: url, alt: caption })(ctx);
+        // フォールバック：image-block スキーマが無ければ従来のインライン挿入
+        for (const url of urls) {
+          callCommand(insertImageCommand.key, { src: url })(ctx);
+        }
       });
     },
   }));

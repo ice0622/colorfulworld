@@ -13,8 +13,8 @@ import { useBatchUpload, type BatchItem } from "./useBatchUpload";
 import { MediaPickerSheet } from "./MediaPickerSheet";
 
 type Props = {
-  /** 画像URLを本文のカーソル位置へ挿入する（複数時は順番に呼ばれる） */
-  onInsert: (url: string) => void;
+  /** 画像URL群を本文のカーソル位置へまとめて挿入する（選択順） */
+  onInsertMany: (urls: string[]) => void;
 };
 
 const STATUS_LABEL: Record<BatchItem["status"], string> = {
@@ -36,10 +36,10 @@ function StatusIcon({ status }: { status: BatchItem["status"] }) {
 // 執筆中つねに画面下に固定される、スマホ向けの操作バー。
 // 「画像を追加」= 複数選択してまとめてアップ → 選んだ順に本文へ挿入。
 // 「ライブラリ」= 過去にアップした画像から選んで挿入。
-export function EditorToolbar({ onInsert }: Props) {
+export function EditorToolbar({ onInsertMany }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const { items, running, elapsedMs, run, clear } = useBatchUpload(onInsert);
+  const { items, running, elapsedMs, run, clear } = useBatchUpload(onInsertMany);
 
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -129,7 +129,7 @@ export function EditorToolbar({ onInsert }: Props) {
       <MediaPickerSheet
         open={pickerOpen}
         onOpenChange={setPickerOpen}
-        onInsert={onInsert}
+        onInsertMany={onInsertMany}
       />
     </div>
   );

@@ -298,7 +298,9 @@ export function PostEditor({ initial }: Props) {
       </Sheet>
 
       {/* 執筆中つねに見える固定ツールバー（画像を追加） */}
-      <EditorToolbar onInsert={(url) => editorRef.current?.insertImage(url)} />
+      <EditorToolbar
+        onInsertMany={(urls) => editorRef.current?.insertImages(urls)}
+      />
     </div>
   );
 }

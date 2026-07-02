@@ -36,7 +36,8 @@ tags: [image, upload, cms, blob, media, library]
 - 画像挿入は markdown `![alt](url)`。挿入経路: (a) Crepe ImageBlock の onUpload、(b) 命令的ハンドル `insertImage(url,alt="")`(`WysiwygEditor.tsx`) を `EditorToolbar` から。バッチ/ピッカーは (b) を選択順に連続呼び。
 - エディタ内ピッカー `src/components/admin/MediaPickerSheet.tsx`（Sheet side=bottom、複数選択→選択順挿入）。
 - **画像は2種類**: ブロック画像(`image-block` ノード, attrs src/caption/ratio, **キャプションボタン有り**, 右上) と インライン画像(キャプション無し)。`@milkdown/components` image-block の remark プラグインが「段落の唯一の子が image」の時だけ image-block へ昇格（`![](url)` が段落単独→ブロック / テキスト混在→インライン）。ブロックの markdown 直列化は `![<ratio>](url "<caption>")`（caption=title, ratio=alt(数値)）。
-- `insertImage`(`WysiwygEditor.tsx`)は **image-block ノードを直接挿入**（`editorViewCtx` で view 取得→`replaceSelectionWith`）。以前は `insertImageCommand`(commonmark=インライン)でキャプションボタンが出なかった＝2026-07-02 修正済み。公開表示は寸法をマニフェスト依存で取り、数値altは無視・title/後続テキストをキャプション扱い（`BlogPostContent.tsx` resolveImg）。
+- `WysiwygEditor` の handle は **`insertImages(urls[])`**（`editorViewCtx`→`replaceSelection(new Slice(Fragment.fromArray(image-blockノード群),0,0))` で**1トランザクション**挿入）。バッチ/ピッカーは成功URLをまとめて1回で渡す（`useBatchUpload`/`MediaPickerSheet`→`onInsertMany`→`EditorToolbar`→`PostEditor`）。**注意**: 以前は1枚ずつ `replaceSelectionWith` を連続呼びしていて atom/isolating ノードの選択移動で「6枚中3枚しか挿入されない」不具合があった＝単一トランザクション化で修正(2026-07-02)。image-block ノードにするのはインラインだとキャプションボタンが出ないため。
+- 公開表示は寸法をマニフェスト依存で取り、数値altは無視・title/後続テキストをキャプション扱い（`BlogPostContent.tsx` resolveImg）。
 
 ## データモデル（Drizzle / Neon, Prismaではない）
 - スキーマ `src/db/schema.ts`、クライアント `src/db/client.ts`(`DATABASE_URL` 無ければ db=null, hasDb=false)、`drizzle.config.ts`。

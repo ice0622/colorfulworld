@@ -17,14 +17,14 @@ import type { MediaItem } from "@/lib/admin/media-repo";
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** 選択したメディアを「選択順」に1つずつ本文へ挿入する */
-  onInsert: (url: string) => void;
+  /** 選択したメディアを「選択順」にまとめて本文へ挿入する */
+  onInsertMany: (urls: string[]) => void;
 };
 
 const PAGE = 60;
 
 // エディタから開く画像ライブラリのピッカー。複数選択 → 選んだ順に挿入。
-export function MediaPickerSheet({ open, onOpenChange, onInsert }: Props) {
+export function MediaPickerSheet({ open, onOpenChange, onInsertMany }: Props) {
   const [items, setItems] = useState<MediaItem[]>([]);
   const [selected, setSelected] = useState<string[]>([]); // url（選択順）
   const [loading, setLoading] = useState(false);
@@ -64,7 +64,7 @@ export function MediaPickerSheet({ open, onOpenChange, onInsert }: Props) {
     );
 
   const confirm = () => {
-    for (const url of selected) onInsert(url);
+    if (selected.length > 0) onInsertMany(selected);
     onOpenChange(false);
   };
 

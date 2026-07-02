@@ -23,16 +23,16 @@ const CONCURRENCY = 2;
 /**
  * 複数画像を少数並列（同時2件）でアップロードするフック。
  * - 各ファイルの状態（待機/変換中/アップ中/完了/失敗）と全体の経過時間を持つ
- * - 完了したら「選択順」で onInsert を呼ぶ（完了順ではない）
+ * - 完了したら成功分を「選択順」でまとめて onInsertMany に渡す（1回だけ）
  */
-export function useBatchUpload(onInsert: (url: string) => void) {
+export function useBatchUpload(onInsertMany: (urls: string[]) => void) {
   const [items, setItems] = useState<BatchItem[]>([]);
   const [running, setRunning] = useState(false);
   const [elapsedMs, setElapsedMs] = useState(0);
 
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const onInsertRef = useRef(onInsert);
-  onInsertRef.current = onInsert;
+  const onInsertManyRef = useRef(onInsertMany);
+  onInsertManyRef.current = onInsertMany;
 
   useEffect(
     () => () => {
@@ -88,8 +88,9 @@ export function useBatchUpload(onInsert: (url: string) => void) {
       Array.from({ length: Math.min(CONCURRENCY, files.length) }, worker)
     );
 
-    // 選択順に本文へ挿入（成功したものだけ）
-    for (const url of results) if (url) onInsertRef.current(url);
+    // 成功分を選択順にまとめて本文へ挿入（1トランザクション）
+    const inserted = results.filter((u): u is string => Boolean(u));
+    if (inserted.length > 0) onInsertManyRef.current(inserted);
 
     if (timerRef.current) {
       clearInterval(timerRef.current);
