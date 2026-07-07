@@ -7,6 +7,7 @@ import { config } from "@/config";
 import { signOgImageUrl } from "@/lib/og-image";
 import { getPosts } from "@/lib/content";
 import { CircleX } from "lucide-react";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 
 interface Params {
@@ -51,6 +52,11 @@ const Page = async (
 
   const page = searchParams.page ? parseInt(searchParams.page as string) : 1;
   const result = await getPosts({ limit: 6, tags: [slug], page });
+
+  // 記事が1件もないタグページ（旧タグ・大文字小文字違い・範囲外ページ）は
+  // ソフト404を避けるため 404 を返す
+  if (result.posts.length === 0) return notFound();
+
   return (
     <div className="container mx-auto px-5 mb-10">
       <Header />

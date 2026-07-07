@@ -28,7 +28,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const tags = activeTags.map((tag) => ({
     url: urlJoin(config.baseUrl, "tag", tag.name),
-    lastModified: new Date(), // タグページの最終更新日は（必要ならCMSから取得）
+    // lastModified は実際の更新日が取れないため省略（毎回 new Date() を返すと
+    // Google が lastmod を信用しなくなり、記事の更新シグナルまで無視される）
     priority: 0.8,
   }));
 
@@ -44,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes = staticPaths.map((page) => ({
     url: urlJoin(config.baseUrl, page.path),
-    lastModified: new Date(),
+    // lastModified は省略（上記タグと同様、固定値/現在時刻は lastmod の信頼性を損なう）
     priority: page.priority,
   }));
 
