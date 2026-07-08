@@ -1,17 +1,18 @@
-# デザインシステム（モノクロ × クリーム）
+# デザインシステム（侍ブルー）
 
 このサイトの見た目の「唯一の真実」。色・余白・タイポはここに従う。
 迷ったらまずこのファイル。新しい色や一回限りの上書きを足さない。
 
+もとはワールドカップ期間限定の「侍ブルー」オーバーレイだったが、常設のベース配色に格上げした。
+
 ## 原則
 
-1. **アクセント色なし（モノクロ）。** クリーム地＋暖色系グレー＋ほぼ黒の文字だけ。
-   青・クレイなどの差し色は使わない。
-2. **コントラストは色相でなく明度（濃淡）と余白で作る。** 猫の視覚にも人にも、
-   明暗・余白・サイズで可読性を出す。
+1. **アクセントは紺1色のみ。** 濃紺の地＋白系の文字・面の濃淡だけで構成する。
+   それ以外の色相（赤・緑・クレイなど）の差し色は使わない。
+2. **コントラストは色相でなく明度（濃淡）と余白で作る。** 明暗・余白・サイズで可読性を出す。
 3. **状態は色に頼らない。** 成否／下書き公開／危険は「アイコン＋文字＋濃淡」で二重に示す。
 4. **色は必ずトークン経由。** 生の色（`gray-*` / `white` / `black` / `#hex` / `rgba()` / `dark:`）は使わない。
-5. **ダーク/ライト切替は廃止。** 固定ライト（クリーム）。
+5. **テーマ切替は廃止。** 固定の侍ブルー配色（ライト/ダークの概念は持たない）。
 
 ## カラートークン（出所：[src/app/globals.css](../src/app/globals.css) の `:root`）
 
@@ -19,20 +20,22 @@
 
 | トークン | Tailwind クラス | 近似HEX | 役割 |
 |---|---|---|---|
-| `--background` | `bg-background` | `#F0EEE6` | ページの地（クリーム） |
-| `--foreground` | `text-foreground` | `#1F1E1D` | 本文・見出し（ほぼ黒） |
-| `--card` / `--popover` | `bg-card` / `bg-popover` | `#FAF8F2` | カード・浮く面 |
-| `--muted` | `bg-muted` | クリーム寄り淡グレー | 控えめな面・タグ地 |
-| `--muted-foreground` | `text-muted-foreground` | `#5B5852` | 補助文字・日付・キャプション |
-| `--secondary` | `bg-secondary` | 暖色淡グレー | 補助ボタン/バッジ地 |
-| `--accent` | `bg-accent` | 淡クリーム | hover の地 |
-| `--primary` | `bg-primary` / `text-primary` | ほぼ黒 | 主要な塗りボタン（黒地＋明色文字）。**差し色ではない** |
-| `--primary-foreground` | `text-primary-foreground` | `#FAF8F2` | 黒面に載る明色 |
-| `--border` / `--input` | `border-border` | 暖色淡グレー | 区切り線・入力枠 |
-| `--ring` | `ring-ring` | 中立グレー | フォーカス輪郭 |
-| `--destructive` | `bg-destructive` | 濃いグレー | 危険操作（赤は使わない。アイコン＋確認で示す） |
+| `--background` | `bg-background` | `#14264F` 付近 | ページの地（侍ブルーの濃紺） |
+| `--foreground` | `text-foreground` | ほぼ白 | 本文・見出し |
+| `--card` / `--popover` | `bg-card` / `bg-popover` | 地より明るい紺 | カード・浮く面 |
+| `--muted` | `bg-muted` | 落ち着いた紺 | 控えめな面・タグ地 |
+| `--muted-foreground` | `text-muted-foreground` | 淡い青グレー | 補助文字・日付・キャプション |
+| `--secondary` | `bg-secondary` | やや控えめな紺 | 補助ボタン/バッジ地 |
+| `--accent` | `bg-accent` | 地よりやや明るい紺 | hover の地 |
+| `--primary` | `bg-primary` / `text-primary` | ほぼ白 | 主要な塗りボタン（白地＋紺文字）。**差し色ではない** |
+| `--primary-foreground` | `text-primary-foreground` | 濃紺 | 白面に載る濃色文字 |
+| `--border` / `--input` | `border-border` | 紺地で見える濃さ | 区切り線・入力枠 |
+| `--ring` | `ring-ring` | 淡い青白 | フォーカス輪郭 |
+| `--destructive` | `bg-destructive` | 淡いグレー | 危険操作（赤は使わない。アイコン＋確認で示す） |
+| `--scrim` | `bg-scrim` | 固定の濃紺（背景よりさらに暗い） | モーダル背景専用。`foreground` の明暗に関わらず常に暗い |
 
-> グレーは地のクリームに合わせ hue≈40 の暖色低彩度で統一。冷たい青みグレーは使わない。
+> 面・境界色は地の紺に合わせ hue≈213-223 で統一。他の色相のグレーは混ぜない。
+> `--scrim` だけは `foreground`/`background` から独立した固定値（モーダルを暗く沈めるための専用トークン。テーマの明暗方向が変わっても壊れない）。
 
 ## 使い分けルール
 
@@ -41,12 +44,13 @@
 - **面**：ページ地＝`bg-background`、カード＝`bg-card`、控えめブロック＝`bg-muted`。
 - **hover 地**：`hover:bg-muted` または `hover:bg-accent`。
 - **区切り**：`border-border` / `divide-border`。
-- **塗りボタン（主）**：`bg-primary text-primary-foreground`（黒ボタン）。副は `variant="outline"/"ghost"`。
+- **塗りボタン（主）**：`bg-primary text-primary-foreground`（白ボタン＋濃紺文字）。副は `variant="outline"/"ghost"`。
 - **フォーカス**：`focus-visible:ring-2 ring-ring`。
-- **スクリム（モーダル背景）**：`bg-foreground/70`（黒の半透明）。
+- **スクリム（モーダル背景）**：`bg-scrim/70`〜`/80`。`bg-foreground/*` は使わない
+  （`foreground` は今は白なので、モーダルを薄くしてしまい壊れる）。
 - **状態バッジ**：地＝濃淡（`bg-muted` / `bg-foreground/10`）＋ lucide アイコン＋文字。色相で区別しない。
   - 例：公開＝`Check`＋`bg-foreground/10`、下書き＝`Pencil`＋`bg-muted`。
-- **危険操作**：`variant="destructive"`（濃グレー）＋アイコン＋確認ダイアログ。
+- **危険操作**：`variant="destructive"`（淡いグレー）＋アイコン＋確認ダイアログ。
 
 ## 余白（8px グリッド）
 
@@ -62,19 +66,17 @@
 
 ## 例外（意図的な独自意匠）
 
-以下はクリーム外の濃色を意図的に使う領域。増やさない：
+以下はベースパレット外の色を意図的に使う領域。増やさない：
 - 発車表示風オーバーレイ [DepartureBoardOverlay](../src/components/DepartureBoardOverlay.tsx)
 - シェーダー展示 [/shaders](../src/app/shaders/page.tsx)
 - コードブロック（`#1e1e1e` のエディタ風）
 
-## 期間限定テーマ（侍ブルー / ワールドカップ）
+## 経緯（旧・期間限定テーマ）
 
-通常はクリーム固定だが、イベント期間だけ全体配色を差し替える仕組みを用意してある。
-- 実装：[globals.css](../src/app/globals.css) の `[data-theme="samurai"]` ブロックが `:root` トークンを上書き（**背景=濃紺／文字・面=白**の反転。明度差＝コントラストは通常版を踏襲）。`:root` 本体は不変更。
-- 有効化：[layout.tsx](../src/app/layout.tsx) の `<html ... data-theme="samurai">` の1属性のみ。
-- 運用は **Git**：適用＝この変更をデプロイ、解除＝`git revert` でデプロイ（ランタイムのフラグ/日付機構は持たない）。プレビューはブランチのプレビューデプロイ or `npm run dev`。
-- 追従しない箇所：OG画像（`og-image/template.tsx` のHEX直書き）と下記の意図的ダーク例外。
-- これは一時的な独自意匠であり、新しい常設色ではない（増やさない）。
+もとはワールドカップ限定の「侍ブルー」オーバーレイ（`html[data-theme="samurai"]` で `:root` を
+一時的に上書きする仕組み）として導入したが、この配色を気に入ったため `:root` 本体に統合し常設化した。
+`data-theme="samurai"` の仕組み自体は [layout.tsx](../src/app/layout.tsx) から削除済み。
+追従しない箇所（OG画像 `og-image/template.tsx` のHEX直書きなど）は変わらず残る。
 
 ## ドリフトを防ぐ運用
 

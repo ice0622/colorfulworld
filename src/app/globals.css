@@ -4,81 +4,48 @@
 
 @layer base {
   /*
-   * 単一の真実：モノクロ × クリーム基調パレット（このブロックが色の唯一の出所）。
-   * 方針：アクセント色なし。クリーム地＋暖色系グレー＋ほぼ黒の文字だけ。
+   * 単一の真実：侍ブルー基調パレット（このブロックが色の唯一の出所）。
+   * 方針：濃紺の地＋白系の文字のみ（旧ワールドカップ限定「侍ブルー」テーマを常設に格上げ）。
+   * 他の色相のアクセントは足さない（紺1色＋白＋その濃淡のみ）。
    *   - コントラストは色相ではなく明度（濃淡）と余白で作る。
    *   - 状態（成否/下書き公開/危険）は色に頼らず、アイコン＋文字＋濃淡で表す。
    * 値は HSL チャンネル（空白区切り）。Tailwind の /opacity 修飾子を効かせるため hsl(var()) 前提。
-   * グレーは地のクリームに合わせて hue≈40 の暖色低彩度で統一する。
-   * ダーク/ライト切替は廃止（darkMode は class のまま、dark クラスを付与しない＝ライト固定）。
+   * 面・境界色は地の紺に合わせて hue≈213-223 で統一する。
+   * ダーク/ライト切替は廃止（darkMode は class のまま、dark クラスを付与しない＝固定配色）。
    * 使い分けの詳細ルールは docs/design-system.md を参照。
    */
   :root {
-    --background: 48 25% 92%;        /* 地：Canvas クリーム #F0EEE6 */
-    --foreground: 30 3% 12%;         /* 文字：ほぼ黒 #1F1E1D */
+    --background: 223 60% 20%;       /* 地：侍ブルーの濃紺 */
+    --foreground: 210 30% 97%;       /* 文字：ほぼ白（わずかに寒色） */
 
-    --card: 45 43% 96%;              /* 面：Surface #FAF8F2 */
-    --card-foreground: 30 3% 12%;
-
-    --popover: 45 43% 96%;
-    --popover-foreground: 30 3% 12%;
-
-    --primary: 30 3% 12%;            /* 主要な塗り＝ほぼ黒（ボタン等）。アクセント色ではない */
-    --primary-foreground: 45 43% 96%;/* 黒面に載る明色 */
-
-    --secondary: 40 12% 88%;         /* 補助面：暖色の淡いグレー */
-    --secondary-foreground: 36 5% 26%;
-
-    --muted: 44 24% 90%;             /* 控えめ面：クリーム寄りグレー */
-    --muted-foreground: 40 5% 34%;   /* 補助文字 #5B5852 */
-
-    --accent: 45 35% 91%;            /* hover 地用の中立クリーム */
-    --accent-foreground: 30 3% 12%;
-
-    --destructive: 30 4% 30%;        /* 危険操作：色に頼らず濃いグレー＋アイコン＋確認で表す */
-    --destructive-foreground: 45 43% 96%;
-
-    --border: 40 10% 84%;            /* 区切り：暖色の淡いグレー */
-    --input: 40 10% 84%;
-    --ring: 30 3% 30%;               /* フォーカス輪郭：中立グレー */
-
-    --radius: 0.5rem;
-  }
-
-  /*
-   * 期間限定オーバーレイ：ワールドカップ「侍ブルー」配色（背景=濃紺／文字=白の反転）。
-   * 通常はクリーム固定。html[data-theme="samurai"] のときだけ :root を上書きする。
-   * 適用/解除は Git で管理（適用=コミット、解除=git revert）。
-   * 明度(L)は通常版の前景/背景の差を反転して踏襲し、コントラスト差を維持する。
-   */
-  [data-theme="samurai"] {
-    --background: 223 60% 20%;          /* 侍ブルーの地（濃紺） */
-    --foreground: 210 30% 97%;          /* ほぼ白（わずかに寒色） */
-
-    --card: 223 50% 26%;                /* 地より明るい紺＝面が浮く */
+    --card: 223 50% 26%;             /* 面：地より明るい紺＝浮く */
     --card-foreground: 210 30% 97%;
 
     --popover: 223 50% 26%;
     --popover-foreground: 210 30% 97%;
 
-    --primary: 210 30% 97%;             /* 主要な塗り＝白ボタン */
-    --primary-foreground: 223 55% 20%;  /* 白面に載る紺文字 */
+    --primary: 210 30% 97%;          /* 主要な塗り＝白ボタン */
+    --primary-foreground: 223 55% 20%;/* 白面に載る紺文字 */
 
     --secondary: 223 45% 30%;
     --secondary-foreground: 210 25% 90%;
 
     --muted: 223 45% 28%;
-    --muted-foreground: 215 25% 76%;    /* 補助文字＝淡い青グレー */
+    --muted-foreground: 215 25% 76%; /* 補助文字：淡い青グレー */
 
-    --accent: 223 45% 32%;              /* hover 地 */
+    --accent: 223 45% 32%;           /* hover 地 */
     --accent-foreground: 210 30% 97%;
 
-    --destructive: 220 12% 75%;         /* 危険＝淡グレー（色相に頼らない）＋アイコン */
+    --destructive: 220 12% 75%;      /* 危険操作：色に頼らず淡いグレー＋アイコン＋確認で表す */
     --destructive-foreground: 223 55% 20%;
 
-    --border: 223 35% 40%;              /* 紺地で見える区切り */
+    --border: 223 35% 40%;           /* 区切り：紺地で見える濃さ */
     --input: 223 35% 40%;
-    --ring: 213 40% 72%;                /* フォーカス＝淡い青白 */
+    --ring: 213 40% 72%;             /* フォーカス輪郭：淡い青白 */
+
+    --scrim: 235 70% 8%;             /* モーダル背景専用の固定の濃紺（foreground の明暗に依存しない） */
+
+    --radius: 0.5rem;
   }
 }
 
@@ -139,10 +106,11 @@
 }
 
 /*
- * 侍ブルー時：Tailwind Typography(prose) は独自のグレー階調(--tw-prose-*)を使い
- * トークンに追従しないため、紺地で本文グレー・見出し黒になる。トークン色へ上書きして白にする。
+ * Tailwind Typography(prose) は既定で独自のグレー階調(--tw-prose-*)を使い、
+ * 本文グレー・見出し黒に固定されトークンに追従しない。紺地では読めなくなるため
+ * トークン色へ上書きして白系にする。
  */
-[data-theme="samurai"] .prose {
+.prose {
   --tw-prose-body: hsl(var(--foreground));
   --tw-prose-headings: hsl(var(--foreground));
   --tw-prose-lead: hsl(var(--muted-foreground));

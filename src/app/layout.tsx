@@ -80,8 +80,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // data-theme="samurai" = ワールドカップ期間限定の侍ブルー配色（解除は git revert / 詳細 docs/design-system.md）
-    <html lang="ja" data-theme="samurai">
+    <html lang="ja">
       <head>
         <script
           type="application/ld+json"

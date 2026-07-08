@@ -28,6 +28,9 @@ export async function generateMetadata(
   return {
     title: `#${slug}`,
     description: `#${slug} タグの記事一覧`,
+    // 一覧（ハブ）ページ自体は検索結果に出さない。ただしリンクは辿らせて
+    // 各記事の評価は通す（follow）。薄いコンテンツの量産を防ぐ定番方針。
+    robots: { index: false, follow: true },
     alternates: { canonical: `${config.baseUrl}/tag/${slug}` },
     openGraph: {
       title: `#${slug}`,

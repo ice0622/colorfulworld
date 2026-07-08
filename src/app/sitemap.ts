@@ -4,8 +4,6 @@ import { config } from "@/config";
 import { getPosts } from "@/lib/content";
 import type { MetadataRoute } from "next";
 import urlJoin from "url-join";
-// TagList.tsx と共通化したロジックをインポート
-import { fetchActiveTagsAndCounts } from "@/lib/tagUtils"; // ※前回作成した共通ファイル
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // --- 1. CMSから動的データを取得 (記事とタグ) ---
@@ -22,16 +20,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       : undefined,
   }));
 
-  // タグ (Tag) を取得 (★ TagList.tsx と同じ共通ロジックを使用)
-  // wisp.getTags() から変更
-  const { tags: activeTags } = await fetchActiveTagsAndCounts();
-
-  const tags = activeTags.map((tag) => ({
-    url: urlJoin(config.baseUrl, "tag", tag.name),
-    // lastModified は実際の更新日が取れないため省略（毎回 new Date() を返すと
-    // Google が lastmod を信用しなくなり、記事の更新シグナルまで無視される）
-    priority: 0.8,
-  }));
+  // タグ (Tag) の一覧ページは noindex, follow 方針にしたためサイトマップから除外。
+  // （一覧ページ自体は検索対象にせず、記事本文に評価を集中させる）
 
   // --- 2. 固定ページ (Static) を定義 ---
 
@@ -53,6 +43,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   return [
     ...staticRoutes,
     ...posts,
-    ...tags, // これで「実際に使われているタグ」だけがサイトマップに含まれます
   ];
 }
