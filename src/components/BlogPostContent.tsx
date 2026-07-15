@@ -237,8 +237,8 @@ export const PostContent = ({
           const blockClass =
             "prose prose-neutral mx-auto " +
             "prose-h1:text-2xl prose-h1:font-bold " +
-            "prose-h2:text-xl prose-h2:font-semibold " +
-            "prose-h3:text-lg prose-h3:font-semibold";
+            "prose-h2:text-xl " +
+            "prose-h3:text-lg";
 
           const inner = (
             <>

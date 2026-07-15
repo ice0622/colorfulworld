@@ -61,7 +61,11 @@
 ## タイポ
 
 - フォント：`--font-sans`（Inter）。本文行間 1.9（`.blog-content`）。
-- 見出しスケール（prose 上書き）：h1 = `text-2xl`/bold、h2 = `text-xl`/semibold、h3 = `text-lg`/semibold。
+- 見出しスケール（prose 上書き）：h1 = `text-2xl`/bold、h2 = `text-xl`、h3 = `text-lg`。
+- 記事本文の h2/h3 は本文と地続きにならないよう、タイトルと同じ `--font-noto-serif-jp`（weight 900）＋
+  `scaleY(1.15)` の縦伸長で「見出しらしさ」を出す（[globals.css](../src/app/globals.css) の
+  `.blog-content .prose h2/h3`）。h2 は下線を `border-border` でコンテナ幅いっぱいに、
+  h3 は横に短い棒線（`border-border` の背景）を添えて区別する。色ではなく書体・線・伸長で差をつける。
 - 補助ラベルは `text-xs` ＋ `tracking-widest`（必要なら `uppercase`）。
 
 ## 例外（意図的な独自意匠）
