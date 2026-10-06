@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import type { GetPostResult } from "@/types/content";
 import Link from "next/link";
 import Image from "next/image";
@@ -288,13 +288,19 @@ export const PostContent = ({
   );
 };
 
-export const BlogPostContent = ({
-  post,
-  slug,
+/**
+ * 記事冒頭（タイトル＋ヒーロー）。公開ページと管理画面エディタで共有し、見た目を一致させる。
+ * titleSlot を渡すとタイトル文字の代わりに差し込む（エディタではタイトル入力欄）。
+ */
+export function PostHeader({
+  title,
+  image,
+  titleSlot,
 }: {
-  post: GetPostResult["post"];
-  slug: string;
-}) => {
+  title: string;
+  image?: string | null;
+  titleSlot?: ReactNode;
+}) {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [titleExtraHeight, setTitleExtraHeight] = useState(0);
 
@@ -302,8 +308,77 @@ export const BlogPostContent = ({
     if (titleRef.current) {
       setTitleExtraHeight(titleRef.current.offsetHeight);
     }
-  }, [post?.title]);
+  }, [title]);
 
+  return image ? (
+    // サムネあり：ヒーロー。タイトルと画像を左端で揃え、
+    // タイトルは画像と同じ幅（max 800px）に収めて左寄せ。右に余白を残す。
+    <header className="mt-4 mb-10 sm:mb-14">
+      <div className="grid grid-cols-12 items-start gap-y-6 sm:gap-y-8">
+        <div
+          className="col-span-12 row-start-1 max-w-[800px] pr-6 sm:pr-12"
+          style={{
+            paddingBottom: `${Math.round(titleExtraHeight * 0.6)}px`,
+          }}
+        >
+          <h1
+            ref={titleRef}
+            className="text-3xl sm:text-4xl lg:text-5xl font-black break-words leading-tight"
+            style={{
+              fontFamily: "var(--font-noto-serif-jp)",
+              fontWeight: 900,
+              transform: "scaleY(1.6)",
+              transformOrigin: "top right",
+              letterSpacing: "-0.06em",
+              display: "inline-block",
+              width: "100%",
+              textAlign: "right",
+            }}
+          >
+            {titleSlot ?? title}
+          </h1>
+        </div>
+        {/* 完全左寄せ・最大800px（1600pxソースをRetinaで等倍に使い切る上限）。
+            上のタイトルと左端・幅を揃える。 */}
+        <div className="col-span-12 row-start-2 max-w-[800px]">
+          <HeroImage src={image} alt={title} />
+        </div>
+      </div>
+    </header>
+  ) : (
+    // サムネなし：従来どおりタイトルのみ（左寄せ・読みやすい幅）。
+    <div
+      className="mx-auto max-w-2xl mt-4"
+      style={{
+        paddingBottom: `${titleExtraHeight + 32}px`,
+      }}
+    >
+      <h1
+        ref={titleRef}
+        className="text-3xl sm:text-4xl lg:text-5xl font-black break-words leading-tight"
+        style={{
+          fontFamily: "var(--font-noto-serif-jp)",
+          fontWeight: 900,
+          transform: "scaleY(1.6)",
+          transformOrigin: "top left",
+          letterSpacing: "-0.06em",
+          display: "inline-block",
+          width: "100%",
+        }}
+      >
+        {titleSlot ?? title}
+      </h1>
+    </div>
+  );
+}
+
+export const BlogPostContent = ({
+  post,
+  slug,
+}: {
+  post: GetPostResult["post"];
+  slug: string;
+}) => {
   useEffect(() => {
     if (!post?.content) return;
 
@@ -328,66 +403,7 @@ export const BlogPostContent = ({
 
   return (
     <div>
-      {image ? (
-        // サムネあり：ヒーロー。タイトルと画像を左端で揃え、
-        // タイトルは画像と同じ幅（max 800px）に収めて左寄せ。右に余白を残す。
-        <header className="mt-4 mb-10 sm:mb-14">
-          <div className="grid grid-cols-12 items-start gap-y-6 sm:gap-y-8">
-            <div
-              className="col-span-12 row-start-1 max-w-[800px] pr-6 sm:pr-12"
-              style={{
-                paddingBottom: `${Math.round(titleExtraHeight * 0.6)}px`,
-              }}
-            >
-              <h1
-                ref={titleRef}
-                className="text-3xl sm:text-4xl lg:text-5xl font-black break-words leading-tight"
-                style={{
-                  fontFamily: "var(--font-noto-serif-jp)",
-                  fontWeight: 900,
-                  transform: "scaleY(1.6)",
-                  transformOrigin: "top right",
-                  letterSpacing: "-0.06em",
-                  display: "inline-block",
-                  width: "100%",
-                  textAlign: "right",
-                }}
-              >
-                {title}
-              </h1>
-            </div>
-            {/* 完全左寄せ・最大800px（1600pxソースをRetinaで等倍に使い切る上限）。
-                上のタイトルと左端・幅を揃える。 */}
-            <div className="col-span-12 row-start-2 max-w-[800px]">
-              <HeroImage src={image} alt={title} />
-            </div>
-          </div>
-        </header>
-      ) : (
-        // サムネなし：従来どおりタイトルのみ（左寄せ・読みやすい幅）。
-        <div
-          className="mx-auto max-w-2xl mt-4"
-          style={{
-            paddingBottom: `${titleExtraHeight + 32}px`,
-          }}
-        >
-          <h1
-            ref={titleRef}
-            className="text-3xl sm:text-4xl lg:text-5xl font-black break-words leading-tight"
-            style={{
-              fontFamily: "var(--font-noto-serif-jp)",
-              fontWeight: 900,
-              transform: "scaleY(1.6)",
-              transformOrigin: "top left",
-              letterSpacing: "-0.06em",
-              display: "inline-block",
-              width: "100%",
-            }}
-          >
-            {title}
-          </h1>
-        </div>
-      )}
+      <PostHeader title={title} image={image} />
 
       <div className="prose prose-neutral mx-auto max-w-2xl break-words">
         <PostContent content={content} />
