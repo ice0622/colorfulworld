@@ -48,8 +48,13 @@
 - **フォーカス**：`focus-visible:ring-2 ring-ring`。
 - **スクリム（モーダル背景）**：`bg-scrim/70`〜`/80`。`bg-foreground/*` は使わない
   （`foreground` は今は白なので、モーダルを薄くしてしまい壊れる）。
-- **状態バッジ**：地＝濃淡（`bg-muted` / `bg-foreground/10`）＋ lucide アイコン＋文字。色相で区別しない。
-  - 例：公開＝`Check`＋`bg-foreground/10`、下書き＝`Pencil`＋`bg-muted`。
+- **状態バッジ**：形（塗り／中抜き）＋濃淡＋文字で示す。色相で区別しない。実装は
+  [PostStatusBadge](../src/components/admin/PostStatusBadge.tsx) に一本化。
+  - 公開中＝塗りの `Circle`（`fill-current`）＋`bg-foreground/10`＋文字「公開中」。
+  - 下書き＝中抜きの `Circle`＋破線枠（`border-dashed border-border`）＋`text-muted-foreground`＋文字「下書き」。
+- **状態と操作の書き分け**：状態は名詞（公開中／下書き）でバッジに、操作は動詞（公開する／下書きに戻す／
+  変更を反映）でボタンに書く。同じ語をバッジとボタンに混在させない（「非公開」という語は使わない）。
+  頻度の低い操作（状態の切替・削除）は「⋯」メニュー（[PostActionsMenu](../src/components/admin/PostActionsMenu.tsx)）へ。
 - **危険操作**：`variant="destructive"`（淡いグレー）＋アイコン＋確認ダイアログ。
 
 ## 余白（8px グリッド）

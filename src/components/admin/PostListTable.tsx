@@ -3,14 +3,10 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import {
-  publishPost,
-  unpublishPost,
-  deletePostAction,
-} from "@/app/(admin)/admin/actions";
-import { Button } from "@/components/ui/button";
-import { Check, Pencil } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { AdminListItem } from "@/lib/admin/repo";
+import { PostStatusBadge } from "./PostStatusBadge";
+import { PostActionsMenu } from "./PostActionsMenu";
 
 const CATEGORY_LABEL: Record<string, string> = {
   trip: "旅",
@@ -18,19 +14,11 @@ const CATEGORY_LABEL: Record<string, string> = {
   daily: "日常",
 };
 
+type Filter = "all" | "published" | "draft";
+
 export function PostListTable({ items }: { items: AdminListItem[] }) {
   const router = useRouter();
-  const [busy, setBusy] = useState<string | null>(null);
-
-  const run = async (id: string, fn: () => Promise<void>) => {
-    setBusy(id);
-    try {
-      await fn();
-      router.refresh();
-    } finally {
-      setBusy(null);
-    }
-  };
+  const [filter, setFilter] = useState<Filter>("all");
 
   if (items.length === 0) {
     return (
@@ -40,72 +28,75 @@ export function PostListTable({ items }: { items: AdminListItem[] }) {
     );
   }
 
+  const counts = {
+    all: items.length,
+    published: items.filter((p) => !p.draft).length,
+    draft: items.filter((p) => p.draft).length,
+  };
+  const visible = items.filter((p) =>
+    filter === "all" ? true : filter === "draft" ? p.draft : !p.draft
+  );
+  const tabs: { key: Filter; label: string }[] = [
+    { key: "all", label: "すべて" },
+    { key: "published", label: "公開中" },
+    { key: "draft", label: "下書き" },
+  ];
+
   return (
-    <ul className="divide-y divide-border/60">
-      {items.map((p) => (
-        <li key={p.id} className="flex items-center gap-3 py-3">
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
+    <div>
+      {/* 状態で絞り込み（件数つき） */}
+      <div className="mb-2 flex gap-1" role="tablist">
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            role="tab"
+            aria-selected={filter === t.key}
+            onClick={() => setFilter(t.key)}
+            className={cn(
+              "rounded-md px-2.5 py-1 text-sm transition-colors",
+              filter === t.key
+                ? "bg-muted font-medium text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            {t.label}
+            <span className="ml-1.5 tabular-nums opacity-60">{counts[t.key]}</span>
+          </button>
+        ))}
+      </div>
+
+      <ul className="divide-y divide-border/60">
+        {visible.map((p) => (
+          <li key={p.id} className="flex items-center gap-3 py-3">
+            {/* 状態は行の左端に幅を揃えて置き、縦に目で追えるようにする */}
+            <div className="w-[4.25rem] shrink-0">
+              <PostStatusBadge draft={p.draft} />
+            </div>
+
+            <div className="min-w-0 flex-1">
               <Link
                 href={`/admin/${p.id}`}
-                className="truncate font-medium hover:underline"
+                className="block truncate font-medium hover:underline"
               >
                 {p.title || "(無題)"}
               </Link>
-              {p.draft ? (
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
-                  <Pencil className="h-3 w-3" />
-                  下書き
-                </span>
-              ) : (
-                <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-foreground/10 px-2 py-0.5 text-[11px] text-foreground">
-                  <Check className="h-3 w-3" />
-                  公開
-                </span>
-              )}
+              <div className="mt-0.5 truncate text-xs text-muted-foreground">
+                {CATEGORY_LABEL[p.category] ?? p.category}
+                {p.publishedAt ? ` ・ ${p.publishedAt.slice(0, 10)}` : ""}
+                {p.tags.length ? ` ・ ${p.tags.join(", ")}` : ""}
+              </div>
             </div>
-            <div className="mt-0.5 truncate text-xs text-muted-foreground">
-              {CATEGORY_LABEL[p.category] ?? p.category}
-              {p.publishedAt ? ` ・ ${p.publishedAt.slice(0, 10)}` : ""}
-              {p.tags.length ? ` ・ ${p.tags.join(", ")}` : ""}
-            </div>
-          </div>
 
-          <div className="flex shrink-0 items-center gap-1">
-            {p.draft ? (
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={busy === p.id}
-                onClick={() => run(p.id, () => publishPost(p.id))}
-              >
-                公開
-              </Button>
-            ) : (
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={busy === p.id}
-                onClick={() => run(p.id, () => unpublishPost(p.id))}
-              >
-                非公開
-              </Button>
-            )}
-            <Button
-              size="sm"
-              variant="ghost"
-              disabled={busy === p.id}
-              onClick={() => {
-                if (confirm(`「${p.title}」を削除しますか？`)) {
-                  run(p.id, () => deletePostAction(p.id));
-                }
-              }}
-            >
-              削除
-            </Button>
-          </div>
-        </li>
-      ))}
-    </ul>
+            <PostActionsMenu
+              post={p}
+              showEdit
+              showPublish
+              onDone={() => router.refresh()}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
