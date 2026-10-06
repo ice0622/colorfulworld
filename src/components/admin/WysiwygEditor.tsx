@@ -2,12 +2,25 @@
 
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import { Crepe } from "@milkdown/crepe";
-import { editorViewCtx } from "@milkdown/kit/core";
+import { editorViewCtx, editorViewOptionsCtx } from "@milkdown/kit/core";
 import { Fragment, Slice } from "@milkdown/kit/prose/model";
 import { insertImageCommand } from "@milkdown/kit/preset/commonmark";
-import { callCommand } from "@milkdown/kit/utils";
-import "@milkdown/crepe/theme/common/style.css";
-import "@milkdown/crepe/theme/frame.css";
+import { callCommand, replaceAll } from "@milkdown/kit/utils";
+// common/style.css は使わず個別に読む。reset.css（見出し42px・段落16/24px・
+// `.milkdown * { margin:0 }` 等の Crepe 独自の文字組み）を外し、本文には公開記事と
+// 同じ prose / .blog-flow を効かせるため。色・フォントの変数とエディタ UI に必要な
+// reset の残りは globals.css の「管理画面の Crepe エディタ」節で定義している。
+import "@milkdown/crepe/theme/common/prosemirror.css";
+import "@milkdown/crepe/theme/common/block-edit.css";
+import "@milkdown/crepe/theme/common/code-mirror.css";
+import "@milkdown/crepe/theme/common/cursor.css";
+import "@milkdown/crepe/theme/common/image-block.css";
+import "@milkdown/crepe/theme/common/link-tooltip.css";
+import "@milkdown/crepe/theme/common/list-item.css";
+import "@milkdown/crepe/theme/common/placeholder.css";
+import "@milkdown/crepe/theme/common/toolbar.css";
+import "@milkdown/crepe/theme/common/table.css";
+import "@milkdown/crepe/theme/common/latex.css";
 
 type Props = {
   /** 初期 markdown（マウント時のみ反映。以後はエディタが真実） */
@@ -21,9 +34,19 @@ type Props = {
 export type WysiwygHandle = {
   /** 画像URL群をカーソル位置へ「1トランザクションで順番に」挿入する */
   insertImages: (urls: string[]) => void;
+  /** 本文を markdown で丸ごと置き換える（Markdown モードから戻ったとき） */
+  setMarkdown: (markdown: string) => void;
 };
 
-// Obsidian/Notion 風のインライン WYSIWYG（markdown を保ったまま編集）
+// 本文の文字組みは公開記事（BlogPostContent の PostContent）と同じクラスを当てる
+const BODY_CLASS =
+  "prose prose-neutral mx-auto blog-flow " +
+  "prose-h1:text-2xl prose-h1:font-bold " +
+  "prose-h2:text-xl " +
+  "prose-h3:text-lg";
+
+// Obsidian/Notion 風のインライン WYSIWYG（markdown を保ったまま編集）。
+// 見た目は公開記事と一致させる（紺地・同じフォント・prose・縦リズム）。
 const WysiwygEditor = forwardRef<WysiwygHandle, Props>(function WysiwygEditor(
   { defaultValue, onChange, onUpload },
   ref
@@ -62,6 +85,9 @@ const WysiwygEditor = forwardRef<WysiwygHandle, Props>(function WysiwygEditor(
         }
       });
     },
+    setMarkdown: (markdown) => {
+      crepeRef.current?.editor.action(replaceAll(markdown));
+    },
   }));
 
   useEffect(() => {
@@ -83,6 +109,12 @@ const WysiwygEditor = forwardRef<WysiwygHandle, Props>(function WysiwygEditor(
           },
         },
       });
+      crepe.editor.config((ctx) =>
+        ctx.update(editorViewOptionsCtx, (prev) => ({
+          ...prev,
+          attributes: { class: BODY_CLASS },
+        }))
+      );
       crepe.on((api) => {
         api.markdownUpdated((_ctx, markdown) => onChangeRef.current(markdown));
       });
@@ -104,7 +136,8 @@ const WysiwygEditor = forwardRef<WysiwygHandle, Props>(function WysiwygEditor(
   }, []);
 
   return (
-    <div className="milkdown-host overflow-hidden rounded-md border border-input">
+    // blog-content：公開記事と同じ見出し装飾・行間（globals.css）を効かせる
+    <div className="milkdown-host blog-content break-words">
       <div ref={rootRef} />
     </div>
   );

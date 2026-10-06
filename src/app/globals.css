@@ -85,8 +85,9 @@
   animation: slideUp 0.9s ease forwards;
 }
 
-/* コードブロックのスタイル拡張 */
-.prose pre {
+/* コードブロックのスタイル拡張（管理画面エディタのコードブロックも同じ箱にする） */
+.prose pre,
+.milkdown-host .milkdown .milkdown-code-block {
   @apply w-[calc(100%+4rem)] ml-[-2rem] px-6 py-4 rounded-xl overflow-x-auto bg-[#1e1e1e] text-sm;
 }
 
@@ -143,10 +144,14 @@
   line-height: 1.9;
 }
 
-/* ブロック間（段落間）= 24px を基本に、見出し前だけ広げてセクション感を出す */
+/* ブロック間（段落間）= 24px を基本に、見出し前だけ広げてセクション感を出す。
+ * 公開記事は「ブロックごとの div ラッパー」が直下に並び（:has で見出しを判定）、
+ * 管理画面エディタ（ProseMirror）は h2/p などが直下に並ぶ。両方の構造を同じ規則で扱い、
+ * 見た目を一致させる。margin-bottom:0 は prose 既定の下余白を消して上余白だけで刻むため。 */
 .blog-flow>* {
   margin-top: 1.5rem;
   /* 24px 段落間 */
+  margin-bottom: 0;
 }
 
 .blog-flow> :first-child {
@@ -154,13 +159,16 @@
 }
 
 /* サブセクション（### の前）= 40px */
-.blog-flow> *:has(h3) {
+.blog-flow> *:has(h3),
+.blog-flow>h3 {
   margin-top: 2.5rem;
 }
 
 /* セクション（## / # の前）= 56px */
 .blog-flow> *:has(h2),
-.blog-flow> *:has(h1) {
+.blog-flow> *:has(h1),
+.blog-flow>h2,
+.blog-flow>h1 {
   margin-top: 3.5rem;
 }
 
@@ -199,39 +207,149 @@
   background-color: hsl(var(--border));
 }
 
-/* ===== 管理画面の Crepe エディタを公開記事の見た目に寄せる ===== */
-/* Crepe 既定（Noto Sans / Noto Serif）→ サイトと同じ Inter に統一 */
-.milkdown-host {
-  --crepe-font-title: var(--font-sans), system-ui, sans-serif;
-  --crepe-font-default: var(--font-sans), system-ui, sans-serif;
+/* ===== 管理画面の Crepe エディタ＝公開記事と同じ見た目（WYSIWYG） ===== */
+/*
+ * Crepe の reset.css は読み込まない（WysiwygEditor.tsx の import 参照）。本文の文字組みは
+ * ProseMirror に付けた prose / .blog-flow と、ホストの .blog-content（見出し装飾・行間）で
+ * 公開記事と共通化する。ここでは
+ *   1) Crepe の色・フォント変数をサイトのトークンへ差し替え（生の色は書かない）
+ *   2) reset.css のうち編集 UI に必要な最小限
+ *   3) 編集用ノードビュー（画像・コード・リスト）を公開記事の見た目へ寄せる
+ * だけを置く。Crepe 側のセレクタ（.milkdown .x = 0,2,0）に読み込み順で負けないよう、
+ * すべて .milkdown-host .milkdown を前置して詳細度を上げている。
+ */
+.milkdown-host .milkdown {
+  --crepe-color-background: transparent;
+  --crepe-color-on-background: hsl(var(--foreground));
+  --crepe-color-surface: hsl(var(--card));
+  --crepe-color-surface-low: hsl(var(--muted));
+  --crepe-color-on-surface: hsl(var(--foreground));
+  --crepe-color-on-surface-variant: hsl(var(--muted-foreground));
+  --crepe-color-outline: hsl(var(--muted-foreground));
+  --crepe-color-primary: hsl(var(--foreground));
+  --crepe-color-secondary: hsl(var(--secondary));
+  --crepe-color-on-secondary: hsl(var(--secondary-foreground));
+  --crepe-color-inverse: hsl(var(--foreground));
+  --crepe-color-on-inverse: hsl(var(--background));
+  --crepe-color-inline-code: hsl(var(--foreground));
+  --crepe-color-error: hsl(var(--destructive));
+  --crepe-color-hover: hsl(var(--accent));
+  --crepe-color-selected: hsl(var(--ring) / 0.35);
+  --crepe-color-inline-area: hsl(var(--muted));
+  --crepe-font-title: inherit;
+  --crepe-font-default: inherit;
+  --crepe-font-code: theme(fontFamily.mono);
+  --crepe-shadow-1: 0 1px 3px 1px hsl(var(--scrim) / 0.3);
+  --crepe-shadow-2: 0 2px 6px 2px hsl(var(--scrim) / 0.3);
+
+  position: relative;
+  font-family: inherit;
+  color: var(--crepe-color-on-background);
+  background: var(--crepe-color-background);
 }
 
-/* スマホでは Crepe 既定の横パディング(120px)が広すぎて本文域が潰れるので詰める */
+.milkdown-host .milkdown input {
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.milkdown-host .milkdown button:focus,
+.milkdown-host .milkdown input:focus,
+.milkdown-host .milkdown :focus-visible,
+.milkdown-host .milkdown .ProseMirror-focused {
+  outline: none;
+}
+
+.milkdown-host .milkdown .milkdown-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 横余白は 0：本文の幅・位置を公開記事の prose 列と揃える。下は書き足す余地 */
 .milkdown-host .milkdown .ProseMirror {
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 1.25rem;
+  padding: 0 0 30vh;
 }
 
-/* md 以上は従来の広い余白に戻す */
-@media (min-width: 768px) {
-  .milkdown-host .milkdown .ProseMirror {
-    padding: 60px 120px;
-  }
+.milkdown-host .milkdown .ProseMirror *::selection {
+  background: var(--crepe-color-selected);
 }
 
-/* 見出しサイズを公開記事（h1=2xl / h2=xl / h3=lg）に合わせる */
-.milkdown-host .milkdown .ProseMirror h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
+.milkdown-host .milkdown .ProseMirror .ProseMirror-selectednode {
+  outline: none;
+  background: var(--crepe-color-selected);
 }
 
-.milkdown-host .milkdown .ProseMirror h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
+.milkdown-host .milkdown .ProseMirror li.ProseMirror-selectednode::after {
+  all: unset;
 }
 
-.milkdown-host .milkdown .ProseMirror h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
+/* 画像・コードのノードビューにも .blog-flow と同じブロック間余白を効かせる
+ * （Crepe の margin: 4px 0 の方が詳細度が高いため） */
+.milkdown-host .milkdown .ProseMirror>:is(.milkdown-image-block, .milkdown-code-block) {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+}
+
+.milkdown-host .milkdown .ProseMirror>:is(.milkdown-image-block, .milkdown-code-block):first-child {
+  margin-top: 0;
+}
+
+/* 画像：公開記事の figure（中央・角丸・最大 80vh・キャプション小さめ淡色）に合わせる */
+
+.milkdown-host .milkdown .milkdown-image-block img {
+  margin: 0;
+  max-height: 80vh;
+  border-radius: 0.5rem;
+}
+
+.milkdown-host .milkdown .ProseMirror .milkdown-image-block img.ProseMirror-selectednode,
+.milkdown-host .milkdown .milkdown-image-block.selected img {
+  outline: 2px solid hsl(var(--ring));
+}
+
+.milkdown-host .milkdown .milkdown-image-block>.caption-input {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* コード：箱そのものは上の「コードブロックのスタイル拡張」で .prose pre と共通。
+ * CodeMirror 自身の地は消して箱の地を見せる */
+/* 共通ルールの overflow-x:auto だと言語選択のドロップダウンが切れるので戻す */
+.milkdown-host .milkdown .milkdown-code-block {
+  overflow: visible;
+}
+
+.milkdown-host .milkdown .milkdown-code-block .cm-editor,
+.milkdown-host .milkdown .milkdown-code-block .cm-gutters {
+  background: transparent;
+}
+
+.milkdown-host .milkdown .milkdown-code-block :is(ul, li) {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* リスト：Crepe は記号を自前で描く（ul > div > li）。prose の字下げ・余白を記号分に置き換える */
+.milkdown-host .milkdown .ProseMirror :is(ul, ol) {
+  padding-left: 0;
+  list-style: none;
+}
+
+.milkdown-host .milkdown .milkdown-list-item-block>li {
+  margin: 0.5em 0;
+  padding-left: 0;
+}
+
+.milkdown-host .milkdown .milkdown-list-item-block p {
+  margin: 0;
+}
+
+/* Markdown モードの入力欄：本文列と同じ幅で、等幅・行間ゆったり */
+.markdown-source {
+  @apply block w-full resize-none overflow-hidden rounded-md border border-border/60 bg-card/40 p-4 font-mono text-sm leading-7 text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring;
 }
